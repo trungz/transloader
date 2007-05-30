@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Transloader
+Bundle-SymbolicName: com.googlecode.transloader
+Bundle-Version: 0.0.1
+Bundle-Description: Bridges the divide between ClassLoaders
+Bundle-RequiredExecutionEnvironment: J2SE-1.3
+Export-Package: com.googlecode.transloader
