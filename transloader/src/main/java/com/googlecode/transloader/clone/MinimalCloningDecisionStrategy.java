@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.googlecode.transloader.TransloaderClass;
 
+// TODO create MaximalCloningDecisionStrategy
 public class MinimalCloningDecisionStrategy implements CloningDecisionStrategy {
 	private static final List KNOWN_IMMUTABLES =
 			Arrays.asList(new Class[] {Boolean.class, Byte.class, Character.class, Short.class, Integer.class,
