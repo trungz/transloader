@@ -32,6 +32,7 @@ public final class RecursiveReferenceTraverser {
 		private static final long serialVersionUID = 7800649333760581678L;
 
 		public Object remove(Object key) {
+			// TODO test this bit
 			throw new UnsupportedOperationException(
 					"Remove must not be called on a ReferenceHistory except by RecursiveReferenceTraverser. Other classes may only add to it.");
 		}

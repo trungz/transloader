@@ -2,7 +2,6 @@ package com.googlecode.transloader.test.fixture;
 
 import com.googlecode.transloader.test.Triangulator;
 
-// TODO this is Serializable for cloning HashSets, which shouldn't be cloned
 public class WithPrimitiveFields extends NonCommonJavaObject {
 	private boolean booleanField;
 	private byte byteField;

@@ -45,7 +45,7 @@ public class TransloaderObject {
 	public Object invoke(InvocationDescription description) {
 		try {
 			Class wrappedClass = wrappedObject.getClass();
-			// TODO collect all the ClassLoaders from the Object graph?
+			// TODO collect all the ClassLoaders from the object graph?
 			ClassLoader wrappedClassLoader = wrappedClass.getClassLoader();
 			Class[] parameterTypes =
 					TransloaderClass.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
@@ -54,6 +54,7 @@ public class TransloaderObject {
 			Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
 			return method.invoke(wrappedObject, clonedParameters);
 		} catch (Exception e) {
+			// TODO test this bit
 			throw new TransloadingException(
 					"Unable to invoke '" + description.getMethodName() + Arrays.asList(description.getParameterTypeNames()) + "' on '" + wrappedObject + "'.",
 					e);
