@@ -42,24 +42,24 @@ public class TransloaderObjectTest extends BaseTestCase {
 		assertFalse(new TransloaderObject(new Object()).isNull());
 	}
 
-	public void testReportsIsNotOfTypeWhenGivenUnrelatedType() throws Exception {
-		assertFalse(new TransloaderObject(new Object()).isOfType(NonCommonJavaType.class.getName()));
+	public void testReportsIsNotInstanceOfUnrelatedType() throws Exception {
+		assertFalse(new TransloaderObject(new Object()).isInstanceOf(NonCommonJavaType.class.getName()));
 	}
 
-	public void testReportsIsOfTypeWhenGivenSameClassName() throws Exception {
-		assertTrue(new TransloaderObject(foreignObject).isOfType(foreignObject.getClass().getName()));
+	public void testReportsIsInstanceOfSameClass() throws Exception {
+		assertTrue(new TransloaderObject(foreignObject).isInstanceOf(foreignObject.getClass().getName()));
 	}
 
-	public void testReportsIsOfTypeWhenGivenSuperClassName() throws Exception {
-		assertTrue(new TransloaderObject(foreignObject).isOfType(NonCommonJavaObject.class.getName()));
+	public void testReportsIsInstanceOfSuperClass() throws Exception {
+		assertTrue(new TransloaderObject(foreignObject).isInstanceOf(NonCommonJavaObject.class.getName()));
 	}
 
-	public void testReportsIsOfTypeWhenGivenImplementedInterfaceName() throws Exception {
-		assertTrue(new TransloaderObject(foreignObject).isOfType(NonCommonJavaType.class.getName()));
+	public void testReportsIsInstanceOfImplementedInterface() throws Exception {
+		assertTrue(new TransloaderObject(foreignObject).isInstanceOf(NonCommonJavaType.class.getName()));
 	}
 
 	public void testReturnsNullWhenAskedToCloneNull() throws Exception {
-		assertNull(new TransloaderObject(null).cloneTo(null));
+		assertNull(new TransloaderObject(null).cloneMinimallyTo(null));
 	}
 
 	public void testReturnsCloneReturnedFromGivenCloningStrategy() throws Exception {
@@ -74,7 +74,7 @@ public class TransloaderObjectTest extends BaseTestCase {
 				return expectedClone;
 			}
 		};
-		assertSame(expectedClone, new TransloaderObject(expectedOriginal, cloningStrategy).cloneTo(expectedClassloader));
+		assertSame(expectedClone, new TransloaderObject(expectedOriginal, cloningStrategy).cloneMinimallyTo(expectedClassloader));
 	}
 
 	public void testWrapsExceptionThrownByGivenCloningStrategy() throws Exception {
@@ -87,7 +87,7 @@ public class TransloaderObjectTest extends BaseTestCase {
 		};
 		Thrower thrower = new Thrower() {
 			public void executeUntilThrow() throws Throwable {
-				new TransloaderObject(expectedOriginal, cloningStrategy).cloneTo(null);
+				new TransloaderObject(expectedOriginal, cloningStrategy).cloneMinimallyTo(null);
 			}
 		};
 		assertThrows(thrower, new TransloadingException("Unable to clone '" + expectedOriginal + "'.",

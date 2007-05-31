@@ -1,14 +1,8 @@
 package com.googlecode.transloader.test.function;
 
-import junit.extensions.ActiveTestSuite;
-import junit.framework.Test;
-
-import com.googlecode.transloader.TransloaderObject;
-import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
 import com.googlecode.transloader.test.fixture.HiearchyWithFieldsBottom;
-import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
 import com.googlecode.transloader.test.fixture.SelfAndChildReferencingParent;
@@ -22,17 +16,7 @@ import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
 import com.googlecode.transloader.test.fixture.WithSetFields;
 import com.googlecode.transloader.test.fixture.WithStringField;
 
-public class DefaultCloningStrategyTest extends BaseTestCase {
-	private static final CloningStrategy CLONER = TransloaderObject.DEFAULT_CLONER;
-
-	public static Test suite() throws Exception {
-		return new ActiveTestSuite(DefaultCloningStrategyTest.class);
-	}
-
-	public void testDoesNotCloneStrings() throws Exception {
-		Object string = Triangulator.anyString();
-		assertSame(string, CLONER.cloneObjectToClassLoader(string, IndependentClassLoader.getInstance()));
-	}
+public abstract class CloningTest extends BaseTestCase {
 
 	public void testClonesObjectsWithPrimitiveFields() throws Exception {
 		assertDeeplyClonedIntoOtherClassLoader(new WithPrimitiveFields());
@@ -93,12 +77,6 @@ public class DefaultCloningStrategyTest extends BaseTestCase {
 				new SelfAndChildReferencingParent(Triangulator.anyString())));
 	}
 
-	private void assertDeeplyClonedIntoOtherClassLoader(NonCommonJavaType original) throws Exception {
-		String originalString = original.toString();
-		print(original);
-		Object clone = CLONER.cloneObjectToClassLoader(original, IndependentClassLoader.getInstance());
-		print(clone);
-		assertNotSame(original, clone);
-		assertEqualExceptForClassLoader(originalString, clone);
-	}
+
+	protected abstract void assertDeeplyClonedIntoOtherClassLoader(NonCommonJavaType fields) throws Exception;
 }

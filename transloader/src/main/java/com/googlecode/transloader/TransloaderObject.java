@@ -9,34 +9,34 @@ import com.googlecode.transloader.clone.MinimalCloningDecisionStrategy;
 import com.googlecode.transloader.clone.ObjenesisInstantiationStrategy;
 
 public class TransloaderObject {
-	public static final CloningStrategy DEFAULT_CLONER =
+	public static final CloningStrategy MINIMAL_CLONER =
 			new InstantiationPlusFieldsCloningStrategy(new MinimalCloningDecisionStrategy(),
 					new ObjenesisInstantiationStrategy());
 
-	private final CloningStrategy cloner;
+	private final CloningStrategy minimalCloner;
 	private final Object wrappedObject;
 
 	public TransloaderObject(Object objectToWrap) {
-		this(objectToWrap, DEFAULT_CLONER);
+		this(objectToWrap, MINIMAL_CLONER);
 	}
 
-	public TransloaderObject(Object objectToWrap, CloningStrategy cloningStrategy) {
-		wrappedObject = objectToWrap;
-		cloner = cloningStrategy;
+	public TransloaderObject(Object objectToWrap, CloningStrategy minimalCloner) {
+		this.wrappedObject = objectToWrap;
+		this.minimalCloner = minimalCloner;
 	}
 
 	public boolean isNull() {
 		return wrappedObject == null;
 	}
 
-	public boolean isOfType(String typeName) {
-		return new TransloaderClass(wrappedObject.getClass()).extendsOrImplements(typeName);
+	public boolean isInstanceOf(String typeName) {
+		return new TransloaderClass(wrappedObject.getClass()).isAssignableTo(typeName);
 	}
 
-	public Object cloneTo(ClassLoader classLoader) {
+	public Object cloneMinimallyTo(ClassLoader classLoader) {
 		if (isNull()) return null;
 		try {
-			return cloner.cloneObjectToClassLoader(wrappedObject, classLoader);
+			return minimalCloner.cloneObjectToClassLoader(wrappedObject, classLoader);
 		} catch (Exception e) {
 			throw new TransloadingException("Unable to clone '" + wrappedObject + "'.", e);
 		}
@@ -50,7 +50,7 @@ public class TransloaderObject {
 			Class[] parameterTypes =
 					TransloaderClass.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
 			Object[] clonedParameters =
-					(Object[]) cloner.cloneObjectToClassLoader(description.getParameters(), wrappedClassLoader);
+					(Object[]) minimalCloner.cloneObjectToClassLoader(description.getParameters(), wrappedClassLoader);
 			Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
 			return method.invoke(wrappedObject, clonedParameters);
 		} catch (Exception e) {
