@@ -4,15 +4,15 @@ import java.util.Map;
 
 import org.apache.commons.collections.map.IdentityMap;
 
-public final class RecursiveReferenceTraverser {
+public final class CyclicReferenceSafeTraverser {
 	private ThreadLocal referenceHistoryForThread = new ThreadLocal();
 
-	public Object performWithoutFollowingCircles(Traversal traversal, Object currentObject) throws Exception {
+	public Object performWithoutFollowingCircles(Traversal traversal, Object currentObjectInGraph) throws Exception {
 		ReferenceHistory referenceHistory = getReferenceHistory();
-		if (referenceHistory.containsKey(currentObject)) return referenceHistory.get(currentObject);
-		referenceHistory.put(currentObject, null);
-		Object result = traversal.traverse(currentObject, referenceHistory);
-		referenceHistory.privatelyRemove(currentObject);
+		if (referenceHistory.containsKey(currentObjectInGraph)) return referenceHistory.get(currentObjectInGraph);
+		referenceHistory.put(currentObjectInGraph, null);
+		Object result = traversal.traverse(currentObjectInGraph, referenceHistory);
+		referenceHistory.privatelyRemove(currentObjectInGraph);
 		return result;
 	}
 
@@ -25,7 +25,7 @@ public final class RecursiveReferenceTraverser {
 	}
 
 	public static interface Traversal {
-		Object traverse(Object currentObject, Map referenceHistory) throws Exception;
+		Object traverse(Object currentObjectInGraph, Map referenceHistory) throws Exception;
 	}
 
 	private static final class ReferenceHistory extends IdentityMap {

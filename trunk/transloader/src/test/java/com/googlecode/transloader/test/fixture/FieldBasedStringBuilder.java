@@ -8,14 +8,14 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 import com.googlecode.transloader.clone.FieldDescription;
 import com.googlecode.transloader.clone.FieldReflector;
-import com.googlecode.transloader.clone.RecursiveReferenceTraverser;
-import com.googlecode.transloader.clone.RecursiveReferenceTraverser.Traversal;
+import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser;
+import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
 
 public class FieldBasedStringBuilder {
 	private static final String FIELD_SEPERATOR = " ";
 	private static final String OPEN_BRACKET = "[" + FIELD_SEPERATOR;
 	private static final String CLOSE_BRACKET = "]";
-	private static final RecursiveReferenceTraverser RECURSIVE_REFERENCE_TRAVERSER = new RecursiveReferenceTraverser();
+	private static final CyclicReferenceSafeTraverser RECURSIVE_REFERENCE_TRAVERSER = new CyclicReferenceSafeTraverser();
 
 	public static String toString(final Object object) {
 		Traversal toStringTraversal = new Traversal() {

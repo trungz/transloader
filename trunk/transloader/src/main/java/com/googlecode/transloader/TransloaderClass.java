@@ -16,8 +16,8 @@ public class TransloaderClass {
 		return wrappedClass.isPrimitive() ? wrappedClass : getClass(wrappedClass.getName(), classLoader);
 	}
 
-	public boolean extendsOrImplements(String typeName) {
-		return classExtendsOrImplementsType(wrappedClass, typeName);
+	public boolean isAssignableTo(String typeName) {
+		return classIsAssignableToType(wrappedClass, typeName);
 	}
 
 	public static Class getClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
@@ -32,7 +32,7 @@ public class TransloaderClass {
 		return classes;
 	}
 
-	private static boolean classExtendsOrImplementsType(Class rootClass, String typeName) {
+	private static boolean classIsAssignableToType(Class rootClass, String typeName) {
 		List allClasses = new ArrayList();
 		allClasses.add(rootClass);
 		allClasses.addAll(ClassUtils.getAllSuperclasses(rootClass));

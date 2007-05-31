@@ -4,10 +4,10 @@ import java.lang.reflect.Array;
 import java.util.Map;
 
 import com.googlecode.transloader.TransloaderClass;
-import com.googlecode.transloader.clone.RecursiveReferenceTraverser.Traversal;
+import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
 
 public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
-	private final RecursiveReferenceTraverser recursiveReferenceTraverser = new RecursiveReferenceTraverser();
+	private final CyclicReferenceSafeTraverser cyclicReferenceSafeTraverser = new CyclicReferenceSafeTraverser();
 	private final CloningStrategy fallbackCloner = new SerializationCloningStrategy();
 
 	private CloningDecisionStrategy cloningDecider;
@@ -24,7 +24,7 @@ public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
 				return InstantiationPlusFieldsCloningStrategy.this.clone(currentObject, targetClassLoader, referenceHistory);
 			}
 		};
-		return recursiveReferenceTraverser.performWithoutFollowingCircles(cloningTraversal, original);
+		return cyclicReferenceSafeTraverser.performWithoutFollowingCircles(cloningTraversal, original);
 	}
 
 	private Object clone(Object original, ClassLoader targetClassLoader, Map cloneHistory) throws Exception {
