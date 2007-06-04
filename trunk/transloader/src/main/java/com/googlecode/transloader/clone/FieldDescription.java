@@ -3,14 +3,17 @@ package com.googlecode.transloader.clone;
 public class FieldDescription {
 	private final String declaringClassName;
 	private final String fieldName;
+	private final boolean primitive;
 
-	public FieldDescription(Class declaringClass, String fieldName) {
-		this(declaringClass.getName(), fieldName);
+	public FieldDescription(Class declaringClass, String fieldName, Class declaredType) {
+		this(declaringClass.getName(), fieldName, declaredType.isPrimitive());
 	}
 
-	public FieldDescription(String declaringClassName, String fieldName) {
+	// TODO storing whether or not a field is primitive here feels slightly broken
+	public FieldDescription(String declaringClassName, String fieldName, boolean primitive) {
 		this.declaringClassName = declaringClassName;
 		this.fieldName = fieldName;
+		this.primitive = primitive;
 	}
 
 	public String getDeclaringClassName() {
@@ -19,5 +22,9 @@ public class FieldDescription {
 
 	public String getFieldName() {
 		return fieldName;
+	}
+
+	public boolean isPrimitive() {
+		return primitive;
 	}
 }

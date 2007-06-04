@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import com.googlecode.transloader.clone.CloningStrategy;
+import com.googlecode.transloader.clone.MaximalCloningDecisionStrategy;
 import com.googlecode.transloader.clone.InstantiationPlusFieldsCloningStrategy;
 import com.googlecode.transloader.clone.MinimalCloningDecisionStrategy;
 import com.googlecode.transloader.clone.ObjenesisInstantiationStrategy;
@@ -12,17 +13,20 @@ public class TransloaderObject {
 	public static final CloningStrategy MINIMAL_CLONER =
 			new InstantiationPlusFieldsCloningStrategy(new MinimalCloningDecisionStrategy(),
 					new ObjenesisInstantiationStrategy());
+	public static final CloningStrategy MAXIMAL_CLONER =
+			new InstantiationPlusFieldsCloningStrategy(new MaximalCloningDecisionStrategy(),
+					new ObjenesisInstantiationStrategy());
 
-	private final CloningStrategy minimalCloner;
+	private final CloningStrategy cloner;
 	private final Object wrappedObject;
 
 	public TransloaderObject(Object objectToWrap) {
 		this(objectToWrap, MINIMAL_CLONER);
 	}
 
-	public TransloaderObject(Object objectToWrap, CloningStrategy minimalCloner) {
-		this.wrappedObject = objectToWrap;
-		this.minimalCloner = minimalCloner;
+	public TransloaderObject(Object objectToWrap, CloningStrategy cloningStrategy) {
+		wrappedObject = objectToWrap;
+		cloner = cloningStrategy;
 	}
 
 	public boolean isNull() {
@@ -33,10 +37,10 @@ public class TransloaderObject {
 		return new TransloaderClass(wrappedObject.getClass()).isAssignableTo(typeName);
 	}
 
-	public Object cloneMinimallyTo(ClassLoader classLoader) {
+	public Object cloneTo(ClassLoader classLoader) {
 		if (isNull()) return null;
 		try {
-			return minimalCloner.cloneObjectToClassLoader(wrappedObject, classLoader);
+			return cloner.cloneObjectToClassLoader(wrappedObject, classLoader);
 		} catch (Exception e) {
 			throw new TransloadingException("Unable to clone '" + wrappedObject + "'.", e);
 		}
@@ -45,12 +49,12 @@ public class TransloaderObject {
 	public Object invoke(InvocationDescription description) {
 		try {
 			Class wrappedClass = wrappedObject.getClass();
-			// TODO collect all the ClassLoaders from the object graph?
+			// TODO collect all the ClassLoaders from the object graph into an abstraction called CollectedClassLoader?
 			ClassLoader wrappedClassLoader = wrappedClass.getClassLoader();
 			Class[] parameterTypes =
 					TransloaderClass.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
 			Object[] clonedParameters =
-					(Object[]) minimalCloner.cloneObjectToClassLoader(description.getParameters(), wrappedClassLoader);
+					(Object[]) cloner.cloneObjectToClassLoader(description.getParameters(), wrappedClassLoader);
 			Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
 			return method.invoke(wrappedObject, clonedParameters);
 		} catch (Exception e) {

@@ -13,7 +13,8 @@ public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
 	private CloningDecisionStrategy cloningDecider;
 	private InstantiationStrategy instantiator;
 
-	public InstantiationPlusFieldsCloningStrategy(CloningDecisionStrategy cloningDecider, InstantiationStrategy instantiator) {
+	public InstantiationPlusFieldsCloningStrategy(CloningDecisionStrategy cloningDecider,
+			InstantiationStrategy instantiator) {
 		this.cloningDecider = cloningDecider;
 		this.instantiator = instantiator;
 	}
@@ -21,7 +22,8 @@ public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
 	public Object cloneObjectToClassLoader(final Object original, final ClassLoader targetClassLoader) throws Exception {
 		Traversal cloningTraversal = new Traversal() {
 			public Object traverse(Object currentObject, Map referenceHistory) throws Exception {
-				return InstantiationPlusFieldsCloningStrategy.this.clone(currentObject, targetClassLoader, referenceHistory);
+				return InstantiationPlusFieldsCloningStrategy.this.clone(currentObject, targetClassLoader,
+						referenceHistory);
 			}
 		};
 		return cyclicReferenceSafeTraverser.performWithoutFollowingCircles(cloningTraversal, original);
@@ -30,13 +32,13 @@ public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
 	private Object clone(Object original, ClassLoader targetClassLoader, Map cloneHistory) throws Exception {
 		if (original == null) return null;
 		try {
-			return performInstantiationCloning(original, targetClassLoader, cloneHistory);
+			return performIntendedCloning(original, targetClassLoader, cloneHistory);
 		} catch (Exception e) {
 			return performFallbackCloning(original, targetClassLoader);
 		}
 	}
 
-	private Object performInstantiationCloning(Object original, ClassLoader targetClassLoader, Map cloneHistory)
+	private Object performIntendedCloning(Object original, ClassLoader targetClassLoader, Map cloneHistory)
 			throws Exception {
 		Object clone = original;
 		if (cloningDecider.shouldCloneObjectItself(original, targetClassLoader))
@@ -75,23 +77,20 @@ public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
 	}
 
 	private void cloneInstanceFields(Object original, Object clone, ClassLoader targetClassLoader) throws Exception {
-		FieldReflector originalReflector = new FieldReflector(original, getClassLoader(original));
+		FieldReflector originalReflector = new FieldReflector(original);
 		FieldReflector cloneReflector = new FieldReflector(clone, targetClassLoader);
 		FieldDescription[] fieldDescriptions = originalReflector.getAllInstanceFieldDescriptions();
 		for (int i = 0; i < fieldDescriptions.length; i++) {
 			FieldDescription description = fieldDescriptions[i];
 			Object originalFieldValue = originalReflector.getValue(description);
-			Object cloneFieldValue = cloneObjectToClassLoader(originalFieldValue, targetClassLoader);
+			Object cloneFieldValue = originalFieldValue;
+			if (!description.isPrimitive())
+				cloneFieldValue = cloneObjectToClassLoader(originalFieldValue, targetClassLoader);
 			cloneReflector.setValue(description, cloneFieldValue);
 		}
 	}
 
 	private Object performFallbackCloning(Object original, ClassLoader targetClassLoader) throws Exception {
 		return fallbackCloner.cloneObjectToClassLoader(original, targetClassLoader);
-	}
-
-	private static ClassLoader getClassLoader(Object original) {
-		ClassLoader classLoader = original.getClass().getClassLoader();
-		return classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader;
 	}
 }
