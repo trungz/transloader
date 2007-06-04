@@ -59,7 +59,7 @@ public class TransloaderObjectTest extends BaseTestCase {
 	}
 
 	public void testReturnsNullWhenAskedToCloneNull() throws Exception {
-		assertNull(new TransloaderObject(null).cloneMinimallyTo(null));
+		assertNull(new TransloaderObject(null).cloneTo(null));
 	}
 
 	public void testReturnsCloneReturnedFromGivenCloningStrategy() throws Exception {
@@ -74,7 +74,7 @@ public class TransloaderObjectTest extends BaseTestCase {
 				return expectedClone;
 			}
 		};
-		assertSame(expectedClone, new TransloaderObject(expectedOriginal, cloningStrategy).cloneMinimallyTo(expectedClassloader));
+		assertSame(expectedClone, new TransloaderObject(expectedOriginal, cloningStrategy).cloneTo(expectedClassloader));
 	}
 
 	public void testWrapsExceptionThrownByGivenCloningStrategy() throws Exception {
@@ -87,7 +87,7 @@ public class TransloaderObjectTest extends BaseTestCase {
 		};
 		Thrower thrower = new Thrower() {
 			public void executeUntilThrow() throws Throwable {
-				new TransloaderObject(expectedOriginal, cloningStrategy).cloneMinimallyTo(null);
+				new TransloaderObject(expectedOriginal, cloningStrategy).cloneTo(null);
 			}
 		};
 		assertThrows(thrower, new TransloadingException("Unable to clone '" + expectedOriginal + "'.",

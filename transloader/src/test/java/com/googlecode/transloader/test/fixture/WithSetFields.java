@@ -11,7 +11,7 @@ import java.util.TreeSet;
 
 import com.googlecode.transloader.test.Triangulator;
 
-// TODO find a way to clone HashSets and TreeSets without serialization so that non-Serializable Objects can put into them!
+// TODO find a way to clone HashSets and TreeSets without serialization so that non-Serializable Objects can be put into them!
 /*
  * All elements must be Serializable only because the this$0 field for anonymous classes is final (and
  * pre-Java-5-JVMs prevent setting any final fields, including instance ones, even by reflection). This affects all

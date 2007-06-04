@@ -9,7 +9,7 @@ import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 
 public abstract class BaseTestCase extends TestCase {
 
-	protected void print(Object object) {
+	protected void dump(Object object) {
 		// System.out.println("[" + getName() + "] " + object.toString());
 	}
 
@@ -19,7 +19,10 @@ public abstract class BaseTestCase extends TestCase {
 		assertNotEquals(originalClassLoaderString, cloneClassLoaderString);
 		String expectedCloneString =
 				StringUtils.replace(originalString, originalClassLoaderString, cloneClassLoaderString);
-		assertEquals(expectedCloneString, clone.toString());
+		String cloneString = clone.toString();
+		dump(originalString);
+		dump(cloneString);
+		assertEquals(expectedCloneString, cloneString);
 	}
 
 	protected static void assertNotEquals(Object notExpected, Object actual) {

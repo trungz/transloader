@@ -9,9 +9,8 @@ import com.googlecode.transloader.TransloaderClass;
 
 // TODO create MaximalCloningDecisionStrategy
 public class MinimalCloningDecisionStrategy implements CloningDecisionStrategy {
-	private static final List KNOWN_IMMUTABLES =
-			Arrays.asList(new Class[] {Boolean.class, Byte.class, Character.class, Short.class, Integer.class,
-					Long.class, Float.class, Double.class, Void.class, BigInteger.class, BigDecimal.class, String.class});
+	private static final List KNOWN_SHARED_IMMUTABLES =
+			Arrays.asList(new Class[] {String.class, BigInteger.class, BigDecimal.class});
 
 	public boolean shouldCloneObjectItself(Object original, ClassLoader targetClassLoader)
 			throws ClassNotFoundException {
@@ -29,6 +28,6 @@ public class MinimalCloningDecisionStrategy implements CloningDecisionStrategy {
 	}
 
 	private boolean isEffectivelyPrimitive(Class originalClass) {
-		return originalClass.isPrimitive() || KNOWN_IMMUTABLES.contains(originalClass);
+		return FieldReflector.PRIMITIVE_WRAPPERS.contains(originalClass) || KNOWN_SHARED_IMMUTABLES.contains(originalClass);
 	}
 }
