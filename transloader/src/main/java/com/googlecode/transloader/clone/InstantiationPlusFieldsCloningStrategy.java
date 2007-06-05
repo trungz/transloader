@@ -6,7 +6,7 @@ import java.util.Map;
 import com.googlecode.transloader.TransloaderClass;
 import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
 
-public class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
+public final class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
 	private final CyclicReferenceSafeTraverser cyclicReferenceSafeTraverser = new CyclicReferenceSafeTraverser();
 	private final CloningStrategy fallbackCloner = new SerializationCloningStrategy();
 

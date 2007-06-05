@@ -1,6 +1,6 @@
 package com.googlecode.transloader.clone;
 
-public class FieldDescription {
+public final class FieldDescription {
 	private final String declaringClassName;
 	private final String fieldName;
 	private final boolean primitive;
