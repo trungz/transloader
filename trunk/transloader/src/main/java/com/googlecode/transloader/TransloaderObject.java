@@ -9,7 +9,7 @@ import com.googlecode.transloader.clone.InstantiationPlusFieldsCloningStrategy;
 import com.googlecode.transloader.clone.MinimalCloningDecisionStrategy;
 import com.googlecode.transloader.clone.ObjenesisInstantiationStrategy;
 
-public class TransloaderObject {
+public final class TransloaderObject {
 	public static final CloningStrategy MINIMAL_CLONER =
 			new InstantiationPlusFieldsCloningStrategy(new MinimalCloningDecisionStrategy(),
 					new ObjenesisInstantiationStrategy());

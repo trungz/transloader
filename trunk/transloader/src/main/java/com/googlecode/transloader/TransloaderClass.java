@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
 
-public class TransloaderClass {
+public final class TransloaderClass {
 	private Class wrappedClass;
 
 	public TransloaderClass(Class classToWrap) {

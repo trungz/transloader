@@ -1,6 +1,6 @@
 package com.googlecode.transloader;
 
-public class InvocationDescription {
+public final class InvocationDescription {
 	private String methodName;
 	private String[] parameterTypeNames;
 	private Object[] parameters;

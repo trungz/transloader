@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.googlecode.transloader.TransloaderClass;
 
-public class FieldReflector {
+public final class FieldReflector {
 	public static final List PRIMITIVE_WRAPPERS =
 			Arrays.asList(new Class[] {Boolean.class, Byte.class, Character.class, Short.class, Integer.class,
 					Long.class, Float.class, Double.class});
