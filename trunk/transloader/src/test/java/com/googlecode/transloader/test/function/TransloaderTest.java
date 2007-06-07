@@ -4,8 +4,11 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
 import com.googlecode.transloader.InvocationDescription;
-import com.googlecode.transloader.TransloaderObject;
-import com.googlecode.transloader.TransloadingException;
+import com.googlecode.transloader.ObjectWrapper;
+import com.googlecode.transloader.TransloaderException;
+import com.googlecode.transloader.DefaultFactory;
+import com.googlecode.transloader.TransloaderWrapper;
+import com.googlecode.transloader.TransloaderFactory;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
@@ -17,12 +20,13 @@ import com.googlecode.transloader.test.fixture.WithMethods;
 import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
 import com.googlecode.transloader.test.fixture.WithStringField;
 
-public class TransloaderObjectTest extends BaseTestCase {
+public class TransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
+	private TransloaderFactory transloaderFactory = new DefaultFactory();
 
 	public static Test suite() throws Exception {
-		return new ActiveTestSuite(TransloaderObjectTest.class);
+		return new ActiveTestSuite(TransloaderTest.class);
 	}
 
 	protected void setUp() throws Exception {
@@ -35,31 +39,31 @@ public class TransloaderObjectTest extends BaseTestCase {
 	}
 
 	public void testReportsIsNullWhenGivenNull() throws Exception {
-		assertTrue(new TransloaderObject(null).isNull());
+		assertTrue(transloaderFactory.wrap(null).isNull());
 	}
 
 	public void testReportsIsNotNullWhenGivenNonNullObject() throws Exception {
-		assertFalse(new TransloaderObject(new Object()).isNull());
+		assertFalse(transloaderFactory.wrap(new Object()).isNull());
 	}
 
 	public void testReportsIsNotInstanceOfUnrelatedType() throws Exception {
-		assertFalse(new TransloaderObject(new Object()).isInstanceOf(NonCommonJavaType.class.getName()));
+		assertFalse(transloaderFactory.wrap(new Object()).isInstanceOf(NonCommonJavaType.class.getName()));
 	}
 
 	public void testReportsIsInstanceOfSameClass() throws Exception {
-		assertTrue(new TransloaderObject(foreignObject).isInstanceOf(foreignObject.getClass().getName()));
+		assertTrue(transloaderFactory.wrap(foreignObject).isInstanceOf(foreignObject.getClass().getName()));
 	}
 
 	public void testReportsIsInstanceOfSuperClass() throws Exception {
-		assertTrue(new TransloaderObject(foreignObject).isInstanceOf(NonCommonJavaObject.class.getName()));
+		assertTrue(transloaderFactory.wrap(foreignObject).isInstanceOf(NonCommonJavaObject.class.getName()));
 	}
 
 	public void testReportsIsInstanceOfImplementedInterface() throws Exception {
-		assertTrue(new TransloaderObject(foreignObject).isInstanceOf(NonCommonJavaType.class.getName()));
+		assertTrue(transloaderFactory.wrap(foreignObject).isInstanceOf(NonCommonJavaType.class.getName()));
 	}
 
 	public void testReturnsNullWhenAskedToCloneNull() throws Exception {
-		assertNull(new TransloaderObject(null).cloneTo(null));
+		assertNull(transloaderFactory.wrap(null).getEquivalentFrom(null));
 	}
 
 	public void testReturnsCloneReturnedFromGivenCloningStrategy() throws Exception {
@@ -74,7 +78,8 @@ public class TransloaderObjectTest extends BaseTestCase {
 				return expectedClone;
 			}
 		};
-		assertSame(expectedClone, new TransloaderObject(expectedOriginal, cloningStrategy).cloneTo(expectedClassloader));
+		assertSame(expectedClone,
+				new ObjectWrapper(expectedOriginal, cloningStrategy).getEquivalentFrom(expectedClassloader));
 	}
 
 	public void testWrapsExceptionThrownByGivenCloningStrategy() throws Exception {
@@ -87,23 +92,23 @@ public class TransloaderObjectTest extends BaseTestCase {
 		};
 		Thrower thrower = new Thrower() {
 			public void executeUntilThrow() throws Throwable {
-				new TransloaderObject(expectedOriginal, cloningStrategy).cloneTo(null);
+				new ObjectWrapper(expectedOriginal, cloningStrategy).getEquivalentFrom(null);
 			}
 		};
-		assertThrows(thrower, new TransloadingException("Unable to clone '" + expectedOriginal + "'.",
-				expectedException));
+		assertThrows(thrower,
+				new TransloaderException("Unable to clone '" + expectedOriginal + "'.", expectedException));
 	}
 
 	public void testProvidesWrappedObjectOnRequest() throws Exception {
 		final Object expected = new Object();
-		assertSame(expected, new TransloaderObject(expected).getUntransloadedObject());
+		assertSame(expected, transloaderFactory.wrap(expected).getUnwrappedSelf());
 	}
 
 	public void testPassesAndReturnsStringsToAndFromInvocations() throws Exception {
-		TransloaderObject transloaderObject = new TransloaderObject(foreignObjectWithMethods);
+		TransloaderWrapper objectWrapper = transloaderFactory.wrap(foreignObjectWithMethods);
 		String expectedStringFieldValue = Triangulator.anyString();
-		transloaderObject.invoke(new InvocationDescription("setStringField", expectedStringFieldValue));
-		assertSame(expectedStringFieldValue, transloaderObject.invoke(new InvocationDescription("getStringField")));
+		objectWrapper.invoke(new InvocationDescription("setStringField", expectedStringFieldValue));
+		assertSame(expectedStringFieldValue, objectWrapper.invoke(new InvocationDescription("getStringField")));
 	}
 
 	public void testClonesParametersOfNonCommonJavaTypesInInvocations() throws Exception {
@@ -113,8 +118,8 @@ public class TransloaderObjectTest extends BaseTestCase {
 		Class[] paramTypes = {NonCommonJavaType.class, NonCommonJavaType.class};
 		Object[] params = {first, second};
 		String actual =
-				(String) new TransloaderObject(foreignObjectWithMethods).invoke(new InvocationDescription(
-						"concatenate", paramTypes, params));
+				(String) transloaderFactory.wrap(foreignObjectWithMethods).invoke(
+						new InvocationDescription("concatenate", paramTypes, params));
 		assertEqualExceptForClassLoader(expected, actual);
 	}
 }
