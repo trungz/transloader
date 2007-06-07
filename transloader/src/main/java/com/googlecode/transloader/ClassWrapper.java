@@ -5,14 +5,17 @@ import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
 
-public final class TransloaderClass {
+import com.googlecode.transloader.clone.CloningStrategy;
+
+public final class ClassWrapper extends ObjectWrapper {
 	private Class wrappedClass;
 
-	public TransloaderClass(Class classToWrap) {
-		wrappedClass = classToWrap;
+	public ClassWrapper(Class classToWrap, CloningStrategy cloningStrategy) {
+		super(classToWrap, cloningStrategy);
+		wrappedClass = (Class) getUnwrappedSelf();
 	}
 
-	public Class getEquivalentFrom(ClassLoader classLoader) throws ClassNotFoundException {
+	public Object getEquivalentFrom(ClassLoader classLoader) {
 		return wrappedClass.isPrimitive() ? wrappedClass : getClass(wrappedClass.getName(), classLoader);
 	}
 
@@ -20,11 +23,16 @@ public final class TransloaderClass {
 		return classIsAssignableToType(wrappedClass, typeName);
 	}
 
-	public static Class getClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
-		return ClassUtils.getClass(classLoader, className, false);
+	public static Class getClass(String className, ClassLoader classLoader) {
+		try {
+			return ClassUtils.getClass(classLoader, className, false);
+		} catch (ClassNotFoundException e) {
+			throw new TransloaderException(
+					"Unable to load Class '" + className + "' from ClassLoader '" + classLoader + "'.", e);
+		}
 	}
 
-	public static Class[] getClasses(String[] classNames, ClassLoader classLoader) throws ClassNotFoundException {
+	public static Class[] getClasses(String[] classNames, ClassLoader classLoader) {
 		Class[] classes = new Class[classNames.length];
 		for (int i = 0; i < classes.length; i++) {
 			classes[i] = getClass(classNames[i], classLoader);

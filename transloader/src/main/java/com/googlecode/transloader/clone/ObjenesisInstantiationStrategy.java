@@ -9,5 +9,4 @@ public final class ObjenesisInstantiationStrategy implements InstantiationStrate
 	public Object newInstance(Class type) throws Exception {
 		return objenesis.newInstance(type);
 	}
-
 }

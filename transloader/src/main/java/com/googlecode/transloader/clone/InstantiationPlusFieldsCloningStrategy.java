@@ -3,7 +3,7 @@ package com.googlecode.transloader.clone;
 import java.lang.reflect.Array;
 import java.util.Map;
 
-import com.googlecode.transloader.TransloaderClass;
+import com.googlecode.transloader.ClassWrapper;
 import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
 
 public final class InstantiationPlusFieldsCloningStrategy implements CloningStrategy {
@@ -53,10 +53,10 @@ public final class InstantiationPlusFieldsCloningStrategy implements CloningStra
 		Class originalClass = original.getClass();
 		if (originalClass.isArray()) {
 			Class originalComponentType = originalClass.getComponentType();
-			Class cloneComponentType = new TransloaderClass(originalComponentType).getEquivalentFrom(targetClassLoader);
+			Class cloneComponentType = ClassWrapper.getClass(originalComponentType.getName(), targetClassLoader);
 			return Array.newInstance(cloneComponentType, Array.getLength(original));
 		}
-		Class cloneClass = new TransloaderClass(originalClass).getEquivalentFrom(targetClassLoader);
+		Class cloneClass = ClassWrapper.getClass(originalClass.getName(), targetClassLoader);
 		return instantiator.newInstance(cloneClass);
 	}
 

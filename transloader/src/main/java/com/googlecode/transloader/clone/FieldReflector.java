@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.googlecode.transloader.TransloaderClass;
+import com.googlecode.transloader.ClassWrapper;
 
 public final class FieldReflector {
 	public static final List PRIMITIVE_WRAPPERS =
@@ -62,7 +62,7 @@ public final class FieldReflector {
 
 	private static Field getFieldHavingMadeItAccessible(Object object, FieldDescription description,
 			ClassLoader classLoader) throws ClassNotFoundException, NoSuchFieldException {
-		Class declaringClass = TransloaderClass.getClass(description.getDeclaringClassName(), classLoader);
+		Class declaringClass = ClassWrapper.getClass(description.getDeclaringClassName(), classLoader);
 		Field field = declaringClass.getDeclaredField(description.getFieldName());
 		field.setAccessible(true);
 		return field;

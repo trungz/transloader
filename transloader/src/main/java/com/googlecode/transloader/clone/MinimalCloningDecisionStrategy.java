@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import com.googlecode.transloader.TransloaderClass;
+import com.googlecode.transloader.ClassWrapper;
 
 public final class MinimalCloningDecisionStrategy implements CloningDecisionStrategy {
 	private static final List KNOWN_SHARED_IMMUTABLES =
@@ -18,7 +18,7 @@ public final class MinimalCloningDecisionStrategy implements CloningDecisionStra
 
 	private boolean isSameInClassLoader(Class originalClass, ClassLoader targetClassLoader)
 			throws ClassNotFoundException {
-		return originalClass.equals(new TransloaderClass(originalClass).getEquivalentFrom(targetClassLoader));
+		return originalClass.equals(ClassWrapper.getClass(originalClass.getName(), targetClassLoader));
 	}
 
 	public boolean shouldCloneObjectContent(Object original, ClassLoader targetClassLoader)

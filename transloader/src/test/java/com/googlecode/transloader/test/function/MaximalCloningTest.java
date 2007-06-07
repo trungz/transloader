@@ -5,7 +5,8 @@ import java.util.Map;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
-import com.googlecode.transloader.TransloaderObject;
+import com.googlecode.transloader.ObjectWrapper;
+import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser;
 import com.googlecode.transloader.clone.FieldDescription;
 import com.googlecode.transloader.clone.FieldReflector;
@@ -24,7 +25,7 @@ public class MaximalCloningTest extends CloningTestCase {
 	protected void assertDeeplyClonedToOtherClassLoader(NonCommonJavaType original) throws Exception {
 		String originalString = original.toString();
 		Object clone =
-				new TransloaderObject(original, TransloaderObject.MAXIMAL_CLONER).cloneTo(IndependentClassLoader.getInstance());
+				new ObjectWrapper(original, CloningStrategy.MAXIMAL).getEquivalentFrom(IndependentClassLoader.getInstance());
 		assertEqualExceptForClassLoader(originalString, clone);
 		assertDeeplyNotTheSame(original, clone);
 	}
