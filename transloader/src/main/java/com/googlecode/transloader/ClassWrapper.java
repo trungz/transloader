@@ -8,7 +8,7 @@ import org.apache.commons.lang.ClassUtils;
 import com.googlecode.transloader.clone.CloningStrategy;
 
 public final class ClassWrapper extends ObjectWrapper {
-	private Class wrappedClass;
+	private final Class wrappedClass;
 
 	public ClassWrapper(Class classToWrap, CloningStrategy cloningStrategy) {
 		super(classToWrap, cloningStrategy);

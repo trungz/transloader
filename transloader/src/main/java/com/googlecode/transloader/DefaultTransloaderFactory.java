@@ -2,8 +2,8 @@ package com.googlecode.transloader;
 
 import com.googlecode.transloader.clone.CloningStrategy;
 
-public class DefaultTransloaderFactory implements TransloaderFactory {
-	private CloningStrategy cloningStrategy;
+public final class DefaultTransloaderFactory implements TransloaderFactory {
+	private final CloningStrategy cloningStrategy;
 
 	public DefaultTransloaderFactory() {
 		this(CloningStrategy.MINIMAL);

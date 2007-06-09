@@ -2,11 +2,11 @@ package com.googlecode.transloader.clone;
 
 public interface CloningStrategy {
 	static final CloningStrategy MINIMAL =
-			new InstantiationPlusFieldsCloningStrategy(new MinimalCloningDecisionStrategy(),
-					new ObjenesisInstantiationStrategy());
+			new NewObjectAndContentCloningStrategy(new MinimalCloningDecisionStrategy(),
+					new ObjenesisInstantiationStrategy(), new SerializationCloningStrategy());
 	static final CloningStrategy MAXIMAL =
-			new InstantiationPlusFieldsCloningStrategy(new MaximalCloningDecisionStrategy(),
-					new ObjenesisInstantiationStrategy());
+			new NewObjectAndContentCloningStrategy(new MaximalCloningDecisionStrategy(),
+					new ObjenesisInstantiationStrategy(), new SerializationCloningStrategy());
 
 	Object cloneObjectToClassLoader(Object original, ClassLoader targetClassLoader) throws Exception;
 }

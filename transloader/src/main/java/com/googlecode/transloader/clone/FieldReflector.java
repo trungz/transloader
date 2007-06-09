@@ -13,8 +13,8 @@ public final class FieldReflector {
 			Arrays.asList(new Class[] {Boolean.class, Byte.class, Character.class, Short.class, Integer.class,
 					Long.class, Float.class, Double.class});
 
-	private Object wrappedObject;
-	private ClassLoader classLoader;
+	private final Object wrappedObject;
+	private final ClassLoader classLoader;
 
 	public FieldReflector(Object objectToWrap) {
 		this(objectToWrap, getClassLoader(objectToWrap));

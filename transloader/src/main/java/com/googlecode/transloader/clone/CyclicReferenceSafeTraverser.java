@@ -28,6 +28,7 @@ public final class CyclicReferenceSafeTraverser {
 		Object traverse(Object currentObjectInGraph, Map referenceHistory) throws Exception;
 	}
 
+	// TODO don't use Map interface externally for this but rather ReferenceHistory interface with just put(key, value)
 	private static final class ReferenceHistory extends IdentityMap {
 		private static final long serialVersionUID = 7800649333760581678L;
 

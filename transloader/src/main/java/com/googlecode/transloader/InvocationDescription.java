@@ -1,9 +1,9 @@
 package com.googlecode.transloader;
 
 public final class InvocationDescription {
-	private String methodName;
-	private String[] parameterTypeNames;
-	private Object[] parameters;
+	private final String methodName;
+	private final String[] parameterTypeNames;
+	private final Object[] parameters;
 
 	public InvocationDescription(String methodName) {
 		this(methodName, new String[] {}, new Object[] {});
