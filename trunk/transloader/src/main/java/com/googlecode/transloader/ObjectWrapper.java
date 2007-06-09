@@ -6,8 +6,8 @@ import java.util.Arrays;
 import com.googlecode.transloader.clone.CloningStrategy;
 
 public class ObjectWrapper implements TransloaderWrapper {
-	private Object wrappedObject;
-	private CloningStrategy cloner;
+	private final Object wrappedObject;
+	private final CloningStrategy cloner;
 
 	public ObjectWrapper(Object objectToWrap, CloningStrategy cloningStrategy) {
 		wrappedObject = objectToWrap;
