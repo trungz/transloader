@@ -1,8 +1,10 @@
 package com.googlecode.transloader.test.function;
 
+import com.googlecode.transloader.TransloaderFactory;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
 import com.googlecode.transloader.test.fixture.HiearchyWithFieldsBottom;
+import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
 import com.googlecode.transloader.test.fixture.SelfAndChildReferencingParent;
@@ -15,6 +17,16 @@ import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
 import com.googlecode.transloader.test.fixture.WithStringField;
 
 public abstract class CloningTestCase extends BaseTestCase {
+
+	protected Object assertDeeplyClonedToOtherClassLoader(NonCommonJavaType original) throws Exception {
+		String originalString = original.toString();
+		Object clone = getTransloaderFactory().wrap(original).getEquivalentFrom(IndependentClassLoader.getInstance());
+		assertNotSame(original, clone);
+		assertEqualExceptForClassLoader(originalString, clone);
+		return clone;
+	}
+
+	protected abstract TransloaderFactory getTransloaderFactory();
 
 	public void testClonesObjectsWithPrimitiveFields() throws Exception {
 		assertDeeplyClonedToOtherClassLoader(new WithPrimitiveFields());
@@ -65,6 +77,4 @@ public abstract class CloningTestCase extends BaseTestCase {
 		assertDeeplyClonedToOtherClassLoader(new SelfAndParentReferencingChild(Triangulator.anyString(),
 				new SelfAndChildReferencingParent(Triangulator.anyString())));
 	}
-
-	protected abstract void assertDeeplyClonedToOtherClassLoader(NonCommonJavaType fields) throws Exception;
 }

@@ -29,7 +29,7 @@ public abstract class BaseTestCase extends TestCase {
 		if (notExpected == null)
 			assertNotNull(actual);
 		else
-			assertFalse("Expected: not " + notExpected + ". Actual: " + actual + " which is equal.",
+			assertFalse("Expected: not '" + notExpected + "'. Actual: '" + actual + "' which is equal.",
 					notExpected.equals(actual));
 	}
 
@@ -45,7 +45,7 @@ public abstract class BaseTestCase extends TestCase {
 	}
 
 	private static String getComparisonFailedMessage(String attributeName, String expectedValue, Throwable actual) {
-		return "Expected " + attributeName + ": " + expectedValue + ". Actual: " + ExceptionUtils.getFullStackTrace(actual);
+		return "Expected " + attributeName + ": '" + expectedValue + "'. Actual: '" + ExceptionUtils.getFullStackTrace(actual) + "'.";
 	}
 
 	protected static final void assertThrows(Thrower thrower, Throwable expected) {
@@ -55,7 +55,7 @@ public abstract class BaseTestCase extends TestCase {
 			assertMatches(expected, actual);
 			return;
 		}
-		fail("Expected: " + expected + ". Actual: nothing thrown.");
+		fail("Expected: '" + expected + "'. Actual: nothing thrown.");
 	}
 
 	protected static interface Thrower {
