@@ -3,10 +3,10 @@ package com.googlecode.transloader.test.function;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
-import com.googlecode.transloader.DefaultFactory;
+import com.googlecode.transloader.DefaultTransloaderFactory;
+import com.googlecode.transloader.TransloaderFactory;
 import com.googlecode.transloader.test.Triangulator;
 import com.googlecode.transloader.test.fixture.IndependentClassLoader;
-import com.googlecode.transloader.test.fixture.NonCommonJavaType;
 import com.googlecode.transloader.test.fixture.WithMapFields;
 import com.googlecode.transloader.test.fixture.WithSetFields;
 
@@ -17,7 +17,8 @@ public class MinimalCloningTest extends CloningTestCase {
 
 	public void testDoesNotCloneStrings() throws Exception {
 		Object string = Triangulator.anyString();
-		assertSame(string,  new DefaultFactory().wrap(string).getEquivalentFrom(IndependentClassLoader.getInstance()));
+		assertSame(string, new DefaultTransloaderFactory().wrap(string).getEquivalentFrom(
+				IndependentClassLoader.getInstance()));
 	}
 
 	public void testClonesObjectsWithSetFields() throws Exception {
@@ -28,10 +29,7 @@ public class MinimalCloningTest extends CloningTestCase {
 		assertDeeplyClonedToOtherClassLoader(new WithMapFields());
 	}
 
-	protected void assertDeeplyClonedToOtherClassLoader(NonCommonJavaType original) throws Exception {
-		String originalString = original.toString();
-		Object clone = new DefaultFactory().wrap(original).getEquivalentFrom(IndependentClassLoader.getInstance());
-		assertNotSame(original, clone);
-		assertEqualExceptForClassLoader(originalString, clone);
+	protected TransloaderFactory getTransloaderFactory() {
+		return new DefaultTransloaderFactory();
 	}
 }

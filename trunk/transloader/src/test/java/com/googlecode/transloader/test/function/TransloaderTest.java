@@ -3,12 +3,12 @@ package com.googlecode.transloader.test.function;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
+import com.googlecode.transloader.DefaultTransloaderFactory;
 import com.googlecode.transloader.InvocationDescription;
 import com.googlecode.transloader.ObjectWrapper;
 import com.googlecode.transloader.TransloaderException;
-import com.googlecode.transloader.DefaultFactory;
-import com.googlecode.transloader.TransloaderWrapper;
 import com.googlecode.transloader.TransloaderFactory;
+import com.googlecode.transloader.TransloaderWrapper;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
@@ -23,7 +23,7 @@ import com.googlecode.transloader.test.fixture.WithStringField;
 public class TransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
-	private TransloaderFactory transloaderFactory = new DefaultFactory();
+	private TransloaderFactory transloaderFactory = new DefaultTransloaderFactory();
 
 	public static Test suite() throws Exception {
 		return new ActiveTestSuite(TransloaderTest.class);

@@ -5,13 +5,13 @@ import java.util.Map;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
-import com.googlecode.transloader.ObjectWrapper;
+import com.googlecode.transloader.DefaultTransloaderFactory;
+import com.googlecode.transloader.TransloaderFactory;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser;
 import com.googlecode.transloader.clone.FieldDescription;
 import com.googlecode.transloader.clone.FieldReflector;
 import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
-import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
 
 // TODO minimal clones of Sets and Maps can be compared by Strings but maximal clones cannot without NullPointerExceptions, so find out why
@@ -22,12 +22,10 @@ public class MaximalCloningTest extends CloningTestCase {
 		return new ActiveTestSuite(MaximalCloningTest.class);
 	}
 
-	protected void assertDeeplyClonedToOtherClassLoader(NonCommonJavaType original) throws Exception {
-		String originalString = original.toString();
-		Object clone =
-				new ObjectWrapper(original, CloningStrategy.MAXIMAL).getEquivalentFrom(IndependentClassLoader.getInstance());
-		assertEqualExceptForClassLoader(originalString, clone);
+	protected Object assertDeeplyClonedToOtherClassLoader(NonCommonJavaType original) throws Exception {
+		Object clone = super.assertDeeplyClonedToOtherClassLoader(original);
 		assertDeeplyNotTheSame(original, clone);
+		return clone;
 	}
 
 	private void assertDeeplyNotTheSame(final Object original, final Object clone) throws Exception {
@@ -48,5 +46,9 @@ public class MaximalCloningTest extends CloningTestCase {
 			}
 		};
 		CYCLIC_REFERENCE_TRAVERSER.performWithoutFollowingCircles(notSameTraversal, original);
+	}
+
+	protected TransloaderFactory getTransloaderFactory() {
+		return new DefaultTransloaderFactory(CloningStrategy.MAXIMAL);
 	}
 }
