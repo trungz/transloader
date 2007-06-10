@@ -7,22 +7,57 @@ import org.apache.commons.lang.ClassUtils;
 
 import com.googlecode.transloader.clone.CloningStrategy;
 
+/**
+ * An extension of <code>ObjectWrapper</code> with specialised functionality for {@link Class}es.
+ * 
+ * @author Jeremy Wales
+ */
 public final class ClassWrapper extends ObjectWrapper {
 	private final Class wrappedClass;
 
+	/**
+	 * Constructs a new <code>ClassWrapper</code> around the given <code>Class</code> which will use the given
+	 * <code>CloningStrategy</code> when required.
+	 * 
+	 * @param classToWrap the <code>Class</code> to wrap
+	 * @param cloningStrategy the strategy for cloning
+	 */
 	public ClassWrapper(Class classToWrap, CloningStrategy cloningStrategy) {
 		super(classToWrap, cloningStrategy);
 		wrappedClass = (Class) getUnwrappedSelf();
 	}
 
+	/**
+	 * Loads the <code>Class</code> with the same name as the wrapped <code>Class</code> from the given
+	 * <code>ClassLoader</code>.
+	 * 
+	 * @param classLoader the <code>ClassLoader</code> with which to load the <code>Class</code>
+	 * @return the <code>Class</code> with the same name as the wrapped <code>Class</code> loaded by the given
+	 *         <code>ClassLoader</code>
+	 */
 	public Object getEquivalentFrom(ClassLoader classLoader) {
 		return wrappedClass.isPrimitive() ? wrappedClass : getClass(wrappedClass.getName(), classLoader);
 	}
 
+	/**
+	 * Indicates whether or not the wrapped <code>Class</code> is assignable to a <code>Class</code> with the given
+	 * name.
+	 * 
+	 * @param typeName the name of the type to check against
+	 * @return true if the wrapped <code>Class</code> is assignable to a <code>Class</code> with the given name
+	 */
 	public boolean isAssignableTo(String typeName) {
 		return classIsAssignableToType(wrappedClass, typeName);
 	}
 
+	/**
+	 * Loads the <code>Class</code> with the given name from the given <code>ClassLoader</code>.
+	 * 
+	 * @param className the name of the <code>Class</code>
+	 * @param classLoader the <code>ClassLoader</code> with which to load it
+	 * @return the <code>Class</code> with the given name loaded from the given <code>ClassLoader</code>
+	 * @throws TransloaderException if the <code>Class</code> cannot be found in the given <code>ClassLoader</code>
+	 */
 	public static Class getClass(String className, ClassLoader classLoader) {
 		try {
 			return ClassUtils.getClass(classLoader, className, false);
@@ -32,6 +67,15 @@ public final class ClassWrapper extends ObjectWrapper {
 		}
 	}
 
+	/**
+	 * Loads the <code>Class</code>es with the given names from the given <code>ClassLoader</code>.
+	 * 
+	 * @param classNames the names of the <code>Class</code>es
+	 * @param classLoader the <code>ClassLoader</code> with which to load them
+	 * @return the <code>Class</code>es with the given names loaded from the given <code>ClassLoader</code>
+	 * @throws TransloaderException if even one of the <code>Class</code>es cannot be found in the given
+	 *             <code>ClassLoader</code>
+	 */
 	public static Class[] getClasses(String[] classNames, ClassLoader classLoader) {
 		Class[] classes = new Class[classNames.length];
 		for (int i = 0; i < classes.length; i++) {

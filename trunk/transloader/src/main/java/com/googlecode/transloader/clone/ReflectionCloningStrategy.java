@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
 
-public final class NewObjectAndContentCloningStrategy implements CloningStrategy {
+public final class ReflectionCloningStrategy implements CloningStrategy {
 	private final CyclicReferenceSafeTraverser cyclicReferenceSafeTraverser = new CyclicReferenceSafeTraverser();
 
 	private final CloningDecisionStrategy decider;
@@ -12,7 +12,7 @@ public final class NewObjectAndContentCloningStrategy implements CloningStrategy
 	private final ChildCloner normalObjectCloner;
 	private final CloningStrategy fallbackCloner;
 
-	public NewObjectAndContentCloningStrategy(CloningDecisionStrategy cloningDecisionStrategy,
+	public ReflectionCloningStrategy(CloningDecisionStrategy cloningDecisionStrategy,
 			InstantiationStrategy instantiator, CloningStrategy fallbackCloningStrategy) {
 		decider = cloningDecisionStrategy;
 		arrayCloner = new ArrayChildCloner(this);
@@ -23,7 +23,7 @@ public final class NewObjectAndContentCloningStrategy implements CloningStrategy
 	public Object cloneObjectToClassLoader(final Object original, final ClassLoader targetClassLoader) throws Exception {
 		Traversal cloningTraversal = new Traversal() {
 			public Object traverse(Object currentObject, Map referenceHistory) throws Exception {
-				return NewObjectAndContentCloningStrategy.this.clone(currentObject, targetClassLoader, referenceHistory);
+				return ReflectionCloningStrategy.this.clone(currentObject, targetClassLoader, referenceHistory);
 			}
 		};
 		return cyclicReferenceSafeTraverser.performWithoutFollowingCircles(cloningTraversal, original);
