@@ -59,9 +59,18 @@
 		<property name="cacheFile" value="${checkstyle.cache.file}" />
 		<!-- Checks for Javadoc comments.                     -->
 		<!-- See http://checkstyle.sf.net/config_javadoc.html -->
-		<module name="JavadocMethod" />
-		<module name="JavadocType" />
-		<module name="JavadocVariable" />
+		<module name="JavadocType">
+			<property name="scope" value="public" />
+			<property name="authorFormat" value="Jeremy Wales" />
+		</module>
+		<module name="JavadocMethod">
+			<property name="scope" value="public" />
+			<property name="allowUndeclaredRTE " value="true" />
+			<property name="allowThrowsTagsForSubclasses" value="true" />
+		</module>
+		<module name="JavadocVariable">
+			<property name="scope" value="public" />
+		</module>
 		<module name="JavadocStyle" />
 		<!-- Checks for Naming Conventions.                  -->
 		<!-- See http://checkstyle.sf.net/config_naming.html -->
@@ -162,8 +171,8 @@
 		<module name="ArrayTypeStyle" />
 		<!-- Not concerned with <module name="FinalParameters" /> -->
 		<module name="GenericIllegalRegexp">
-			<property name="format" value="\s+$" />
-			<property name="message" value="Line has trailing spaces." />
+			<property name="format" value="(?&lt;!\*)\s+$" />
+			<property name="message" value="Non-JavaDoc line has trailing whitespace." />
 		</module>
 		<module name="TodoComment" />
 		<module name="UpperEll" />
