@@ -3,12 +3,10 @@ package com.googlecode.transloader.test.function;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
-import com.googlecode.transloader.DefaultTransloaderFactory;
 import com.googlecode.transloader.InvocationDescription;
 import com.googlecode.transloader.ObjectWrapper;
 import com.googlecode.transloader.TransloaderException;
 import com.googlecode.transloader.TransloaderFactory;
-import com.googlecode.transloader.TransloaderWrapper;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
@@ -23,7 +21,7 @@ import com.googlecode.transloader.test.fixture.WithStringField;
 public class TransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
-	private TransloaderFactory transloaderFactory = new DefaultTransloaderFactory();
+	private TransloaderFactory transloaderFactory = TransloaderFactory.DEFAULT;
 
 	public static Test suite() throws Exception {
 		return new ActiveTestSuite(TransloaderTest.class);
@@ -63,7 +61,7 @@ public class TransloaderTest extends BaseTestCase {
 	}
 
 	public void testReturnsNullWhenAskedToCloneNull() throws Exception {
-		assertNull(transloaderFactory.wrap(null).getEquivalentFrom(null));
+		assertNull(transloaderFactory.wrap((Object) null).cloneWith(null));
 	}
 
 	public void testReturnsCloneReturnedFromGivenCloningStrategy() throws Exception {
@@ -78,8 +76,7 @@ public class TransloaderTest extends BaseTestCase {
 				return expectedClone;
 			}
 		};
-		assertSame(expectedClone,
-				new ObjectWrapper(expectedOriginal, cloningStrategy).getEquivalentFrom(expectedClassloader));
+		assertSame(expectedClone, new ObjectWrapper(expectedOriginal, cloningStrategy).cloneWith(expectedClassloader));
 	}
 
 	public void testWrapsExceptionThrownByGivenCloningStrategy() throws Exception {
@@ -92,7 +89,7 @@ public class TransloaderTest extends BaseTestCase {
 		};
 		Thrower thrower = new Thrower() {
 			public void executeUntilThrow() throws Throwable {
-				new ObjectWrapper(expectedOriginal, cloningStrategy).getEquivalentFrom(null);
+				new ObjectWrapper(expectedOriginal, cloningStrategy).cloneWith(null);
 			}
 		};
 		assertThrows(thrower,
@@ -105,7 +102,7 @@ public class TransloaderTest extends BaseTestCase {
 	}
 
 	public void testPassesAndReturnsStringsToAndFromInvocations() throws Exception {
-		TransloaderWrapper objectWrapper = transloaderFactory.wrap(foreignObjectWithMethods);
+		ObjectWrapper objectWrapper = transloaderFactory.wrap(foreignObjectWithMethods);
 		String expectedStringFieldValue = Triangulator.anyString();
 		objectWrapper.invoke(new InvocationDescription("setStringField", expectedStringFieldValue));
 		assertSame(expectedStringFieldValue, objectWrapper.invoke(new InvocationDescription("getStringField")));
