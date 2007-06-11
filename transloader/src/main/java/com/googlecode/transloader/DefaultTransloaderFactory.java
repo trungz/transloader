@@ -11,18 +11,10 @@ public final class DefaultTransloaderFactory implements TransloaderFactory {
 	private final CloningStrategy cloningStrategy;
 
 	/**
-	 * Contructs a new <code>TransloaderFactory</code> which will produce <code>TransloaderWrapper</code>s
-	 * configured with {@link CloningStrategy#MINIMAL}.
-	 */
-	public DefaultTransloaderFactory() {
-		this(CloningStrategy.MINIMAL);
-	}
-
-	/**
-	 * Contructs a new <code>TransloaderFactory</code> which will produce <code>TransloaderWrapper</code>s
-	 * configured with the given <code>CloningStrategy</code>.
+	 * Contructs a new <code>TransloaderFactory</code> which will produce wrappers, the <code>ObjectWrapper</code>s
+	 * being configured with the given <code>CloningStrategy</code>.
 	 * 
-	 * @param cloningStrategy the <code>CloningStrategy</code> with which to configure <code>TransloaderWrapper</code>s.
+	 * @param cloningStrategy the <code>CloningStrategy</code> with which to configure <code>ObjectWrapper</code>s
 	 */
 	public DefaultTransloaderFactory(CloningStrategy cloningStrategy) {
 		this.cloningStrategy = cloningStrategy;
@@ -31,12 +23,19 @@ public final class DefaultTransloaderFactory implements TransloaderFactory {
 	/**
 	 * {@inheritDoc}
 	 * 
-	 * @see TransloaderFactory#wrap(Object)
-	 * @return a {@link ClassWrapper} if the given object is a <code>Class</code>, an {@link ObjectWrapper}
-	 *         otherwise, both constructed with the {@link CloningStrategy} that this factory is configured with
+	 * @return an <code>ObjectWrapper</code> around the given object, configured with the {@link CloningStrategy} that
+	 *         this factory is configured with
 	 */
-	public TransloaderWrapper wrap(Object object) {
-		if (object instanceof Class) return new ClassWrapper(((Class) object), cloningStrategy);
-		return new ObjectWrapper(object, cloningStrategy);
+	public ObjectWrapper wrap(Object objectToWrap) {
+		return new ObjectWrapper(objectToWrap, cloningStrategy);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @return a <code>ClassWrapper</code> around the given <code>Class</code>
+	 */
+	public ClassWrapper wrap(Class classToWrap) {
+		return new ClassWrapper(classToWrap);
 	}
 }

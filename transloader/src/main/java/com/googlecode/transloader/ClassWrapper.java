@@ -5,26 +5,40 @@ import java.util.List;
 
 import org.apache.commons.lang.ClassUtils;
 
-import com.googlecode.transloader.clone.CloningStrategy;
-
 /**
- * An extension of <code>ObjectWrapper</code> with specialised functionality for {@link Class}es.
+ * The wrapper appropriate for wrapping around all <code>Class</code>es from potentially foreign
+ * <code>ClassLoader</code>s.
  * 
  * @author Jeremy Wales
  */
-public final class ClassWrapper extends ObjectWrapper {
+public final class ClassWrapper {
 	private final Class wrappedClass;
 
 	/**
-	 * Constructs a new <code>ClassWrapper</code> around the given <code>Class</code> which will use the given
-	 * <code>CloningStrategy</code> when required.
+	 * Constructs a new <code>ClassWrapper</code> around the given <code>Class</code>.
 	 * 
 	 * @param classToWrap the <code>Class</code> to wrap
-	 * @param cloningStrategy the strategy for cloning
 	 */
-	public ClassWrapper(Class classToWrap, CloningStrategy cloningStrategy) {
-		super(classToWrap, cloningStrategy);
-		wrappedClass = (Class) getUnwrappedSelf();
+	public ClassWrapper(Class classToWrap) {
+		wrappedClass = classToWrap;
+	}
+
+	/**
+	 * Indicates whether or not <code>null</code> is what is wrapped.
+	 * 
+	 * @return true if the wrapped "Class" is actually <code>null</code>
+	 */
+	public boolean isNull() {
+		return wrappedClass == null;
+	}
+
+	/**
+	 * Provides direct access to the wrapped <code>Class</code>.
+	 * 
+	 * @return the actual wrapped <code>Class</code> without any wrapping
+	 */
+	public Class getUnwrappedSelf() {
+		return wrappedClass;
 	}
 
 	/**
