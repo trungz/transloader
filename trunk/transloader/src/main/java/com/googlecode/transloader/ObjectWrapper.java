@@ -6,16 +6,17 @@ import java.util.Arrays;
 import com.googlecode.transloader.clone.CloningStrategy;
 
 /**
- * The TransloaderWrapper appropriate for wrapping around all <code>Object</code>s.
+ * The wrapper appropriate for wrapping around all <code>Object</code>s referencing <code>Class</code>es from
+ * potentially foreign <code>ClassLoader</code>s.
  * 
  * @author Jeremy Wales
  */
-public class ObjectWrapper implements TransloaderWrapper {
+public final class ObjectWrapper {
 	private final Object wrappedObject;
 	private final CloningStrategy cloner;
 
 	/**
-	 * Constructs a new <code>ObjectWrapper</code> around the given object and which will use the given
+	 * Constructs a new <code>ObjectWrapper</code> around the given object, which will use the given
 	 * <code>CloningStrategy</code> when required.
 	 * 
 	 * @param objectToWrap the object to wrap
@@ -27,38 +28,56 @@ public class ObjectWrapper implements TransloaderWrapper {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Indicates whether or not <code>null</code> is what is wrapped.
+	 * 
+	 * @return true if the wrapped "object" is actually <code>null</code>
 	 */
-	public final boolean isNull() {
+	public boolean isNull() {
 		return wrappedObject == null;
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Provides direct access to the wrapped object.
+	 * 
+	 * @return the actual wrapped object without any wrapping
 	 */
-	public final boolean isInstanceOf(String typeName) {
-		return new ClassWrapper(wrappedObject.getClass(), cloner).isAssignableTo(typeName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public final Object getUnwrappedSelf() {
+	public Object getUnwrappedSelf() {
 		return wrappedObject;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
-	 * This implementation clones the wrapped object using <code>Class</code>es from the given
-	 * <code>ClassLoader</code>. It makes use of the <code>CloningStrategy</code> injected at construction. Note
-	 * that using {@link CloningStrategy#MINIMAL}, the default strategy in {@link DefaultTransloaderFactory}, will
-	 * often effect some changes to the wrapped object itself, as opposed to producing a purely seperate clone. Using
-	 * {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely seperate clone without any changes to
-	 * the wrapped object, at the cost of potentially far greater cloning effort.
-	 * </p>
+	 * Indicates whether or not the wrapped object is an instance of the type with the given name in the wrapped
+	 * object's <code>ClassLoader</code>(s).
+	 * 
+	 * @param typeName the name of the type against which the wrapped object will be checked
+	 * @return true if the wrapped object is an instance of the type with the given name in the wrapped object's
+	 *         <code>ClassLoader</code>(s)
 	 */
-	public Object getEquivalentFrom(ClassLoader classLoader) {
+	public boolean isInstanceOf(String typeName) {
+		return TransloaderFactory.DEFAULT.wrap(wrappedObject.getClass()).isAssignableTo(typeName);
+	}
+
+	/**
+	 * Gets an equivalent of the wrapped object with all <code>Class</code>es referenced being loaded from the given
+	 * <code>ClassLoader</code>. Every object referenced in the object graph starting with the object returned will
+	 * be able to be cast to its respective types in the given <code>ClassLoader</code>.
+	 * <p>
+	 * This implementation employs the <code>CloningStrategy</code> configured at construction. Note that using
+	 * {@link CloningStrategy#MINIMAL}, the default strategy in {@link TransloaderFactory#DEFAULT}, will often effect
+	 * some changes within the object graph that starts with the wrapped object itself, as opposed to producing a
+	 * completely new, seperate graph. Using {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely
+	 * seperate clone without any changes within the wrapped object graph, at the cost of potentially far greater
+	 * cloning effort. An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored
+	 * entirely for use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s)
+	 * by cloning it back with those original <code>ClassLoader</code>(s), but this is an extra coding step and
+	 * somewhat reduces the effort saved by not using {@link CloningStrategy#MAXIMAL}.
+	 * </p>
+	 * 
+	 * @param classLoader the <code>ClassLoader</code> to use in creating an equivalent of the wrapped object
+	 * @return an equivalent of the wrapped object with all <code>Class</code>es referenced being loaded from the
+	 *         given <code>ClassLoader</code>
+	 */
+	public Object cloneWith(ClassLoader classLoader) {
 		if (isNull()) return null;
 		try {
 			return cloner.cloneObjectToClassLoader(getUnwrappedSelf(), classLoader);
@@ -77,10 +96,10 @@ public class ObjectWrapper implements TransloaderWrapper {
 	 * construction.
 	 * </p>
 	 */
-	public final Object invoke(InvocationDescription description) {
+	public Object invoke(InvocationDescription description) {
 		try {
 			Class wrappedClass = getUnwrappedSelf().getClass();
-			// TODO collect all ClassLoaders from the object graph into an abstraction like eg CollectedClassLoader?
+			// TODO collect all ClassLoaders from the object graph into an abstraction like eg CollectedClassLoader
 			ClassLoader wrappedClassLoader = wrappedClass.getClassLoader();
 			Class[] parameterTypes = ClassWrapper.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
 			Object[] clonedParameters =
