@@ -20,7 +20,7 @@ public abstract class CloningTestCase extends BaseTestCase {
 
 	protected Object assertDeeplyClonedToOtherClassLoader(NonCommonJavaType original) throws Exception {
 		String originalString = original.toString();
-		Object clone = getTransloaderFactory().wrap(original).getEquivalentFrom(IndependentClassLoader.getInstance());
+		Object clone = getTransloaderFactory().wrap(original).cloneWith(IndependentClassLoader.getInstance());
 		assertNotSame(original, clone);
 		assertEqualExceptForClassLoader(originalString, clone);
 		return clone;
