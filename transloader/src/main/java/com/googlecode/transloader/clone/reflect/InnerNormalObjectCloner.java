@@ -1,13 +1,14 @@
-package com.googlecode.transloader.clone;
+package com.googlecode.transloader.clone.reflect;
 
 import com.googlecode.transloader.ClassWrapper;
+import com.googlecode.transloader.clone.CloningStrategy;
 
-final class NormalObjectChildCloner implements ChildCloner {
+final class InnerNormalObjectCloner implements InnerCloner {
 	private final InstantiationStrategy instantiator;
 	private final CloningStrategy parent;
 
-	NormalObjectChildCloner(CloningStrategy parentCloner, InstantiationStrategy instantiationStrategy) {
-		parent = parentCloner;
+	InnerNormalObjectCloner(CloningStrategy outerCloner, InstantiationStrategy instantiationStrategy) {
+		parent = outerCloner;
 		instantiator = instantiationStrategy;
 	}
 
@@ -30,7 +31,7 @@ final class NormalObjectChildCloner implements ChildCloner {
 		Object originalFieldValue = originalReflector.getValue(description);
 		Object cloneFieldValue = originalFieldValue;
 		if (!description.isPrimitive())
-			cloneFieldValue = parent.cloneObjectToClassLoader(originalFieldValue, targetClassLoader);
+			cloneFieldValue = parent.cloneObjectUsingClassLoader(originalFieldValue, targetClassLoader);
 		cloneReflector.setValue(description, cloneFieldValue);
 	}
 }

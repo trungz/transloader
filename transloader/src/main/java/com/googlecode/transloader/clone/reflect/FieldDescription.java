@@ -1,4 +1,4 @@
-package com.googlecode.transloader.clone;
+package com.googlecode.transloader.clone.reflect;
 
 public final class FieldDescription {
 	private final String declaringClassName;
