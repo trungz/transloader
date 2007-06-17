@@ -1,4 +1,5 @@
-package com.googlecode.transloader.clone;
+package com.googlecode.transloader.clone.reflect;
+
 
 public final class MaximalCloningDecisionStrategy implements CloningDecisionStrategy {
 	public boolean shouldCloneObjectItself(Object original, ClassLoader targetClassLoader)

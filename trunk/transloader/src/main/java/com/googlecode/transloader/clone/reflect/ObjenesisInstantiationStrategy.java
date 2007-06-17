@@ -1,4 +1,4 @@
-package com.googlecode.transloader.clone;
+package com.googlecode.transloader.clone.reflect;
 
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;

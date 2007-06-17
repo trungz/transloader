@@ -1,14 +1,15 @@
-package com.googlecode.transloader.clone;
+package com.googlecode.transloader.clone.reflect;
 
 import java.lang.reflect.Array;
 
 import com.googlecode.transloader.ClassWrapper;
+import com.googlecode.transloader.clone.CloningStrategy;
 
-final class ArrayChildCloner implements ChildCloner {
+final class InnerArrayCloner implements InnerCloner {
 	private final CloningStrategy parent;
 
-	ArrayChildCloner(CloningStrategy parentCloner) {
-		parent = parentCloner;
+	InnerArrayCloner(CloningStrategy outerCloner) {
+		parent = outerCloner;
 	}
 
 	public Object instantiateClone(Object originalArray, ClassLoader targetClassLoader) throws Exception {
@@ -20,7 +21,7 @@ final class ArrayChildCloner implements ChildCloner {
 	public void cloneContent(Object original, Object clone, ClassLoader targetClassLoader) throws Exception {
 		for (int i = 0; i < Array.getLength(original); i++) {
 			Object originalComponent = Array.get(original, i);
-			Object cloneComponent = parent.cloneObjectToClassLoader(originalComponent, targetClassLoader);
+			Object cloneComponent = parent.cloneObjectUsingClassLoader(originalComponent, targetClassLoader);
 			Array.set(clone, i, cloneComponent);
 		}
 	}

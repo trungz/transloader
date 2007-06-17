@@ -70,7 +70,7 @@ public final class ObjectWrapper {
 	 * cloning effort. An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored
 	 * entirely for use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s)
 	 * by cloning it back with those original <code>ClassLoader</code>(s), but this is an extra coding step and
-	 * somewhat reduces the effort saved by not using {@link CloningStrategy#MAXIMAL}.
+	 * somewhat reduces the effort saved by not using {@link CloningStrategy#MAXIMAL} in the first place.
 	 * </p>
 	 * 
 	 * @param classLoader the <code>ClassLoader</code> to use in creating an equivalent of the wrapped object
@@ -80,7 +80,7 @@ public final class ObjectWrapper {
 	public Object cloneWith(ClassLoader classLoader) {
 		if (isNull()) return null;
 		try {
-			return cloner.cloneObjectToClassLoader(getUnwrappedSelf(), classLoader);
+			return cloner.cloneObjectUsingClassLoader(getUnwrappedSelf(), classLoader);
 		} catch (Exception e) {
 			throw new TransloaderException("Unable to clone '" + getUnwrappedSelf() + "'.", e);
 		}
@@ -103,7 +103,7 @@ public final class ObjectWrapper {
 			ClassLoader wrappedClassLoader = wrappedClass.getClassLoader();
 			Class[] parameterTypes = ClassWrapper.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
 			Object[] clonedParameters =
-					(Object[]) cloner.cloneObjectToClassLoader(description.getParameters(), wrappedClassLoader);
+					(Object[]) cloner.cloneObjectUsingClassLoader(description.getParameters(), wrappedClassLoader);
 			Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
 			return method.invoke(getUnwrappedSelf(), clonedParameters);
 		} catch (Exception e) {
@@ -113,4 +113,6 @@ public final class ObjectWrapper {
 					e);
 		}
 	}
+
+	// TODO add makeCastableTo(Class interface)
 }

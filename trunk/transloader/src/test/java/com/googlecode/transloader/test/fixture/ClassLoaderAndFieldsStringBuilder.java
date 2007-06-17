@@ -7,10 +7,10 @@ import java.util.Set;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
-import com.googlecode.transloader.clone.FieldDescription;
-import com.googlecode.transloader.clone.FieldReflector;
-import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser;
-import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
+import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser;
+import com.googlecode.transloader.clone.reflect.FieldDescription;
+import com.googlecode.transloader.clone.reflect.FieldReflector;
+import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Traversal;
 
 public class ClassLoaderAndFieldsStringBuilder {
 	private static final String FIELD_SEPERATOR = " ";

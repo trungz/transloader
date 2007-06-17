@@ -70,7 +70,7 @@ public class TransloaderTest extends BaseTestCase {
 		};
 		final Object expectedClone = new Object();
 		CloningStrategy cloningStrategy = new CloningStrategy() {
-			public Object cloneObjectToClassLoader(Object original, ClassLoader cloneClassLoader) throws Exception {
+			public Object cloneObjectUsingClassLoader(Object original, ClassLoader cloneClassLoader) throws Exception {
 				assertSame(expectedOriginal, original);
 				assertSame(expectedClassloader, cloneClassLoader);
 				return expectedClone;
@@ -83,7 +83,7 @@ public class TransloaderTest extends BaseTestCase {
 		final Object expectedOriginal = new Object();
 		final Exception expectedException = new Exception(Triangulator.anyString());
 		final CloningStrategy cloningStrategy = new CloningStrategy() {
-			public Object cloneObjectToClassLoader(Object original, ClassLoader cloneClassLoader) throws Exception {
+			public Object cloneObjectUsingClassLoader(Object original, ClassLoader cloneClassLoader) throws Exception {
 				throw expectedException;
 			}
 		};

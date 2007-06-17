@@ -8,10 +8,10 @@ import junit.framework.Test;
 import com.googlecode.transloader.DefaultTransloaderFactory;
 import com.googlecode.transloader.TransloaderFactory;
 import com.googlecode.transloader.clone.CloningStrategy;
-import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser;
-import com.googlecode.transloader.clone.FieldDescription;
-import com.googlecode.transloader.clone.FieldReflector;
-import com.googlecode.transloader.clone.CyclicReferenceSafeTraverser.Traversal;
+import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser;
+import com.googlecode.transloader.clone.reflect.FieldDescription;
+import com.googlecode.transloader.clone.reflect.FieldReflector;
+import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Traversal;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
 
 // TODO minimal clones of Sets and Maps can be compared by Strings but maximal clones cannot without NullPointerExceptions, so find out why

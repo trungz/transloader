@@ -1,4 +1,4 @@
-package com.googlecode.transloader.clone;
+package com.googlecode.transloader.clone.reflect;
 
 import java.util.Map;
 
