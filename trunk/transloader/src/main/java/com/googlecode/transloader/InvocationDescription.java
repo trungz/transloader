@@ -3,7 +3,7 @@ package com.googlecode.transloader;
 import org.apache.commons.lang.Validate;
 
 /**
- * A description of a method invocation, with method name, parameter type names and parameters.
+ * Describes a method invocation by method name, parameter type names and parameters.
  * 
  * @author Jeremy Wales
  */
@@ -69,8 +69,8 @@ public final class InvocationDescription {
 	 * Constructs an <code>InvocationDescription</code> with the given method name, parameter types and parameters.
 	 * 
 	 * @param methodName the name of a multi-parameter method
-	 * @param parameterTypes some <code>Class</code>es whose names are the same as the parameter types declared in the
-	 *            method
+	 * @param parameterTypes some <code>Class</code>es whose names are the same as the parameter types declared in
+	 *            the method
 	 * @param parameters the parameters to the method invocation
 	 */
 	public InvocationDescription(String methodName, Class[] parameterTypes, Object[] parameters) {
@@ -85,11 +85,11 @@ public final class InvocationDescription {
 	 * @param parameters the parameters to the method invocation
 	 */
 	public InvocationDescription(String methodName, String[] parameterTypeNames, Object[] parameters) {
+		// TODO test this bit
+		Validate.isTrue(parameterTypeNames.length == parameters.length);
 		this.methodName = methodName;
 		this.parameterTypeNames = parameterTypeNames;
 		this.parameters = parameters;
-		// TODO test this bit
-		Validate.isTrue(parameterTypeNames.length == parameters.length);
 	}
 
 	private static Class[] getClasses(Object[] objects) {
