@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 import org.apache.commons.io.input.ClassLoaderObjectInputStream;
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
@@ -21,8 +22,8 @@ public final class SerializationCloningStrategy implements CloningStrategy {
 	 * @throws IOException if input fails during deserialization
 	 * @throws ClassNotFoundException if the <code>targetClassLoader</code> cannot find a required class
 	 */
-	public Object cloneObjectUsingClassLoader(Object original, ClassLoader targetClassLoader) throws IOException,
-			ClassNotFoundException {
+	public Object cloneObjectUsingClassLoader(Object original, ClassLoader targetClassLoader)
+			throws ClassCastException, SerializationException, IOException, ClassNotFoundException {
 		byte[] serializedOriginal = SerializationUtils.serialize((Serializable) original);
 		return new ClassLoaderObjectInputStream(targetClassLoader, new ByteArrayInputStream(serializedOriginal)).readObject();
 	}

@@ -153,10 +153,10 @@
 		<module name="EqualsHashCode" />
 		<!-- Not converned with <module name="HiddenField" /> -->
 		<module name="IllegalInstantiation" />
-		<module name="InnerAssignment" />
+		<!-- Not concerned with <module name="InnerAssignment" /> because it can clarify code as well as obscure it -->
 		<module name="MagicNumber" />
 		<module name="MissingSwitchDefault" />
-		<module name="RedundantThrows" />
+		<!-- I need redundant throws declarations until CheckStyle has access to Classes for checking UndeclaredRTEs <module name="RedundantThrows" /> -->
 		<module name="SimplifyBooleanExpression" />
 		<module name="SimplifyBooleanReturn" />
 		<!-- Checks for class design                         -->
