@@ -55,7 +55,8 @@ public final class ClassWrapper {
 
 	/**
 	 * Indicates whether or not the wrapped <code>Class</code> is assignable to a <code>Class</code> with the given
-	 * name.
+	 * name. It takes a parameter of type <code>String</code> instead of <code>Class</code> so that the test can be
+	 * performed for <code>Class</code>es that do not have an equivalent in the caller's <code>ClassLoader</code>.
 	 * 
 	 * @param typeName the name of the type to check against
 	 * @return true if the wrapped <code>Class</code> is assignable to a <code>Class</code> with the given name

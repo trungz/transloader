@@ -1,6 +1,8 @@
 package com.googlecode.transloader;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 
 import com.googlecode.transloader.clone.CloningStrategy;
@@ -47,14 +49,16 @@ public final class ObjectWrapper {
 
 	/**
 	 * Indicates whether or not the wrapped object is an instance of the type with the given name in the wrapped
-	 * object's <code>ClassLoader</code>(s).
+	 * object's <code>ClassLoader</code>(s). It takes a parameter of type <code>String</code> instead of
+	 * <code>Class</code> so that the test can be performed for <code>Class</code>es that do not have an equivalent
+	 * in the caller's <code>ClassLoader</code>.
 	 * 
 	 * @param typeName the name of the type against which the wrapped object will be checked
 	 * @return true if the wrapped object is an instance of the type with the given name in the wrapped object's
 	 *         <code>ClassLoader</code>(s)
 	 */
 	public boolean isInstanceOf(String typeName) {
-		return TransloaderFactory.DEFAULT.wrap(wrappedObject.getClass()).isAssignableTo(typeName);
+		return Transloader.DEFAULT.wrap(wrappedObject.getClass()).isAssignableTo(typeName);
 	}
 
 	/**
@@ -63,14 +67,14 @@ public final class ObjectWrapper {
 	 * be able to be cast to its respective types in the given <code>ClassLoader</code>.
 	 * <p>
 	 * This implementation employs the <code>CloningStrategy</code> configured at construction. Note that using
-	 * {@link CloningStrategy#MINIMAL}, the default strategy in {@link TransloaderFactory#DEFAULT}, will often effect
-	 * some changes within the object graph that starts with the wrapped object itself, as opposed to producing a
-	 * completely new, seperate graph. Using {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely
-	 * seperate clone without any changes within the wrapped object graph, at the cost of potentially far greater
-	 * cloning effort. An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored
-	 * entirely for use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s)
-	 * by cloning it back with those original <code>ClassLoader</code>(s), but this is an extra coding step and
-	 * somewhat reduces the effort saved by not using {@link CloningStrategy#MAXIMAL} in the first place.
+	 * {@link CloningStrategy#MINIMAL}, the default strategy in {@link Transloader#DEFAULT}, will often effect some
+	 * changes within the object graph that starts with the wrapped object itself, as opposed to producing a completely
+	 * new, seperate graph. Using {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely seperate
+	 * clone without any changes within the wrapped object graph, at the cost of potentially far greater cloning effort.
+	 * An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored entirely for
+	 * use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s) by cloning it
+	 * back with those original <code>ClassLoader</code>(s), but this is an extra coding step and somewhat reduces
+	 * the effort saved by not using {@link CloningStrategy#MAXIMAL} in the first place.
 	 * </p>
 	 * 
 	 * @param classLoader the <code>ClassLoader</code> to use in creating an equivalent of the wrapped object
@@ -99,7 +103,7 @@ public final class ObjectWrapper {
 	public Object invoke(InvocationDescription description) {
 		try {
 			Class wrappedClass = getUnwrappedSelf().getClass();
-			// TODO collect all ClassLoaders from the object graph into an abstraction like eg CollectedClassLoader
+			// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
 			ClassLoader wrappedClassLoader = wrappedClass.getClassLoader();
 			Class[] parameterTypes = ClassWrapper.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
 			Object[] clonedParameters =
@@ -114,5 +118,29 @@ public final class ObjectWrapper {
 		}
 	}
 
-	// TODO add makeCastableTo(Class interface)
+	/**
+	 * Makes an implementation of the given <code>interface</code> that calls through to the wrapped object. This is
+	 * particularly useful if you have access in the current <code>ClassLoader</code> to an <code>interface</code>
+	 * that the wrapped object is expected to implement, except that it actually implements the equivalent from a
+	 * different <code>ClassLoader</code>. It is therefore usefully employed in conjunction with
+	 * {@link #isInstanceOf(String)}.
+	 * <p>
+	 * This method will not fail fast if the wrapped object does not implement it's own <code>ClassLoader</code>'s
+	 * equivalent of the given <code>interface</code>, so can also be used for "duck"-typing, as a more syntactically
+	 * elegant alternative to using {@link #invoke(InvocationDescription)}, if desired.
+	 * </p>
+	 * 
+	 * @param desiredInterface the <code>interface</code> that the returned object can be cast to
+	 * @return a {@link Proxy} to the wrapped object that implements <code>desiredInterface</code>
+	 */
+	public Object makeCastableTo(Class desiredInterface) {
+		// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
+		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {desiredInterface}, new Invoker());
+	}
+
+	private class Invoker implements InvocationHandler {
+		public Object invoke(Object proxy, Method method, Object[] parameters) throws Throwable {
+			return ObjectWrapper.this.invoke(new InvocationDescription(method, parameters));
+		}
+	}
 }
