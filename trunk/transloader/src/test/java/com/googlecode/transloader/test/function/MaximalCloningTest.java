@@ -5,8 +5,8 @@ import java.util.Map;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
-import com.googlecode.transloader.DefaultTransloaderFactory;
-import com.googlecode.transloader.TransloaderFactory;
+import com.googlecode.transloader.DefaultTransloader;
+import com.googlecode.transloader.Transloader;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser;
 import com.googlecode.transloader.clone.reflect.FieldDescription;
@@ -48,7 +48,7 @@ public class MaximalCloningTest extends CloningTestCase {
 		CYCLIC_REFERENCE_TRAVERSER.performWithoutFollowingCircles(notSameTraversal, original);
 	}
 
-	protected TransloaderFactory getTransloaderFactory() {
-		return new DefaultTransloaderFactory(CloningStrategy.MAXIMAL);
+	protected Transloader getTransloaderFactory() {
+		return new DefaultTransloader(CloningStrategy.MAXIMAL);
 	}
 }

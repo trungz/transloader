@@ -1,5 +1,7 @@
 package com.googlecode.transloader;
 
+import java.lang.reflect.Method;
+
 import org.apache.commons.lang.Validate;
 
 /**
@@ -85,11 +87,21 @@ public final class InvocationDescription {
 	 * @param parameters the parameters to the method invocation
 	 */
 	public InvocationDescription(String methodName, String[] parameterTypeNames, Object[] parameters) {
-		// TODO test this bit
-		Validate.isTrue(parameterTypeNames.length == parameters.length);
 		this.methodName = methodName;
-		this.parameterTypeNames = parameterTypeNames;
-		this.parameters = parameters;
+		// TODO test all below
+		this.parameterTypeNames = parameterTypeNames == null ? new String[] {} : parameterTypeNames;
+		this.parameters = parameters == null ? new Object[] {} : parameters;
+		Validate.isTrue(this.parameterTypeNames.length == this.parameters.length);
+	}
+
+	/**
+	 * Constructs an <code>InvocationDescription</code> with the given {@link Method} and parameters.
+	 * 
+	 * @param method the <code>Method</code> to invoke
+	 * @param parameters the parameters to the method invocation
+	 */
+	public InvocationDescription(Method method, Object[] parameters) {
+		this(method.getName(), method.getParameterTypes(), parameters);
 	}
 
 	private static Class[] getClasses(Object[] objects) {

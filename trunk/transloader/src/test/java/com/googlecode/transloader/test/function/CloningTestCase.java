@@ -1,6 +1,6 @@
 package com.googlecode.transloader.test.function;
 
-import com.googlecode.transloader.TransloaderFactory;
+import com.googlecode.transloader.Transloader;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
 import com.googlecode.transloader.test.fixture.HiearchyWithFieldsBottom;
@@ -26,7 +26,7 @@ public abstract class CloningTestCase extends BaseTestCase {
 		return clone;
 	}
 
-	protected abstract TransloaderFactory getTransloaderFactory();
+	protected abstract Transloader getTransloaderFactory();
 
 	public void testClonesObjectsWithPrimitiveFields() throws Exception {
 		assertDeeplyClonedToOtherClassLoader(new WithPrimitiveFields());

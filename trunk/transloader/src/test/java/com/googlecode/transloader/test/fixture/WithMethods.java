@@ -1,6 +1,6 @@
 package com.googlecode.transloader.test.fixture;
 
-public class WithMethods extends NonCommonJavaObject {
+public class WithMethods extends NonCommonJavaObject implements NonCommonJavaTypeWithMethods {
 	private String stringField;
 
 	public String getStringField() {

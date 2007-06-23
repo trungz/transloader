@@ -3,20 +3,20 @@ package com.googlecode.transloader;
 import com.googlecode.transloader.clone.CloningStrategy;
 
 /**
- * The default implementation of <code>TransloaderFactory</code>.
+ * The default implementation of <code>Transloader</code>.
  * 
  * @author Jeremy Wales
  */
-public final class DefaultTransloaderFactory implements TransloaderFactory {
+public final class DefaultTransloader implements Transloader {
 	private final CloningStrategy cloningStrategy;
 
 	/**
-	 * Contructs a new <code>TransloaderFactory</code> which will produce wrappers, the <code>ObjectWrapper</code>s
-	 * being configured with the given <code>CloningStrategy</code>.
+	 * Contructs a new <code>Transloader</code> to produce wrappers, the <code>ObjectWrapper</code>s being
+	 * configured with the given <code>CloningStrategy</code>.
 	 * 
 	 * @param cloningStrategy the <code>CloningStrategy</code> with which to configure <code>ObjectWrapper</code>s
 	 */
-	public DefaultTransloaderFactory(CloningStrategy cloningStrategy) {
+	public DefaultTransloader(CloningStrategy cloningStrategy) {
 		this.cloningStrategy = cloningStrategy;
 	}
 

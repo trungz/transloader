@@ -6,13 +6,14 @@ import junit.framework.Test;
 import com.googlecode.transloader.InvocationDescription;
 import com.googlecode.transloader.ObjectWrapper;
 import com.googlecode.transloader.TransloaderException;
-import com.googlecode.transloader.TransloaderFactory;
+import com.googlecode.transloader.Transloader;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulator;
 import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
+import com.googlecode.transloader.test.fixture.NonCommonJavaTypeWithMethods;
 import com.googlecode.transloader.test.fixture.WithMapFields;
 import com.googlecode.transloader.test.fixture.WithMethods;
 import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
@@ -21,7 +22,7 @@ import com.googlecode.transloader.test.fixture.WithStringField;
 public class TransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
-	private TransloaderFactory transloaderFactory = TransloaderFactory.DEFAULT;
+	private Transloader transloader = Transloader.DEFAULT;
 
 	public static Test suite() throws Exception {
 		return new ActiveTestSuite(TransloaderTest.class);
@@ -37,31 +38,31 @@ public class TransloaderTest extends BaseTestCase {
 	}
 
 	public void testReportsIsNullWhenGivenNull() throws Exception {
-		assertTrue(transloaderFactory.wrap(null).isNull());
+		assertTrue(transloader.wrap(null).isNull());
 	}
 
 	public void testReportsIsNotNullWhenGivenNonNullObject() throws Exception {
-		assertFalse(transloaderFactory.wrap(new Object()).isNull());
+		assertFalse(transloader.wrap(new Object()).isNull());
 	}
 
 	public void testReportsIsNotInstanceOfUnrelatedType() throws Exception {
-		assertFalse(transloaderFactory.wrap(new Object()).isInstanceOf(NonCommonJavaType.class.getName()));
+		assertFalse(transloader.wrap(new Object()).isInstanceOf(NonCommonJavaType.class.getName()));
 	}
 
 	public void testReportsIsInstanceOfSameClass() throws Exception {
-		assertTrue(transloaderFactory.wrap(foreignObject).isInstanceOf(foreignObject.getClass().getName()));
+		assertTrue(transloader.wrap(foreignObject).isInstanceOf(foreignObject.getClass().getName()));
 	}
 
 	public void testReportsIsInstanceOfSuperClass() throws Exception {
-		assertTrue(transloaderFactory.wrap(foreignObject).isInstanceOf(NonCommonJavaObject.class.getName()));
+		assertTrue(transloader.wrap(foreignObject).isInstanceOf(NonCommonJavaObject.class.getName()));
 	}
 
 	public void testReportsIsInstanceOfImplementedInterface() throws Exception {
-		assertTrue(transloaderFactory.wrap(foreignObject).isInstanceOf(NonCommonJavaType.class.getName()));
+		assertTrue(transloader.wrap(foreignObject).isInstanceOf(NonCommonJavaType.class.getName()));
 	}
 
 	public void testReturnsNullWhenAskedToCloneNull() throws Exception {
-		assertNull(transloaderFactory.wrap((Object) null).cloneWith(null));
+		assertNull(transloader.wrap((Object) null).cloneWith(null));
 	}
 
 	public void testReturnsCloneReturnedFromGivenCloningStrategy() throws Exception {
@@ -98,11 +99,11 @@ public class TransloaderTest extends BaseTestCase {
 
 	public void testProvidesWrappedObjectOnRequest() throws Exception {
 		final Object expected = new Object();
-		assertSame(expected, transloaderFactory.wrap(expected).getUnwrappedSelf());
+		assertSame(expected, transloader.wrap(expected).getUnwrappedSelf());
 	}
 
 	public void testPassesAndReturnsStringsToAndFromInvocations() throws Exception {
-		ObjectWrapper objectWrapper = transloaderFactory.wrap(foreignObjectWithMethods);
+		ObjectWrapper objectWrapper = transloader.wrap(foreignObjectWithMethods);
 		String expectedStringFieldValue = Triangulator.anyString();
 		objectWrapper.invoke(new InvocationDescription("setStringField", expectedStringFieldValue));
 		assertSame(expectedStringFieldValue, objectWrapper.invoke(new InvocationDescription("getStringField")));
@@ -115,8 +116,18 @@ public class TransloaderTest extends BaseTestCase {
 		Class[] paramTypes = {NonCommonJavaType.class, NonCommonJavaType.class};
 		Object[] params = {first, second};
 		String actual =
-				(String) transloaderFactory.wrap(foreignObjectWithMethods).invoke(
+				(String) transloader.wrap(foreignObjectWithMethods).invoke(
 						new InvocationDescription("concatenate", paramTypes, params));
 		assertEqualExceptForClassLoader(expected, actual);
+	}
+
+	public void testCreatesAnImplementationOfAGivenInterfaceThatCallsThroughToTheWrappedObject() throws Exception {
+		String expectedStringFieldValue = Triangulator.anyString();
+		Transloader.DEFAULT.wrap(foreignObjectWithMethods).invoke(
+				new InvocationDescription("setStringField", expectedStringFieldValue));
+		NonCommonJavaTypeWithMethods withMethods =
+				(NonCommonJavaTypeWithMethods) transloader.wrap(foreignObjectWithMethods).makeCastableTo(
+						NonCommonJavaTypeWithMethods.class);
+		assertSame(expectedStringFieldValue, withMethods.getStringField());
 	}
 }
