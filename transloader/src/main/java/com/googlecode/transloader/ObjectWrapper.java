@@ -91,14 +91,14 @@ public final class ObjectWrapper {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <p>
 	 * Invokes on the wrapped object the method described by the given invocation description, with the parameters given
 	 * by the same. Finds the method reflectively using parameter types loaded from the wrapped object's
 	 * <code>ClassLoader</code>(s). Any parameters which refer to <code>Class</code>es that are foreign to the
 	 * wrapped object's <code>ClassLoader</code>(s) are cloned using the <code>CloningStrategy</code> injected at
 	 * construction.
-	 * </p>
+	 * 
+	 * @param description the description of the invocation to be performed
+	 * @return the result of performing the invocation described by <code>description</code>
 	 */
 	public Object invoke(InvocationDescription description) {
 		try {
