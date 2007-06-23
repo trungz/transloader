@@ -14,7 +14,7 @@ import com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy;
  */
 public interface CloningStrategy {
 	/**
-	 * The implmentation which clones as little as possible to make the given object graph use <code>Class</code>es
+	 * The implementation which clones as little as possible to make the given object graph use <code>Class</code>es
 	 * that are the same as those that would be loaded through the given <code>ClassLoader</code>. This is the most
 	 * efficient implementation to use simply for the purpose of making sure the returned object graph is perfectly
 	 * compatible with all other objects referencing <code>Class</code>es loaded through the given
