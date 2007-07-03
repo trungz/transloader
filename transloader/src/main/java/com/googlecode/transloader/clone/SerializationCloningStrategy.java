@@ -8,6 +8,8 @@ import org.apache.commons.io.input.ClassLoaderObjectInputStream;
 import org.apache.commons.lang.SerializationException;
 import org.apache.commons.lang.SerializationUtils;
 
+import com.googlecode.transloader.Assert;
+
 /**
  * A <code>CloningStrategy</code> that uses Java Serialization as its mechanism.
  * 
@@ -24,6 +26,7 @@ public final class SerializationCloningStrategy implements CloningStrategy {
 	 */
 	public Object cloneObjectUsingClassLoader(Object original, ClassLoader targetClassLoader)
 			throws ClassCastException, SerializationException, IOException, ClassNotFoundException {
+		Assert.areNotNull(original, targetClassLoader);
 		byte[] serializedOriginal = SerializationUtils.serialize((Serializable) original);
 		return new ClassLoaderObjectInputStream(targetClassLoader, new ByteArrayInputStream(serializedOriginal)).readObject();
 	}

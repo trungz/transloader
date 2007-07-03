@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
+import com.googlecode.transloader.Assert;
 import com.googlecode.transloader.ClassWrapper;
 
 /**
@@ -28,6 +29,7 @@ public final class MinimalCloningDecisionStrategy implements CloningDecisionStra
 	 *         through <code>targetClassLoader</code>
 	 */
 	public boolean shouldCloneObjectItself(Object original, ClassLoader targetClassLoader) {
+		Assert.areNotNull(original, targetClassLoader);
 		return !isSameInClassLoader(original.getClass(), targetClassLoader);
 	}
 
@@ -46,6 +48,7 @@ public final class MinimalCloningDecisionStrategy implements CloningDecisionStra
 	 *         type shared among all <code>ClassLoader</code>s
 	 */
 	public boolean shouldCloneObjectContent(Object original, ClassLoader targetClassLoader) {
+		Assert.areNotNull(original, targetClassLoader);
 		return !isEffectivelyPrimitive(original.getClass());
 	}
 

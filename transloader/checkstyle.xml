@@ -171,8 +171,16 @@
 		<module name="ArrayTypeStyle" />
 		<!-- Not concerned with <module name="FinalParameters" /> -->
 		<module name="GenericIllegalRegexp">
-			<property name="format" value="(?&lt;!\*)\s+$" />
+			<property name="format" value="[^*]\s+$" />
 			<property name="message" value="Non-JavaDoc line has trailing whitespace." />
+		</module>
+		<module name="GenericIllegalRegexp">
+			<property name="format" value="\* \s+$" />
+			<property name="message" value="JavaDoc line has more than one trailing space." />
+		</module>
+		<module name="GenericIllegalRegexp">
+			<property name="format" value="(private|protected|public) (?!(static final|final)).*[=;]" />
+			<property name="message" value="Fields should be final to aid the implementation of thread-safety." />
 		</module>
 		<module name="TodoComment" />
 		<module name="UpperEll" />

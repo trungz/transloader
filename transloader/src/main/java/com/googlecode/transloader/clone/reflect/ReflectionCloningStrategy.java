@@ -2,6 +2,7 @@ package com.googlecode.transloader.clone.reflect;
 
 import java.util.Map;
 
+import com.googlecode.transloader.Assert;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Traversal;
 
@@ -52,6 +53,7 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
 	 */
 	public Object cloneObjectUsingClassLoader(final Object original, final ClassLoader targetClassLoader)
 			throws Exception {
+		Assert.areNotNull(original, targetClassLoader);
 		Traversal cloningTraversal = new Traversal() {
 			public Object traverse(Object currentObject, Map referenceHistory) throws Exception {
 				return ReflectionCloningStrategy.this.clone(currentObject, targetClassLoader, referenceHistory);

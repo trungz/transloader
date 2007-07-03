@@ -23,6 +23,7 @@ public class TransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
 	private Transloader transloader = Transloader.DEFAULT;
+	private ClassLoader dummyClassLoader = (ClassLoader) Triangulator.dummyInstanceOf(ClassLoader.class);
 
 	public static Test suite() throws Exception {
 		return new ActiveTestSuite(TransloaderTest.class);
@@ -62,7 +63,7 @@ public class TransloaderTest extends BaseTestCase {
 	}
 
 	public void testReturnsNullWhenAskedToCloneNull() throws Exception {
-		assertNull(transloader.wrap((Object) null).cloneWith(null));
+		assertNull(transloader.wrap((Object) null).cloneWith(dummyClassLoader));
 	}
 
 	public void testReturnsCloneReturnedFromGivenCloningStrategy() throws Exception {
@@ -83,14 +84,14 @@ public class TransloaderTest extends BaseTestCase {
 	public void testWrapsExceptionThrownByGivenCloningStrategy() throws Exception {
 		final Object expectedOriginal = new Object();
 		final Exception expectedException = new Exception(Triangulator.anyString());
-		final CloningStrategy cloningStrategy = new CloningStrategy() {
+		final CloningStrategy throwingCloningStrategy = new CloningStrategy() {
 			public Object cloneObjectUsingClassLoader(Object original, ClassLoader cloneClassLoader) throws Exception {
 				throw expectedException;
 			}
 		};
 		Thrower thrower = new Thrower() {
 			public void executeUntilThrow() throws Throwable {
-				new ObjectWrapper(expectedOriginal, cloningStrategy).cloneWith(null);
+				new ObjectWrapper(expectedOriginal, throwingCloningStrategy).cloneWith(dummyClassLoader);
 			}
 		};
 		assertThrows(thrower,

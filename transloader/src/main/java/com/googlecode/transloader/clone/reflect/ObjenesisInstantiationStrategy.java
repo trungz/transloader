@@ -3,6 +3,8 @@ package com.googlecode.transloader.clone.reflect;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
+import com.googlecode.transloader.Assert;
+
 /**
  * Uses {@link ObjenesisStd} to create new instances of <code>Class</code>es without invoking their consrtuctors.
  * 
@@ -15,6 +17,7 @@ public final class ObjenesisInstantiationStrategy implements InstantiationStrate
 	 * {@inheritDoc}
 	 */
 	public Object newInstance(Class type) throws Exception {
+		Assert.isNotNull(type);
 		return objenesis.newInstance(type);
 	}
 }
