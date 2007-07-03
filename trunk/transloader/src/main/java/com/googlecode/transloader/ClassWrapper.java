@@ -50,6 +50,7 @@ public final class ClassWrapper {
 	 *         <code>ClassLoader</code>
 	 */
 	public Object getEquivalentFrom(ClassLoader classLoader) {
+		Assert.isNotNull(classLoader);
 		return wrappedClass.isPrimitive() ? wrappedClass : getClass(wrappedClass.getName(), classLoader);
 	}
 
@@ -62,6 +63,7 @@ public final class ClassWrapper {
 	 * @return true if the wrapped <code>Class</code> is assignable to a <code>Class</code> with the given name
 	 */
 	public boolean isAssignableTo(String typeName) {
+		Assert.isNotNull(typeName);
 		return classIsAssignableToType(wrappedClass, typeName);
 	}
 
@@ -74,6 +76,7 @@ public final class ClassWrapper {
 	 * @throws TransloaderException if the <code>Class</code> cannot be found in the given <code>ClassLoader</code>
 	 */
 	public static Class getClass(String className, ClassLoader classLoader) {
+		Assert.areNotNull(className, classLoader);
 		try {
 			return ClassUtils.getClass(classLoader, className, false);
 		} catch (ClassNotFoundException e) {
@@ -92,6 +95,7 @@ public final class ClassWrapper {
 	 *             <code>ClassLoader</code>
 	 */
 	public static Class[] getClasses(String[] classNames, ClassLoader classLoader) {
+		Assert.areNotNull(classNames, classLoader);
 		Class[] classes = new Class[classNames.length];
 		for (int i = 0; i < classes.length; i++) {
 			classes[i] = getClass(classNames[i], classLoader);

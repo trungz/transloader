@@ -58,6 +58,7 @@ public final class ObjectWrapper {
 	 *         <code>ClassLoader</code>(s)
 	 */
 	public boolean isInstanceOf(String typeName) {
+		Assert.isNotNull(typeName);
 		return Transloader.DEFAULT.wrap(wrappedObject.getClass()).isAssignableTo(typeName);
 	}
 
@@ -82,6 +83,7 @@ public final class ObjectWrapper {
 	 *         given <code>ClassLoader</code>
 	 */
 	public Object cloneWith(ClassLoader classLoader) {
+		Assert.isNotNull(classLoader);
 		if (isNull()) return null;
 		try {
 			return cloner.cloneObjectUsingClassLoader(getUnwrappedSelf(), classLoader);
@@ -101,6 +103,7 @@ public final class ObjectWrapper {
 	 * @return the result of performing the invocation described by <code>description</code>
 	 */
 	public Object invoke(InvocationDescription description) {
+		Assert.isNotNull(description);
 		try {
 			Class wrappedClass = getUnwrappedSelf().getClass();
 			// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
@@ -134,6 +137,7 @@ public final class ObjectWrapper {
 	 * @return a {@link Proxy} to the wrapped object that implements <code>desiredInterface</code>
 	 */
 	public Object makeCastableTo(Class desiredInterface) {
+		Assert.isNotNull(desiredInterface);
 		// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
 		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {desiredInterface}, new Invoker());
 	}

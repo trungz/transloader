@@ -1,4 +1,4 @@
-package com.googlecode.transloader.test.fixture;
+package com.googlecode.transloader.test;
 
 import java.lang.reflect.Array;
 import java.util.Map;

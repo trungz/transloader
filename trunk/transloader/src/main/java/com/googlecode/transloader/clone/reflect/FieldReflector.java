@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.googlecode.transloader.Assert;
 import com.googlecode.transloader.ClassWrapper;
 
 /**
@@ -95,6 +96,7 @@ public final class FieldReflector {
 	 */
 	public Object getValue(FieldDescription description) throws ClassNotFoundException, NoSuchFieldException,
 			IllegalAccessException {
+		Assert.isNotNull(description);
 		return getFieldHavingMadeItAccessible(wrappedObject, description, classLoader).get(wrappedObject);
 	}
 
@@ -115,6 +117,7 @@ public final class FieldReflector {
 	 */
 	public void setValue(FieldDescription description, Object fieldValue) throws ClassNotFoundException,
 			NoSuchFieldException, IllegalAccessException {
+		Assert.areNotNull(description, fieldValue);
 		getFieldHavingMadeItAccessible(wrappedObject, description, classLoader).set(wrappedObject, fieldValue);
 	}
 
