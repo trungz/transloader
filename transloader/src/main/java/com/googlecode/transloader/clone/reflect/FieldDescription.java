@@ -1,5 +1,7 @@
 package com.googlecode.transloader.clone.reflect;
 
+import com.googlecode.transloader.Assert;
+
 /**
  * Describes a field by its name, declaring class name and whether or not it is it of primitive type.
  * 
@@ -19,22 +21,10 @@ public final class FieldDescription {
 	 * @param declaredType the declared type of the field
 	 */
 	public FieldDescription(Class declaringClass, String fieldName, Class declaredType) {
-		this(declaringClass.getName(), fieldName, declaredType.isPrimitive());
-	}
-
-	// TODO storing whether or not a field is primitive here feels slightly broken
-	/**
-	 * Constructs a <code>FieldDescription</code> with the given declaring class name, field name and primitive type
-	 * indicator.
-	 * 
-	 * @param declaringClassName the <code>Class</code> that declares the field
-	 * @param fieldName the name of the field
-	 * @param primitive indicates whether or the declared type of the field is primitive
-	 */
-	public FieldDescription(String declaringClassName, String fieldName, boolean primitive) {
-		this.declaringClassName = declaringClassName;
+		Assert.areNotNull(declaringClass, fieldName, declaredType);
+		this.declaringClassName = declaringClass.getName();
 		this.fieldName = fieldName;
-		this.primitive = primitive;
+		this.primitive = declaredType.isPrimitive();
 	}
 
 	/**

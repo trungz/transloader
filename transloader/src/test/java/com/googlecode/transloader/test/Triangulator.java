@@ -67,7 +67,11 @@ public final class Triangulator {
 	}
 
 	public static Class anyClass() {
-		return MY_METHODS[anyIntFromZeroTo(MY_METHODS.length - 1)].getReturnType();
+		return anyMethod().getReturnType();
+	}
+
+	public static Method anyMethod() {
+		return MY_METHODS[anyIntFromZeroTo(MY_METHODS.length - 1)];
 	}
 
 	public static Object dummyInstanceOf(Class type) {

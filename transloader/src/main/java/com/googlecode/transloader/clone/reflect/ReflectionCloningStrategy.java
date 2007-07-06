@@ -32,6 +32,7 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
 	 */
 	public ReflectionCloningStrategy(CloningDecisionStrategy cloningDecisionStrategy,
 			InstantiationStrategy instantiator, CloningStrategy fallbackCloningStrategy) {
+		Assert.areNotNull(cloningDecisionStrategy, instantiator, fallbackCloningStrategy);
 		decider = cloningDecisionStrategy;
 		arrayCloner = new InnerArrayCloner(this);
 		normalObjectCloner = new InnerNormalObjectCloner(this, instantiator);

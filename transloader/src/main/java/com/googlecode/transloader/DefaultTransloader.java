@@ -7,7 +7,7 @@ import com.googlecode.transloader.clone.CloningStrategy;
  * 
  * @author Jeremy Wales
  */
-public final class DefaultTransloader implements Transloader, AcceptsNullMethodParams {
+public final class DefaultTransloader implements Transloader {
 	private final CloningStrategy cloningStrategy;
 
 	/**
@@ -17,6 +17,7 @@ public final class DefaultTransloader implements Transloader, AcceptsNullMethodP
 	 * @param cloningStrategy the <code>CloningStrategy</code> with which to configure <code>ObjectWrapper</code>s
 	 */
 	public DefaultTransloader(CloningStrategy cloningStrategy) {
+		Assert.isNotNull(cloningStrategy);
 		this.cloningStrategy = cloningStrategy;
 	}
 
