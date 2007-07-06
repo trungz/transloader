@@ -43,6 +43,7 @@ public final class FieldReflector {
 	 *            {@link FieldDescription#getDeclaringClassName()}
 	 */
 	public FieldReflector(Object objectToWrap, ClassLoader classLoaderToUse) {
+		Assert.areNotNull(objectToWrap, classLoaderToUse);
 		wrappedObject = objectToWrap;
 		classLoader = classLoaderToUse;
 	}
@@ -130,6 +131,7 @@ public final class FieldReflector {
 	}
 
 	private static ClassLoader getClassLoader(Object object) {
+		Assert.isNotNull(object);
 		ClassLoader classLoader = object.getClass().getClassLoader();
 		return classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader;
 	}

@@ -25,6 +25,7 @@ public final class ObjectWrapper {
 	 * @param cloningStrategy the strategy for cloning
 	 */
 	public ObjectWrapper(Object objectToWrap, CloningStrategy cloningStrategy) {
+		Assert.isNotNull(cloningStrategy);
 		wrappedObject = objectToWrap;
 		cloner = cloningStrategy;
 	}
@@ -128,18 +129,18 @@ public final class ObjectWrapper {
 	 * different <code>ClassLoader</code>. It is therefore usefully employed in conjunction with
 	 * {@link #isInstanceOf(String)}.
 	 * <p>
-	 * This method will not fail fast if the wrapped object does not implement it's own <code>ClassLoader</code>'s
-	 * equivalent of the given <code>interface</code>, so can also be used for "duck"-typing, as a more syntactically
+	 * This method will not fail fast if the wrapped object does not implement its own <code>ClassLoader</code>'s
+	 * equivalent to the given <code>interface</code>, so can also be used for "duck"-typing, as a more syntactically
 	 * elegant alternative to using {@link #invoke(InvocationDescription)}, if desired.
 	 * </p>
 	 * 
-	 * @param desiredInterface the <code>interface</code> that the returned object can be cast to
+	 * @param targetInterface the <code>interface</code> that the returned object can be cast to
 	 * @return a {@link Proxy} to the wrapped object that implements <code>desiredInterface</code>
 	 */
-	public Object makeCastableTo(Class desiredInterface) {
-		Assert.isNotNull(desiredInterface);
+	public Object makeCastableTo(Class targetInterface) {
+		Assert.isNotNull(targetInterface);
 		// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
-		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {desiredInterface}, new Invoker());
+		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {targetInterface}, new Invoker());
 	}
 
 	private class Invoker implements InvocationHandler {

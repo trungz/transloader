@@ -2,14 +2,13 @@ package com.googlecode.transloader;
 
 import java.lang.reflect.Method;
 
-import org.apache.commons.lang.Validate;
-
 /**
  * Describes a method invocation by method name, parameter type names and parameters.
  * 
  * @author Jeremy Wales
  */
 public final class InvocationDescription {
+	private static final String[] NO_PARAMS = new String[] {};
 	private final String methodName;
 	private final String[] parameterTypeNames;
 	private final Object[] parameters;
@@ -20,15 +19,15 @@ public final class InvocationDescription {
 	 * @param methodName the name of a zero-parameter method
 	 */
 	public InvocationDescription(String methodName) {
-		this(methodName, new String[] {}, new Object[] {});
+		this(methodName, NO_PARAMS, NO_PARAMS);
 	}
 
 	/**
 	 * Constructs an <code>InvocationDescription</code> with the given method name and parameter.
 	 * 
 	 * @param methodName the name of a single-parameter method
-	 * @param parameter a parameter whose type name declared in the method is the same as the name of its concrete
-	 *            implementation <code>Class</code>
+	 * @param parameter a parameter whose concrete implementation <code>Class</code> has the same name as its type
+	 *            declared in the targeted method (therefore cannot be <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, Object parameter) {
 		this(methodName, new Object[] {parameter});
@@ -38,8 +37,8 @@ public final class InvocationDescription {
 	 * Constructs an <code>InvocationDescription</code> with the given method name and parameters.
 	 * 
 	 * @param methodName the name of a multi-parameter method
-	 * @param parameters some parameters whose type names declared in the method are the same as the names of their
-	 *            concrete implementation <code>Class</code>es
+	 * @param parameters some parameters whose concrete implementation <code>Class</code>es have the same names as
+	 *            their types declared in the targeted method (therefore cannot contain <code>null</code>s)
 	 */
 	public InvocationDescription(String methodName, Object[] parameters) {
 		this(methodName, getClasses(parameters), parameters);
@@ -72,7 +71,7 @@ public final class InvocationDescription {
 	 * 
 	 * @param methodName the name of a multi-parameter method
 	 * @param parameterTypes some <code>Class</code>es whose names are the same as the parameter types declared in
-	 *            the method
+	 *            the targeted method
 	 * @param parameters the parameters to the method invocation
 	 */
 	public InvocationDescription(String methodName, Class[] parameterTypes, Object[] parameters) {
@@ -83,15 +82,18 @@ public final class InvocationDescription {
 	 * Constructs an <code>InvocationDescription</code> with the given method name, parameter type name and parameter.
 	 * 
 	 * @param methodName the name of a single-parameter method
-	 * @param parameterTypeNames the names of the parameter types declared in the method
-	 * @param parameters the parameters to the method invocation
+	 * @param parameterTypeNames the names of the parameter types declared in the method (cannot be or contain
+	 *            <code>null</code>)
+	 * @param parameters the parameters to the method invocation (cannot be but can <i>contain</i> <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, String[] parameterTypeNames, Object[] parameters) {
+		Assert.areNotNull(methodName, parameters);
+		Assert.areNotNull(parameterTypeNames);
+		// TODO test this assertion
+		Assert.areSameLength(parameterTypeNames, parameters);
 		this.methodName = methodName;
-		// TODO test all below
-		this.parameterTypeNames = parameterTypeNames == null ? new String[] {} : parameterTypeNames;
-		this.parameters = parameters == null ? new Object[] {} : parameters;
-		Validate.isTrue(this.parameterTypeNames.length == this.parameters.length);
+		this.parameterTypeNames = parameterTypeNames;
+		this.parameters = parameters;
 	}
 
 	/**
@@ -101,10 +103,12 @@ public final class InvocationDescription {
 	 * @param parameters the parameters to the method invocation
 	 */
 	public InvocationDescription(Method method, Object[] parameters) {
-		this(method.getName(), method.getParameterTypes(), parameters);
+		this(((Method) Assert.isNotNull(method)).getName(), method.getParameterTypes(), parameters == null ? NO_PARAMS
+				: parameters);
 	}
 
 	private static Class[] getClasses(Object[] objects) {
+		Assert.areNotNull(objects);
 		Class[] classes = new Class[objects.length];
 		for (int i = 0; i < objects.length; i++) {
 			classes[i] = objects[i].getClass();
@@ -113,6 +117,7 @@ public final class InvocationDescription {
 	}
 
 	private static String[] getNames(Class[] classes) {
+		Assert.areNotNull(classes);
 		String[] names = new String[classes.length];
 		for (int i = 0; i < classes.length; i++) {
 			names[i] = classes[i].getName();

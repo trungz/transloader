@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 public class ProductionClassFinder {
 	private static final String CLASS_EXTENSION = ".class";
@@ -20,17 +21,20 @@ public class ProductionClassFinder {
 	private ProductionClassFinder() {
 	}
 
-	public static Class[] getAllProductionClasses(Class exampleProductionClass, String nonProductionRootPackageName)
-			throws Exception {
-		File rootDirectory = getRootDirectoryOf(exampleProductionClass);
-		List classes = new ArrayList();
-		Collection classFiles = FileUtils.listFiles(rootDirectory, new String[] {"class"}, true);
-		for (Iterator iterator = classFiles.iterator(); iterator.hasNext();) {
-			File classFile = (File) iterator.next();
-			String className = getClassName(rootDirectory, classFile);
-			if (!className.startsWith(nonProductionRootPackageName)) classes.add(ClassUtils.getClass(className));
+	public static Class[] getAllProductionClasses(Class exampleProductionClass, String nonProductionRootPackageName) {
+		try {
+			File rootDirectory = getRootDirectoryOf(exampleProductionClass);
+			List classes = new ArrayList();
+			Collection classFiles = FileUtils.listFiles(rootDirectory, new String[] {"class"}, true);
+			for (Iterator iterator = classFiles.iterator(); iterator.hasNext();) {
+				File classFile = (File) iterator.next();
+				String className = getClassName(rootDirectory, classFile);
+				if (!className.startsWith(nonProductionRootPackageName)) classes.add(ClassUtils.getClass(className));
+			}
+			return (Class[]) classes.toArray(new Class[classes.size()]);
+		} catch (Exception e) {
+			throw new NestableRuntimeException(e);
 		}
-		return (Class[]) classes.toArray(new Class[classes.size()]);
 	}
 
 	private static File getRootDirectoryOf(Class clazz) throws MalformedURLException {
