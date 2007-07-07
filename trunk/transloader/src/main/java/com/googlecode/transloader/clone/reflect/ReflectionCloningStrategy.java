@@ -46,11 +46,11 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
 	 * given object graph.
 	 * </p>
 	 * 
-	 * @returned a completely or partially cloned object graph, depending on the <code>CloningDecisionStrategy</code>
-	 *           injected in
-	 *           {@link #ReflectionCloningStrategy(CloningDecisionStrategy, InstantiationStrategy, CloningStrategy)},
-	 *           with potentially the <code>original</code> itself being the top-level object in the graph returned if
-	 *           it was not cloned
+	 * @return a completely or partially cloned object graph, depending on the <code>CloningDecisionStrategy</code>
+	 *         injected in
+	 *         {@link #ReflectionCloningStrategy(CloningDecisionStrategy, InstantiationStrategy, CloningStrategy)},
+	 *         with potentially the <code>original</code> itself being the top-level object in the graph returned if
+	 *         it was not cloned
 	 */
 	public Object cloneObjectUsingClassLoader(final Object original, final ClassLoader targetClassLoader)
 			throws Exception {

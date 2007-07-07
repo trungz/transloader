@@ -27,7 +27,7 @@ public class MinimalCloningTest extends CloningTestCase {
 		assertDeeplyClonedToOtherClassLoader(new WithMapFields());
 	}
 
-	protected Transloader getTransloaderFactory() {
+	protected Transloader getTransloader() {
 		return Transloader.DEFAULT;
 	}
 }

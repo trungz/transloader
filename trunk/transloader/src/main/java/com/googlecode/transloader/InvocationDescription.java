@@ -49,7 +49,7 @@ public final class InvocationDescription {
 	 * 
 	 * @param methodName the name of a single-parameter method
 	 * @param parameterType a <code>Class</code> whose name is the same as the parameter type declared in the method
-	 * @param parameter the parameter to the method invocation
+	 * @param parameter the parameter to the method invocation (can be <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, Class parameterType, Object parameter) {
 		this(methodName, new Class[] {parameterType}, new Object[] {parameter});
@@ -60,7 +60,7 @@ public final class InvocationDescription {
 	 * 
 	 * @param methodName the name of a single-parameter method
 	 * @param parameterTypeName the name of the parameter type declared in the method
-	 * @param parameter the parameter to the method invocation
+	 * @param parameter the parameter to the method invocation (can be <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, String parameterTypeName, Object parameter) {
 		this(methodName, new String[] {parameterTypeName}, new Object[] {parameter});
@@ -72,7 +72,7 @@ public final class InvocationDescription {
 	 * @param methodName the name of a multi-parameter method
 	 * @param parameterTypes some <code>Class</code>es whose names are the same as the parameter types declared in
 	 *            the targeted method
-	 * @param parameters the parameters to the method invocation
+	 * @param parameters the parameters to the method invocation (cannot be but can <i>contain</i> <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, Class[] parameterTypes, Object[] parameters) {
 		this(methodName, getNames(parameterTypes), parameters);
@@ -100,7 +100,7 @@ public final class InvocationDescription {
 	 * Constructs an <code>InvocationDescription</code> with the given {@link Method} and parameters.
 	 * 
 	 * @param method the <code>Method</code> to invoke
-	 * @param parameters the parameters to the method invocation
+	 * @param parameters the parameters to the method invocation (can actually be <code>null</code>)
 	 */
 	public InvocationDescription(Method method, Object[] parameters) {
 		this(((Method) Assert.isNotNull(method)).getName(), method.getParameterTypes(), parameters == null ? NO_PARAMS
