@@ -48,7 +48,7 @@ public class MaximalCloningTest extends CloningTestCase {
 		CYCLIC_REFERENCE_TRAVERSER.performWithoutFollowingCircles(notSameTraversal, original);
 	}
 
-	protected Transloader getTransloaderFactory() {
+	protected Transloader getTransloader() {
 		return new DefaultTransloader(CloningStrategy.MAXIMAL);
 	}
 }

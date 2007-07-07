@@ -8,6 +8,7 @@ import com.googlecode.transloader.clone.CloningStrategy;
  * @author Jeremy Wales
  */
 public interface Transloader {
+	// TODO make CloningStrategy#MAXIMAL the default because it has less potential to surprise
 	/**
 	 * The default implementation of <code>Transloader</code> which will produce {@link ObjectWrapper}s configured
 	 * with {@link CloningStrategy#MINIMAL} for <code>Object</code>s and {@link ClassWrapper}s for
