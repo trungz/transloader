@@ -187,6 +187,7 @@
 						<link>http://jakarta.apache.org/commons/lang/api-2.2/</link>
 						<link>http://jakarta.apache.org/commons/io/api-1.3/</link>
 						<link>http://jakarta.apache.org/commons/collections/api-3.2/</link>
+						<link>http://objenesis.googlecode.com/svn/docs/apidocs/</link>
 					</links>
 				</configuration>
 			</plugin>
