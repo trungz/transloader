@@ -6,7 +6,7 @@ import org.objenesis.ObjenesisStd;
 import com.googlecode.transloader.Assert;
 
 /**
- * Uses {@link ObjenesisStd} to create new instances of <code>Class</code>es without invoking their consrtuctors.
+ * Uses {@link ObjenesisStd} to create new instances of <code>Class</code>es without invoking their constructors.
  * 
  * @author Jeremy Wales
  */
