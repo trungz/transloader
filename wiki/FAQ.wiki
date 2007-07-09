@@ -1,7 +1,7 @@
 = Frequently Asked Questions =
 
 ===When will you have some documentation?===
-The !JavaDoc is already [file:///C:/work/osgi-test-runner-workspace/Transloader/target/site/apidocs/index.html here], where the central `interface` [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/Transloader.html Transloader] is a good place to start. A [Tutorial] will be filled out shortly.
+The !JavaDoc is already [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/index.html here], where the central `interface` [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/Transloader.html Transloader] is a good place to start. A [Tutorial] will be filled out shortly.
 
 ===Can I help at all?===
 Yes! Use the library and let me know what you think and where it could be improved. Check out the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/taglist.html TODOs] to see actual code contributions that would already be welcomed. Email jeremywales@gmail.com to let me know how you might like to help.
