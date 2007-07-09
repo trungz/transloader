@@ -15,7 +15,8 @@ public final class ClassWrapper {
 	private final Class wrappedClass;
 
 	/**
-	 * Constructs a new <code>ClassWrapper</code> around the given <code>Class</code>.
+	 * Constructs a new <code>ClassWrapper</code> around the given <code>Class</code>. Note that using
+	 * implementation of {@link Transloader} is the recommended way to produce these.
 	 * 
 	 * @param classToWrap the <code>Class</code> to wrap
 	 */
@@ -38,6 +39,7 @@ public final class ClassWrapper {
 	 * @return the actual wrapped <code>Class</code> without any wrapping
 	 */
 	public Class getUnwrappedSelf() {
+		// TODO test Class getUnwrappedSelf() or remove
 		return wrappedClass;
 	}
 
@@ -51,6 +53,7 @@ public final class ClassWrapper {
 	 */
 	public Object getEquivalentFrom(ClassLoader classLoader) {
 		Assert.isNotNull(classLoader);
+		// TODO test getEquivalentFrom(ClassLoader) or remove
 		return wrappedClass.isPrimitive() ? wrappedClass : getClass(wrappedClass.getName(), classLoader);
 	}
 
@@ -80,6 +83,7 @@ public final class ClassWrapper {
 		try {
 			return ClassUtils.getClass(classLoader, className, false);
 		} catch (ClassNotFoundException e) {
+			// TODO test ClassNotFoundException
 			throw new TransloaderException(
 					"Unable to load Class '" + className + "' from ClassLoader '" + classLoader + "'.", e);
 		}

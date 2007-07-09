@@ -19,14 +19,14 @@ import com.googlecode.transloader.test.fixture.WithMethods;
 import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
 import com.googlecode.transloader.test.fixture.WithStringField;
 
-public class TransloaderTest extends BaseTestCase {
+public class GeneralTransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
 	private Transloader transloader = Transloader.DEFAULT;
 	private ClassLoader dummyClassLoader = (ClassLoader) Triangulator.dummyInstanceOf(ClassLoader.class);
 
 	public static Test suite() throws Exception {
-		return new ActiveTestSuite(TransloaderTest.class);
+		return new ActiveTestSuite(GeneralTransloaderTest.class);
 	}
 
 	protected void setUp() throws Exception {
@@ -107,7 +107,7 @@ public class TransloaderTest extends BaseTestCase {
 		ObjectWrapper objectWrapper = transloader.wrap(foreignObjectWithMethods);
 		String expectedStringFieldValue = Triangulator.anyString();
 		objectWrapper.invoke(new InvocationDescription("setStringField", expectedStringFieldValue));
-		assertSame(expectedStringFieldValue, objectWrapper.invoke(new InvocationDescription("getStringField")));
+		assertEquals(expectedStringFieldValue, objectWrapper.invoke(new InvocationDescription("getStringField")));
 	}
 
 	public void testClonesParametersOfNonCommonJavaTypesInInvocations() throws Exception {
@@ -129,6 +129,6 @@ public class TransloaderTest extends BaseTestCase {
 		NonCommonJavaTypeWithMethods withMethods =
 				(NonCommonJavaTypeWithMethods) transloader.wrap(foreignObjectWithMethods).makeCastableTo(
 						NonCommonJavaTypeWithMethods.class);
-		assertSame(expectedStringFieldValue, withMethods.getStringField());
+		assertEquals(expectedStringFieldValue, withMethods.getStringField());
 	}
 }

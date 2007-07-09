@@ -24,8 +24,8 @@ public interface CloningStrategy {
 	 * pre-Java-5 JVM).
 	 * <p>
 	 * However, the fact that it only clones what is necessary to make the object graph compatible with the given
-	 * <code>ClassLoader</code> means that usually <b>not all</b> of the object graph will be cloned. This means
-	 * that, depending on the <code>Class</code>es in the object graph and which of these is the same if loaded
+	 * <code>ClassLoader</code> means that usually <b>not all</b> of the objects in the graph will be cloned. This
+	 * means that, depending on the <code>Class</code>es in the object graph and which of these is the same if loaded
 	 * through the given <code>ClassLoader</code>, it is possible that a top level object is not cloned but objects
 	 * it references through fields are cloned. This effectively means that the existing object graph can be altered
 	 * rather than a new, purely seperate object graph being created. This <b>may not be what you want</b> if you want
@@ -45,8 +45,8 @@ public interface CloningStrategy {
 	 * loaded through the given <code>ClassLoader</code> is returned. Only primitives, which are not
 	 * <code>Object</code>s, are not cloned because they cannot be, as there is no concept of different references to
 	 * the same primitive value in Java. Similiar in behaviour to {@link SerializationCloningStrategy} except that it
-	 * can clone more object graphs because it does not rely on objects being {@link java.io.Serializable} and also
-	 * performs much faster than serialization.
+	 * can clone more object graphs because it does not rely on all referenced objects being
+	 * {@link java.io.Serializable} and also performs much faster than serialization.
 	 * 
 	 * @see ReflectionCloningStrategy
 	 * @see MaximalCloningDecisionStrategy
