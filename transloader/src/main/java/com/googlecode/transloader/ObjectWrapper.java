@@ -19,7 +19,8 @@ public final class ObjectWrapper {
 
 	/**
 	 * Constructs a new <code>ObjectWrapper</code> around the given object, which will use the given
-	 * <code>CloningStrategy</code> when required.
+	 * <code>CloningStrategy</code> when required. Note that using implementation of {@link Transloader} is the
+	 * recommended way to produce these.
 	 * 
 	 * @param objectToWrap the object to wrap
 	 * @param cloningStrategy the strategy for cloning
@@ -69,14 +70,14 @@ public final class ObjectWrapper {
 	 * be able to be cast to its respective types in the given <code>ClassLoader</code>.
 	 * <p>
 	 * This implementation employs the <code>CloningStrategy</code> configured at construction. Note that using
-	 * {@link CloningStrategy#MINIMAL}, the default strategy in {@link Transloader#DEFAULT}, will often effect some
-	 * changes within the object graph that starts with the wrapped object itself, as opposed to producing a completely
-	 * new, seperate graph. Using {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely seperate
-	 * clone without any changes within the wrapped object graph, at the cost of potentially far greater cloning effort.
-	 * An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored entirely for
-	 * use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s) by cloning it
-	 * back with those original <code>ClassLoader</code>(s), but this is an extra coding step and somewhat reduces
-	 * the effort saved by not using {@link CloningStrategy#MAXIMAL} in the first place.
+	 * {@link CloningStrategy#MINIMAL} (which is not the default strategy in {@link Transloader#DEFAULT}) will often
+	 * effect some changes within the object graph that starts with the wrapped object itself, as opposed to producing a
+	 * completely new, seperate graph. Using {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely
+	 * seperate clone without any changes within the wrapped object graph, at the cost of potentially far greater
+	 * cloning effort. An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored
+	 * entirely for use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s)
+	 * by cloning it back with those original <code>ClassLoader</code>(s), but this is an extra coding step and
+	 * somewhat reduces the effort saved by not using {@link CloningStrategy#MAXIMAL} in the first place.
 	 * </p>
 	 * 
 	 * @param classLoader the <code>ClassLoader</code> to use in creating an equivalent of the wrapped object
@@ -115,7 +116,7 @@ public final class ObjectWrapper {
 			Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
 			return method.invoke(getUnwrappedSelf(), clonedParameters);
 		} catch (Exception e) {
-			// TODO test this bit
+			// TODO test Exception from invoke
 			throw new TransloaderException(
 					"Unable to invoke '" + description.getMethodName() + Arrays.asList(description.getParameterTypeNames()) + "' on '" + getUnwrappedSelf() + "'.",
 					e);

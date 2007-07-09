@@ -3,7 +3,9 @@ package com.googlecode.transloader.test.function;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
+import com.googlecode.transloader.DefaultTransloader;
 import com.googlecode.transloader.Transloader;
+import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.Triangulator;
 import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.WithMapFields;
@@ -16,7 +18,7 @@ public class MinimalCloningTest extends CloningTestCase {
 
 	public void testDoesNotCloneStrings() throws Exception {
 		Object string = Triangulator.anyString();
-		assertSame(string, Transloader.DEFAULT.wrap(string).cloneWith(IndependentClassLoader.getInstance()));
+		assertSame(string, getTransloader().wrap(string).cloneWith(IndependentClassLoader.getInstance()));
 	}
 
 	public void testClonesObjectsWithSetFields() throws Exception {
@@ -28,6 +30,6 @@ public class MinimalCloningTest extends CloningTestCase {
 	}
 
 	protected Transloader getTransloader() {
-		return Transloader.DEFAULT;
+		return new DefaultTransloader(CloningStrategy.MINIMAL);
 	}
 }

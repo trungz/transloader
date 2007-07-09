@@ -5,9 +5,7 @@ import java.util.Map;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
-import com.googlecode.transloader.DefaultTransloader;
 import com.googlecode.transloader.Transloader;
-import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser;
 import com.googlecode.transloader.clone.reflect.FieldDescription;
 import com.googlecode.transloader.clone.reflect.FieldReflector;
@@ -49,6 +47,6 @@ public class MaximalCloningTest extends CloningTestCase {
 	}
 
 	protected Transloader getTransloader() {
-		return new DefaultTransloader(CloningStrategy.MAXIMAL);
+		return Transloader.DEFAULT;
 	}
 }

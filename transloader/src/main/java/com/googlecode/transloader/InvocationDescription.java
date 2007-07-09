@@ -52,6 +52,7 @@ public final class InvocationDescription {
 	 * @param parameter the parameter to the method invocation (can be <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, Class parameterType, Object parameter) {
+		// TODO test InvocationDescription(String methodName, Class parameterType, Object parameter)
 		this(methodName, new Class[] {parameterType}, new Object[] {parameter});
 	}
 
@@ -63,6 +64,7 @@ public final class InvocationDescription {
 	 * @param parameter the parameter to the method invocation (can be <code>null</code>)
 	 */
 	public InvocationDescription(String methodName, String parameterTypeName, Object parameter) {
+		// TODO test InvocationDescription(String methodName, String parameterTypeName, Object parameter)
 		this(methodName, new String[] {parameterTypeName}, new Object[] {parameter});
 	}
 
@@ -89,7 +91,7 @@ public final class InvocationDescription {
 	public InvocationDescription(String methodName, String[] parameterTypeNames, Object[] parameters) {
 		Assert.areNotNull(methodName, parameters);
 		Assert.areNotNull(parameterTypeNames);
-		// TODO test this assertion
+		// TODO test different number of params to paramTypes
 		Assert.areSameLength(parameterTypeNames, parameters);
 		this.methodName = methodName;
 		this.parameterTypeNames = parameterTypeNames;
