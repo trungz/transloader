@@ -44,20 +44,6 @@ public final class ClassWrapper {
 	}
 
 	/**
-	 * Loads the <code>Class</code> with the same name as the wrapped <code>Class</code> from the given
-	 * <code>ClassLoader</code>.
-	 * 
-	 * @param classLoader the <code>ClassLoader</code> with which to load the <code>Class</code>
-	 * @return the <code>Class</code> with the same name as the wrapped <code>Class</code> loaded by the given
-	 *         <code>ClassLoader</code>
-	 */
-	public Object getEquivalentFrom(ClassLoader classLoader) {
-		Assert.isNotNull(classLoader);
-		// TODO test getEquivalentFrom(ClassLoader) or remove
-		return wrappedClass.isPrimitive() ? wrappedClass : getClass(wrappedClass.getName(), classLoader);
-	}
-
-	/**
 	 * Indicates whether or not the wrapped <code>Class</code> is assignable to a <code>Class</code> with the given
 	 * name. It takes a parameter of type <code>String</code> instead of <code>Class</code> so that the test can be
 	 * performed for <code>Class</code>es that do not have an equivalent in the caller's <code>ClassLoader</code>.

@@ -4,29 +4,41 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.transloader</groupId>
 	<artifactId>transloader</artifactId>
-	<packaging>bundle</packaging>
-	<version>0.2</version>
+	<packaging>jar</packaging>
+	<version>0.3</version>
 	<description>Bridges the divide between ClassLoaders</description>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<version>0.8.0-incubator</version>
-				<extensions>true</extensions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<instructions>
-						<Export-Package>${pom.groupId}*</Export-Package>
-						<Import-Package>!sun.reflect,*</Import-Package>
-						<!-- BND would let me just put "@objenesis-1.0.jar" but this plugin makes ALL expressions relative to the POM file. -->
-						<!-- TODO Raise with the Feilx Users List re the plugin OR bundlize Objenesis and just import it. -->
-						<Include-Resource>
-							<![CDATA[@../../../Documents and Settings/Jeremy/.m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0.jar]]>
-						</Include-Resource>
-						<Bundle-SymbolicName>${pom.groupId}</Bundle-SymbolicName>
-						<Bundle-RequiredExecutionEnvironment>J2SE-1.3</Bundle-RequiredExecutionEnvironment>
-					</instructions>
+					<archive>
+						<manifestFile>META-INF/MANIFEST.MF</manifestFile>
+					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>minijar-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>ueberjar</goal>
+						</goals>
+						<configuration>
+							<name>[artifactId]-[version]-withdeps.jar</name>
+							<excludeDependencies>
+								<param>junit:junit</param>
+								<param>cglib:cglib-full</param>
+							</excludeDependencies>
+							<archive>
+								<manifestFile>META-INF/MANIFEST.MF</manifestFile>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -52,59 +64,28 @@
 	</build>
 	<repositories>
 		<repository>
-			<id>apache.m2.incubator</id>
-			<name>Apache M2 Incubator Repository</name>
-			<url>http://people.apache.org/repo/m2-incubating-repository/</url>
-			<snapshots>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>safehaus-repository</id>
-			<name>Safehaus Repository</name>
-			<url>http://m2.safehaus.org</url>
-		</repository>
-		<repository>
-			<id>apache-snapshot-repo</id>
-			<name>Apache snapshot repo</name>
-			<url>http://people.apache.org/maven-snapshot-repository</url>
-			<snapshots>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
 			<id>maven-repo</id>
 			<name>maven repo</name>
 			<url>http://repo1.maven.org/maven2/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>apache.m2.incubator</id>
-			<name>Apache M2 Incubator Repository</name>
-			<url>http://people.apache.org/repo/m2-incubating-repository/</url>
-			<snapshots>
-				<updatePolicy>never</updatePolicy>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>org.apache.felix.commons</groupId>
-			<artifactId>org.apache.felix.commons.commons-lang</artifactId>
-			<version>2.2.0-0001-SNAPSHOT</version>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.felix.commons</groupId>
-			<artifactId>org.apache.felix.commons.commons-io</artifactId>
-			<version>1.3.0-0001-SNAPSHOT</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.3</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.felix.commons</groupId>
-			<artifactId>org.apache.felix.commons.commons-collections</artifactId>
-			<version>3.2.0-0001-SNAPSHOT</version>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -120,9 +101,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.felix.commons</groupId>
-			<artifactId>org.apache.felix.commons.cglib-full</artifactId>
-			<version>2.0.2-0001-SNAPSHOT</version>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-full</artifactId>
+			<version>2.0.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -153,17 +134,6 @@
 					<configLocation>checkstyle.xml</configLocation>
 				</configuration>
 			</plugin>
-			<!-- <plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>simian-maven-plugin</artifactId>
-				<configuration>
-				<ignoreIdentifiers>true</ignoreIdentifiers>
-				<ignoreModifiers>true</ignoreModifiers>
-				<ignoreStrings>true</ignoreStrings>
-				<ignoreVariableNames>true</ignoreVariableNames>
-				<minimumThreshold>2</minimumThreshold>
-				</configuration>
-				</plugin> -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
