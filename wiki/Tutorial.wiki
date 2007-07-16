@@ -31,7 +31,7 @@ ClassWrapper someClassWrapped = transloader.wrap(someObject.getClass());
 
 The resulting wrappers can then be used to work with the wrapped object despite the wrapped object referencing different `Class`es to those loaded by the `ClassLoader` of the calling code.
 
-The [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ClassWrapper.html ClassWrapper] is fairly self-explanatory; of more interest is the [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ObjectWrapper.html ObjectWrapper]. `ObjectWrapper` basically provides the ability to clone the wrapped object in a way far superior to serialization or to invoke methods on the wrapped object without resorting directly to Java™’s Reflection API. It also provides the ability to find out about the wrapped before doing either:
+The [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ClassWrapper.html ClassWrapper] is fairly self-explanatory; of more interest is the [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ObjectWrapper.html ObjectWrapper]. `ObjectWrapper` basically provides the ability to clone the wrapped object in a way far superior to serialization or to invoke methods on the wrapped object without resorting directly to Java™’s Reflection API. It also provides the ability to find out about the wrapped object before doing either:
 {{{
 if (someObjectWrapped.isNull()) …
 }}}
