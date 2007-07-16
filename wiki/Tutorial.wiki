@@ -1,4 +1,3 @@
-2 minute How To
+=The Problem=
 
-= Introduction =
-
+Suppose you have one object, built using `Class`es loaded through one `ClassLoader`, and another object, built using `Class`es loaded through a `ClassLoader` that is _independent_ of the first `ClassLoader`, and you want the two objects to interact:
