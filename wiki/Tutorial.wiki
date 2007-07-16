@@ -4,3 +4,9 @@ Suppose you have one object, built using `Class`es loaded through one `ClassLoad
 
 [http://transloader.googlecode.com/svn/wiki/images/ClassLoaderClash.png]
 
+This scenario does not occur very often in normal Java^TM^ development. However, it does occur whenever a container you are using implements `ClassLoader` isolation and yet that isolation needs to be crossed for whatever reason. For example, with [http://www.osgi.org OSGi], which provides `ClassLoader` isolation for each Bundle (a module in the OSGi Framework), valid reasons for crossing the `ClassLoader` divide include:
+
+ # You have an object from a Bundle in the OSGi Framework that you want to use outside the OSGi Framework.
+ # You need to work around the situation where a particular combination of Bundle constraints makes it impossible for the OSGi Framework to make the Class space consistent.
+
+
