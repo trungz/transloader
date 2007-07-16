@@ -70,3 +70,22 @@ The latter is divided into two flavours by different implementations of [http://
 In the scenario above, [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/clone/CloningStrategy.html#MINIMAL CloningStrategy.MINIMAL] will determine that ObjectC extends a `Class` that is the same whether loaded through !ClassLoader1 or !ClassLoader2 and therefore does not clone it. In this scenario, `CloningStrategy.MINIMAL` is not too surprising as it’s just doing a shallow clone instead of the deep clone that `SerializationCloningStrategy` or [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/clone/CloningStrategy.html#MAXIMAL CloningStrategy.MAXIMAL] would do. However, imagine the scenario where ObjectC is the top level object that references ObjectA:
 
 [http://transloader.googlecode.com/svn/wiki/images/AlteringClone.png]
+
+In this scenario, ObjectC is again not cloned and, again, ObjectA is. However, because ObjectC is now the top level object that is wrapped by `ObjectWrapper`, the `cloneWith` method now actually returns the wrapped object itself (because it wasn’t cloned) while the wrapped object itself has been _altered_ to now refer to the clone of ObjectA, which is ObjectB, instead of referring to ObjectA. So rather than being a completely new, clean copy, `CloningStrategy.MINIMAL` will, in this scenario, alter the wrapped object just enough to make it compatible with `Class`es from the given `ClassLoader`. If this is not what you want, then use `CloningStrategy.MAXIMAL`, which happens to be the default in `Translaaoder.DEFAULT`.
+
+==Method Invocation==
+
+If you need to invoke on the wrapped object a method that is not on an `interface` you have access to in the current `ClassLoader`, here’s what to do:
+{{{
+someObjectWrapped.invoke(new InvocationDescription(“getValue”))
+}}}
+There is only one [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#invoke(com.googlecode.transloader.InvocationDescription) invoke] method but [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/InvocationDescription.html InvocationDescription] has many convenient constructors for specifying invocations with zero, one or many parameters. These parameters are cloned on the way through to ensure no `ClassCastException`s as a result of the different `ClassLoader`s involved. The `CloningStrategy` employed will be the one injected into the `ObjectWrapper` at construction.
+
+If you are fortunate enough that the method you want to invoke happens to exist on an `interface` accessible to your current `ClassLoader`, then you’ll prefer:
+{{{
+SomeInterface someObject = (SomeInterface) someObjectWrapped.makeCastableTo(SomeInterface.class);
+someObject.doSomethingWith(parameterObject);
+}}}
+The [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#makeCastableTo(java.lang.Class) makeCastableTo] method just returns a proxy that implements the given `interface` (which would be loaded through the current ClassLoader) and delegates to the `ObjectWrapper#invoke` method under the covers.
+
+In this way the object from the foreign `ClassLoader` can be employed to do work using all its current references to other objects, which is particularly handy if, for example, you want to invoke an OSGi Service from outside the OSGi Framework. 
