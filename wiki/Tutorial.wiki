@@ -46,10 +46,20 @@ if (someObject instanceOf SomeType)) …
 except that the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#isInstanceOf(java.lang.String) isInstanceOf] method takes a [http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html String], not a `Class`, to indicate that it is only matching the wrapped object against a type name which could actually be loaded by any `ClassLoader` (whereas a `Class` refers to a specific `ClassLoader`) and in fact a definition of that type need not even be accessible to the `ClassLoader` of the calling object.
 
 ==Cloning==
-If you want a copy of the wrapped object that will behave _exactly_ as if it were originally constructed using `Class`es from the current `ClassLoader`, the cloneWith method is your friend:
+If you want a copy of the wrapped object that will behave _exactly_ as if it were originally constructed using `Class`es from the current `ClassLoader`, the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#cloneWith(java.lang.ClassLoader) cloneWith] method is your friend:
 {{{
 if (someObjectWrapped.isInstanceOf(“com.somepackage.SomeType”)) {
     SomeType someObject = (SomeType) someObjectWrapped.cloneWith(getClass().getClassLoader());
     if (someOtherObject.equals(someObject) …
 }
 }}}
+This is helpful when you are interested in the _values_ of the object from a foreign `ClassLoader`, not in that precise `Object` itself. It is perfectly compatible, for example, with being passed into the `Object#equals(Object)` method because it is built using local `Class`es. Of course, this can only solve Problem 2 above, where the relevant `Class`es are accessible to both `ClassLoader`s, not Problem 1 where the current `ClassLoader` cannot even access definitions of the `Class`es in the foreign `ClassLoader`.
+
+The algorithm used to create the clone is supplied by the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/clone/CloningStrategy.html CloningStrategy] injected into the `ObjectWrapper` at [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#ObjectWrapper(java.lang.Object,%20com.googlecode.transloader.clone.CloningStrategy) construction], which in turn can be supplied by the particular implementation of `Transloader` that you choose to use. You can change the `CloningStrategy` by replacing the implementation of `Transloader` that you are using:
+{{{
+Transloader transloader = new DefaultTransloader(CloningStrategy.MINIMAL);
+}}}
+Out of the box Transloader supplies two major implementations of `CloningStrategy`
+ # [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/clone/SerializationCloningStrategy.html One] based on Java^TM^ Serialization, which is comparatively slow and limited only to Serializables, but has the advantage that Java^TM^ Serialization has at least been well understood for a long time.
+ # [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/clone/reflect/ReflectionCloningStrategy.html One] based on Java^TM^ Reflection, which is comparatively fast and much more flexible.
+
