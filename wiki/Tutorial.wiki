@@ -20,3 +20,29 @@ The interaction between two Objects in the scenario above faces two potential pr
 =The Solution=
 
 Transloader aims to provide superior alternatives to the workarounds above.
+
+The central interface is [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/Transloader.html com.googlecode.transloader.Transloader] and for convenience it provides static access to the default implementation via the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/Transloader.html#DEFAULT Transloader.DEFAULT] constant (but you can use whatever implementation you want, which you'll usually want to inject following IOC). The `Transloader` interface is used to wrap objects referencing `Class`es from potentially foreign `ClassLoader`s like so:
+{{{
+Object someObject = someService.getObjectFromAnotherClassLoader();
+Transloader transloader = Transloader.DEFAULT;
+ObjectWrapper someObjectWrapped = transloader.wrap(someObject);
+ClassWrapper someClassWrapped = transloader.wrap(someObject.getClass());
+}}}
+
+The resulting wrappers can then be used to work with the wrapped object despite the wrapped object referencing different `Class`es to those loaded by the `ClassLoader` of the calling code.
+
+The [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ClassWrapper.html ClassWrapper] is fairly self-explanatory; of more interest is the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html ObjectWrapper]. `ObjectWrapper` basically provides the ability to clone the wrapped object in a way far superior to serialization or to invoke methods on the wrapped object without resorting directly to Java^TM^’s Reflection API. It also provides the ability to find out about the wrapped before doing either:
+{{{
+if (someObjectWrapped.isNull()) …
+}}}
+will let you handle the null case while
+{{{
+if (someObjectWrapped.isInstanceOf(“com.somepackage.SomeType”)) …
+}}}
+will let you handle particular types of object, analogous to
+{{{
+if (someObject instanceOf SomeType)) …
+}}}
+except that the isInstanceOf method takes a [http://java.sun.com/j2se/1.3/docs/api/java/lang/String.html String], not a Class, to indicate that it is only matching the wrapped object against a type name which could actually be loaded by any `ClassLoader` (whereas a `Class` refers to a specific `ClassLoader`) and in fact a definition of that type need not even be accessible to the `ClassLoader` of the calling object.
+
+
