@@ -1,6 +1,6 @@
 =The Problem=
 
-Suppose you have one object, built using `Class`es loaded through one `ClassLoader`, and another object, built using `Class`es loaded through a `ClassLoader` that is _independent_ of the first `ClassLoader`, and you want the two objects to interact:
+Suppose you have one object, built using [http://java.sun.com/j2se/1.3/docs/api/java/lang/ClassLoader.html Class]es loaded through one [http://java.sun.com/j2se/1.3/docs/api/java/lang/ClassLoader.html ClassLoader], and another object, built using `Class`es loaded through a `ClassLoader` that is _independent_ of the first `ClassLoader`, and you want the two objects to interact:
 
 [http://transloader.googlecode.com/svn/wiki/images/ClassLoaderClash.png]
 
@@ -11,8 +11,8 @@ This scenario does not occur very often in normal Java^TM^ development. However,
 
 The interaction between two Objects in the scenario above faces two potential problems:
  # !ClassLoader1 doesn’t even have access to the same `Class` definitions as !ClassLoader2
-  * Effect: You cannot even compile the `Class` of !ObjectA to reference the `Class` of !ObjectB in the first place
+  * Effect: You cannot even compile the `Class` of ObjectA to reference the `Class` of ObjectB in the first place
   * Workaround: You could use Java^TM^’s Reflection API to call methods on ObjectB but this can be difficult and is always ugly
- # ClassLoader1 has access to the same `Class` definitions as ClassLoader2 but loads them independently
-  * Effect: You can compile the `Class` of ObjectA to reference the `Class` of ObjectB but when you bring the objects into contact (e.g. by passing one into the other through a method, or pulling one out of a Collection accessible to the other and casting it) then a ClassCastException will be thrown. This is because although ObjectB appears to extend/implement a type known to ObjectA, it really extends/implements a different copy of that type loaded by a different `ClassLoader`, not the copy of the type known to ObjectA.
+ # !ClassLoader1 has access to the same `Class` definitions as !ClassLoader2 but loads them independently
+  * Effect: You can compile the `Class` of ObjectA to reference the `Class` of ObjectB but when you bring the objects into contact (e.g. by passing one into the other through a method, or pulling one out of a `Collection` accessible to the other and casting it) then a [http://java.sun.com/j2se/1.3/docs/api/java/lang/ClassCastException.html ClassCastException] will be thrown. This is because although ObjectB appears to extend/implement a type known to ObjectA, it really extends/implements a different copy of that type loaded by a different `ClassLoader`, not the copy of the type known to ObjectA.
   * Workaround: Again, don’t use ObjectB directly but either invoke its methods reflectively, with all the drawbacks that go with the Java^TM^'s Reflection API, or use Java^TM^'s Serialization API to serialize ObjectB and deserialize it using ClassLoader1. The latter workaround has the advantage of making a copy of ObjectB that will work in [http://java.sun.com/j2se/1.3/docs/api/java/lang/Object.html#equals(java.lang.Object) Object#equals(Object)] and so forth but is slow and only works for object graphs that are completely [http://java.sun.com/j2se/1.3/docs/api/java/io/Serializable.html Serializable].
