@@ -4,18 +4,18 @@ Suppose you have one object, built using [http://java.sun.com/j2se/1.3/docs/api/
 
 [http://transloader.googlecode.com/svn/wiki/images/ClassLoaderClash.png]
 
-This scenario does not occur very often in normal Java^TM^ development. However, it does occur whenever a container you are using implements `ClassLoader` isolation and yet that isolation needs to be crossed for whatever reason. For example, with [http://www.osgi.org OSGi], which provides `ClassLoader` isolation for each Bundle (a module in the OSGi Framework), valid reasons for crossing the `ClassLoader` divide include:
+This scenario does not occur very often in normal Java™ development. However, it does occur whenever a container you are using implements `ClassLoader` isolation and yet that isolation needs to be crossed for whatever reason. For example, with [http://www.osgi.org OSGi], which provides `ClassLoader` isolation for each Bundle (a module in the OSGi Framework), valid reasons for crossing the `ClassLoader` divide include:
 
  # You have an object from a Bundle in the OSGi Framework that you want to use _outside_ the OSGi Framework.
- # You need to work around the situation where a particular combination of Bundle constraints makes it impossible for the OSGi Framework to make the Class space consistent.
+ # You need to work around the situation where a particular combination of Bundle constraints makes it impossible for the OSGi Framework to make the “Class space” consistent.
 
 The interaction between two Objects in the scenario above faces two potential problems:
  # !ClassLoader1 doesn’t even have access to the same `Class` definitions as !ClassLoader2
   * Effect: You cannot even compile the `Class` of ObjectA to reference the `Class` of ObjectB in the first place.
-  * Workaround: You could use [http://java.sun.com/j2se/1.3/docs/guide/reflection/index.html JavaTM’s Reflection API] to call methods on ObjectB but this can be difficult and is always ugly.
+  * Workaround: You could use [http://java.sun.com/j2se/1.3/docs/guide/reflection/index.html Java™’s Reflection API] to call methods on ObjectB but this can be difficult and is always ugly.
  # !ClassLoader1 has access to the same `Class` definitions as !ClassLoader2 but loads them independently
   * Effect: You can compile the `Class` of ObjectA to reference the `Class` of ObjectB but when you bring the objects into contact (e.g. by passing one into the other through a reflective method invocation, or pulling one out of a [http://java.sun.com/j2se/1.3/docs/api/java/util/Collection.html Collection] accessible to the other and casting it) then a [http://java.sun.com/j2se/1.3/docs/api/java/lang/ClassCastException.html ClassCastException] will be thrown. This is because although ObjectB appears to extend/implement a type known to ObjectA, it really extends/implements a different copy of that type loaded by a different `ClassLoader`, not the copy of the type known to ObjectA.
-  * Workaround: Again, don’t use ObjectB directly but either invoke its methods reflectively, with all the drawbacks that go with Java^TM^'s Reflection API, or use [http://java.sun.com/j2se/1.3/docs/guide/serialization/index.html JavaTM's Serialization API] to serialize ObjectB and deserialize it using !ClassLoader1. The latter workaround has the advantage of making a copy of ObjectB that will work in [http://java.sun.com/j2se/1.3/docs/api/java/lang/Object.html#equals(java.lang.Object) Object#equals(Object)] and so forth but is slow and only works for object graphs that are completely [http://java.sun.com/j2se/1.3/docs/api/java/io/Serializable.html Serializable].
+  * Workaround: Again, don’t use ObjectB directly but either invoke its methods reflectively, with all the drawbacks that go with Java™’s Reflection API, or use [http://java.sun.com/j2se/1.3/docs/guide/serialization/index.html Java™’s Serialization API] to serialize ObjectB and deserialize it using !ClassLoader1. The latter workaround has the advantage of making a copy of ObjectB that will work in [http://java.sun.com/j2se/1.3/docs/api/java/lang/Object.html#equals(java.lang.Object) Object#equals(Object)] and so forth but is slow and only works for object graphs that are completely [http://java.sun.com/j2se/1.3/docs/api/java/io/Serializable.html Serializable].
 
 =The Solution=
 
@@ -31,7 +31,7 @@ ClassWrapper someClassWrapped = transloader.wrap(someObject.getClass());
 
 The resulting wrappers can then be used to work with the wrapped object despite the wrapped object referencing different `Class`es to those loaded by the `ClassLoader` of the calling code.
 
-The [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ClassWrapper.html ClassWrapper] is fairly self-explanatory; of more interest is the [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ObjectWrapper.html ObjectWrapper]. `ObjectWrapper` basically provides the ability to clone the wrapped object in a way far superior to serialization or to invoke methods on the wrapped object without resorting directly to Java^TM^’s Reflection API. It also provides the ability to find out about the wrapped before doing either:
+The [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ClassWrapper.html ClassWrapper] is fairly self-explanatory; of more interest is the [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/ObjectWrapper.html ObjectWrapper]. `ObjectWrapper` basically provides the ability to clone the wrapped object in a way far superior to serialization or to invoke methods on the wrapped object without resorting directly to Java™’s Reflection API. It also provides the ability to find out about the wrapped before doing either:
 {{{
 if (someObjectWrapped.isNull()) …
 }}}
@@ -60,8 +60,8 @@ The algorithm used to create the clone is supplied by the [http://transloader.go
 Transloader transloader = new DefaultTransloader(CloningStrategy.MINIMAL);
 }}}
 Out of the box Transloader supplies two major implementations of `CloningStrategy`
- # [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/SerializationCloningStrategy.html One] based on Java^TM^ Serialization, which is comparatively slow and limited only to `Serializable`s, but has the advantage that Java^TM^ Serialization has at least been well understood for a long time.
- # [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/reflect/ReflectionCloningStrategy.html One] based on Java^TM^ Reflection, which is comparatively fast and much more flexible.
+ # [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/SerializationCloningStrategy.html One] based on Java™ Serialization, which is comparatively slow and limited only to `Serializable`s, but has the advantage that Java™ Serialization has at least been well understood for a long time.
+ # [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/reflect/ReflectionCloningStrategy.html One] based on Java™ Reflection, which is comparatively fast and much more flexible.
 
 The latter is divided into two flavours by different implementations of [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/reflect/CloningDecisionStrategy.html CloningDecisionStrategy]. [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/reflect/MinimalCloningDecisionStrategy.html MinimalCloningDecisionStrategy] actually only clones an object if it instantiates a `Class` that happens to be different when loaded through the `ClassLoader` supplied to `cloneWith(ClassLoader)`; everything else is left untouched. [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/com/googlecode/transloader/clone/reflect/MaximalCloningDecisionStrategy.html MaximalCloningDecisionStrategy] clones everything. `MinimalCloningDecisionStrategy` is usually the best choice because it is _so_ fast and less likely to hit problems, because it is attempting to do the least. However, it can provide surprising results if you do not understand how it works:
 
