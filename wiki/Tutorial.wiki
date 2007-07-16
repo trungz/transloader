@@ -71,7 +71,7 @@ In the scenario above, [http://transloader.googlecode.com/svn/trunk/transloader/
 
 [http://transloader.googlecode.com/svn/wiki/images/AlteringClone.png]
 
-In this scenario, ObjectC is again not cloned and, again, ObjectA is. However, because ObjectC is now the top level object that is wrapped by `ObjectWrapper`, the `cloneWith` method now actually returns the wrapped object itself (because it wasn’t cloned) while the wrapped object itself has been _altered_ to now refer to the clone of ObjectA, which is ObjectB, instead of referring to ObjectA. So rather than being a completely new, clean copy, `CloningStrategy.MINIMAL` will, in this scenario, alter the wrapped object just enough to make it compatible with `Class`es from the given `ClassLoader`. If this is not what you want, then use `CloningStrategy.MAXIMAL`, which happens to be the default in `Translaaoder.DEFAULT`.
+In this scenario, ObjectC is again not cloned and, again, ObjectA is. However, because ObjectC is now the top level object that is wrapped by `ObjectWrapper`, the `cloneWith` method now actually returns the wrapped object itself (because it wasn’t cloned) while the wrapped object itself has been _altered_ to now refer to the clone of ObjectA, which is ObjectB, instead of referring to ObjectA. So rather than being a completely new, clean copy, `CloningStrategy.MINIMAL` will, in this scenario, alter the wrapped object just enough to make it compatible with `Class`es from the given `ClassLoader`. If this is not what you want, then use `CloningStrategy.MAXIMAL`, which happens to be the default in `Transloader.DEFAULT`.
 
 ==Method Invocation==
 
@@ -86,6 +86,6 @@ If you are fortunate enough that the method you want to invoke happens to exist 
 SomeInterface someObject = (SomeInterface) someObjectWrapped.makeCastableTo(SomeInterface.class);
 someObject.doSomethingWith(parameterObject);
 }}}
-The [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#makeCastableTo(java.lang.Class) makeCastableTo] method just returns a proxy that implements the given `interface` (which would be loaded through the current ClassLoader) and delegates to the `ObjectWrapper#invoke` method under the covers.
+The [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/ObjectWrapper.html#makeCastableTo(java.lang.Class) makeCastableTo] method just returns a proxy that implements the given `interface` (which would be loaded through the current `ClassLoader`) and delegates to the `ObjectWrapper#invoke` method under the covers.
 
 In this way the object from the foreign `ClassLoader` can be employed to do work using all its current references to other objects, which is particularly handy if, for example, you want to invoke an OSGi Service from outside the OSGi Framework. 
