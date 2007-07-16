@@ -10,8 +10,8 @@ This scenario does not occur very often in normal Java^TM^ development. However,
  # You need to work around the situation where a particular combination of Bundle constraints makes it impossible for the OSGi Framework to make the Class space consistent.
 
 The interaction between two Objects in the scenario above faces two potential problems:
- # ClassLoader1 doesn’t even have access to the same Class definitions as ClassLoader2
-  * Effect: You cannot even compile the `Class` of ObjectA to reference the `Class` of ObjectB in the first place
+ # !ClassLoader1 doesn’t even have access to the same `Class` definitions as !ClassLoader2
+  * Effect: You cannot even compile the `Class` of !ObjectA to reference the `Class` of !ObjectB in the first place
   * Workaround: You could use Java^TM^’s Reflection API to call methods on ObjectB but this can be difficult and is always ugly
  # ClassLoader1 has access to the same `Class` definitions as ClassLoader2 but loads them independently
   * Effect: You can compile the `Class` of ObjectA to reference the `Class` of ObjectB but when you bring the objects into contact (e.g. by passing one into the other through a method, or pulling one out of a Collection accessible to the other and casting it) then a ClassCastException will be thrown. This is because although ObjectB appears to extend/implement a type known to ObjectA, it really extends/implements a different copy of that type loaded by a different `ClassLoader`, not the copy of the type known to ObjectA.
