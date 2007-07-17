@@ -5,7 +5,7 @@
 The [Tutorial] provides a nice introduction while the  [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/index.html JavaDoc] gives all the details.
 
 ===Is Transloader Production-ready?===
-Well, I (Jeremy) haven't used it Production yet (hopefully one day soon), but it's quite well tested so it probably _should_ work for you. I'd recommend you write some integration tests around your use of it but from my tests I expect it to work well.
+Well, I (Jeremy) haven't used it in Production yet (hopefully one day soon), but it's quite well tested so it probably _should_ work for you. I'd recommend you write some integration tests around your use of it but from my tests I expect it to work well.
 
 ===Can I help at all?===
 Yes!
