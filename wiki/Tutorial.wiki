@@ -1,4 +1,5 @@
-﻿=The Problem=
+﻿#labels Featured
+=The Problem=
 
 Suppose you have one object, built using [http://java.sun.com/j2se/1.3/docs/api/java/lang/ClassLoader.html Class]es loaded through one [http://java.sun.com/j2se/1.3/docs/api/java/lang/ClassLoader.html ClassLoader], and another object, built using `Class`es loaded through a `ClassLoader` that is _independent_ of the first `ClassLoader`, and you want the two objects to interact:
 
