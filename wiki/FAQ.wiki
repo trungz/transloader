@@ -1,7 +1,14 @@
-= Frequently Asked Questions =
+=Frequently Asked Questions=
 
-===When will you have some documentation?===
-The !JavaDoc is already [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/index.html here], where the central `interface` [http://transloader.googlecode.com/svn/trunk/transloader/target/site/apidocs/com/googlecode/transloader/Transloader.html Transloader] is a good place to start. A [Tutorial] will be filled out shortly.
+===Where's the documentation?===
+The [Tutorial] provides a nice introduction while the  [http://transloader.googlecode.com/svn/wiki/maven/site/apidocs/index.html JavaDoc] gives all the details.
+
+===Is this expected to be Production-ready?===
+Hmm... I (Jeremy) haven't used it Production yet (getting there), but it's quite well tested so it probably _should_ work for you. Just make sure you write some integration tests around your use of it and it should work well.
 
 ===Can I help at all?===
-Yes! Use the library and let me know what you think and where it could be improved. Check out the [http://transloader.googlecode.com/svn/trunk/transloader/target/site/taglist.html TODOs] to see actual code contributions that would already be welcomed. Email jeremywales@gmail.com to let me know how you might like to help.
+Yes!
+ * Use the library and let me know what you think and where it could be improved.
+ * Raise an [http://code.google.com/p/transloader/issues/entry Issue] for anything you find broken.
+ * Check out the [http://transloader.googlecode.com/svn/wiki/maven/site/taglist.html TODOs] to see actual code contributions that would already be welcomed.
+ * Email [mailto:jeremywales@gmail.com me] to let me know any other way you might like to help.
