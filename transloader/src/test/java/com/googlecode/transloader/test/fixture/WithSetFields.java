@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.googlecode.transloader.test.Triangulator;
+import com.googlecode.transloader.test.Triangulate;
 
 // TODO find a way to clone HashSets and TreeSets without serialization so that non-Serializable Objects can be put into them!
 /*
@@ -22,22 +22,22 @@ public class WithSetFields extends NonCommonJavaObject {
 
 	private Set set = new TreeSet(new ToStringComparator());
 	{
-		set.add(Triangulator.anyInteger());
-		set.add(Triangulator.anyString());
-		set.add(Triangulator.anyInteger());
+		set.add(Triangulate.anyInteger());
+		set.add(Triangulate.anyString());
+		set.add(Triangulate.anyInteger());
 	}
 
 	private Set customSet = new OrderedToStringHashSet();
 	{
-		customSet.add(Triangulator.anyString());
-		customSet.add(Triangulator.anyInteger());
-		customSet.add(Triangulator.anyString());
+		customSet.add(Triangulate.anyString());
+		customSet.add(Triangulate.anyInteger());
+		customSet.add(Triangulate.anyString());
 	}
 
 	private Set empty = Collections.EMPTY_SET;
 	private Set unmodifiable = Collections.unmodifiableSet(set);
 	private Set synchronizedSet = Collections.synchronizedSet(set);
-	private Set singelton = Collections.singleton(Triangulator.anyInteger());
+	private Set singelton = Collections.singleton(Triangulate.anyInteger());
 
 	private static class ToStringComparator implements Comparator, Serializable {
 		public int compare(Object o1, Object o2) {

@@ -5,20 +5,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.googlecode.transloader.test.Triangulator;
+import com.googlecode.transloader.test.Triangulate;
 
 public class WithListFields extends NonCommonJavaObject {
 	List listFromArray =
 			Arrays.asList(new NonCommonJavaType[] {new WithPrimitiveFields(),
-					new WithStringField(Triangulator.anyString())});
+					new WithStringField(Triangulate.anyString())});
 	private List list = new ArrayList();
 	{
-		list.add(Triangulator.anyString());
-		list.add(Triangulator.anyInteger());
-		list.add(Triangulator.anyString());
+		list.add(Triangulate.anyString());
+		list.add(Triangulate.anyInteger());
+		list.add(Triangulate.anyString());
 	}
 	private List empty = Collections.EMPTY_LIST;
 	private List unmodifiable = Collections.unmodifiableList(list);
 	private List synchronizedList = Collections.synchronizedList(list);
-	private List singelton = Collections.singletonList(Triangulator.anyInteger());
+	private List singelton = Collections.singletonList(Triangulate.anyInteger());
 }

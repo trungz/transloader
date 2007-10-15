@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<name>Transloader</name>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.transloader</groupId>
 	<artifactId>transloader</artifactId>
 	<packaging>jar</packaging>
-	<version>0.3</version>
+	<version>0.4</version>
 	<description>Bridges the divide between ClassLoaders</description>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestFile>META-INF/MANIFEST.MF</manifestFile>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>minijar-maven-plugin</artifactId>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>1.0.0</version>
+				<extensions>true</extensions>
 				<executions>
 					<execution>
 						<phase>package</phase>
 						<goals>
-							<goal>ueberjar</goal>
+							<goal>bundle</goal>
 						</goals>
-						<configuration>
-							<name>[artifactId]-[version]-withdeps.jar</name>
-							<excludeDependencies>
-								<param>junit:junit</param>
-								<param>cglib:cglib-full</param>
-							</excludeDependencies>
-							<archive>
-								<manifestFile>META-INF/MANIFEST.MF</manifestFile>
-							</archive>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<instructions>
+						<Private-Package>org.*</Private-Package>
+						<Export-Package>com.googlecode.transloader*,org.objenesis*</Export-Package>
+						<Import-Package>sun.reflect;resolution:=optional,com.googlecode.transloader*,org.objenesis*</Import-Package>
+						<Bundle-SymbolicName>${pom.groupId}</Bundle-SymbolicName>
+						<Bundle-RequiredExecutionEnvironment>J2SE-1.3</Bundle-RequiredExecutionEnvironment>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.pyx4me</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+					</libs>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>

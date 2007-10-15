@@ -8,21 +8,27 @@ import java.lang.reflect.Proxy;
 import java.util.Random;
 
 import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.NoOp;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.objenesis.ObjenesisHelper;
 
-public final class Triangulator {
+/**
+ * @author Jeremy Wales
+ */
+public final class Triangulate {
 	private static final Random RANDOM = new Random(System.currentTimeMillis());
 	private static final byte[] ONE_BYTE_BUFFER = new byte[1];
-	private static final Method[] MY_METHODS = Triangulator.class.getDeclaredMethods();
+	private static final Method[] MY_METHODS = Triangulate.class.getDeclaredMethods();
 
-	private Triangulator() {
+	private Triangulate() {
 	}
 
 	public static String anyString() {
 		return anyDouble() + "";
+	}
+
+	public static String anyAlphaNumbericString() {
+		return Long.toHexString(anyLong());
 	}
 
 	public static boolean eitherBoolean() {
@@ -74,16 +80,17 @@ public final class Triangulator {
 		return MY_METHODS[anyIntFromZeroTo(MY_METHODS.length - 1)];
 	}
 
-	public static Object dummyInstanceOf(Class type) {
+	public static Object anyInstanceOf(Class type) {
 		try {
+			if (type == null || type == void.class) return null;
 			if (type.isArray()) return anyArrayOf(type.getComponentType());
-			Object triangulatedInstance = locallyTriangulate(type);
+			Object triangulatedInstance = tryToTriangulateFromThisClass(type);
 			if (triangulatedInstance != null) return triangulatedInstance;
 			if (type.isInterface())
 				return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[] {type},
-						new NoOpInvocationHandler());
-			if (Modifier.isAbstract(type.getModifiers())) return Enhancer.create(type, new NoOp() {
-			});
+						new TriangulatingInvocationHandler());
+			if (Modifier.isAbstract(type.getModifiers()))
+				return Enhancer.create(type, new TriangulatingInvocationHandler());
 			return ObjenesisHelper.newInstance(type);
 		} catch (Exception e) {
 			throw new NestableRuntimeException(e);
@@ -94,12 +101,12 @@ public final class Triangulator {
 		int length = anyIntFromZeroTo(3);
 		Object array = Array.newInstance(componentType, length);
 		for (int i = 0; i < length; i++) {
-			Array.set(array, i, dummyInstanceOf(componentType));
+			Array.set(array, i, anyInstanceOf(componentType));
 		}
 		return array;
 	}
 
-	private static Object locallyTriangulate(Class type) throws Exception {
+	private static Object tryToTriangulateFromThisClass(Class type) throws Exception {
 		for (int i = 0; i < MY_METHODS.length; i++) {
 			Method method = MY_METHODS[i];
 			Class returnType = method.getReturnType();
@@ -111,9 +118,17 @@ public final class Triangulator {
 		return null;
 	}
 
-	private static class NoOpInvocationHandler implements InvocationHandler {
+	private static class TriangulatingInvocationHandler implements InvocationHandler,
+			net.sf.cglib.proxy.InvocationHandler {
 		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-			return null;
+			if (method.getReturnType() == Void.class) return null;
+			if (method.getName().equals("equals") && method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == Object.class)
+				return new Boolean(proxy == args[0]);
+			if (method.getName().equals("hashCode") && method.getParameterTypes().length == 0)
+				return new Integer(System.identityHashCode(proxy));
+			if (method.getName().equals("toString") && method.getParameterTypes().length == 0)
+				return TriangulatingInvocationHandler.class.getName() + '#' + System.identityHashCode(proxy);
+			return anyInstanceOf(method.getReturnType());
 		}
 	}
 }
