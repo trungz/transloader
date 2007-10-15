@@ -16,7 +16,7 @@
 <a name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> com.googlecode.transloader.DefaultTransloader;
 <a name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> com.googlecode.transloader.Transloader;
 <a name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> com.googlecode.transloader.clone.CloningStrategy;
-<a name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> com.googlecode.transloader.test.Triangulator;
+<a name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> com.googlecode.transloader.test.Triangulate;
 <a name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.googlecode.transloader.test.fixture.IndependentClassLoader;
 <a name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> com.googlecode.transloader.test.fixture.WithMapFields;
 <a name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> com.googlecode.transloader.test.fixture.WithSetFields;
@@ -27,7 +27,7 @@
 <a name="17" href="#17">17</a>  	}
 <a name="18" href="#18">18</a>  
 <a name="19" href="#19">19</a>  	<strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testDoesNotCloneStrings() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="20" href="#20">20</a>  		Object string = Triangulator.anyString();
+<a name="20" href="#20">20</a>  		Object string = Triangulate.anyString();
 <a name="21" href="#21">21</a>  		assertSame(string, getTransloader().wrap(string).cloneWith(IndependentClassLoader.getInstance()));
 <a name="22" href="#22">22</a>  	}
 <a name="23" href="#23">23</a>  
