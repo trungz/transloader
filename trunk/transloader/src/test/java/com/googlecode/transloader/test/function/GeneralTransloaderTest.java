@@ -9,7 +9,7 @@ import com.googlecode.transloader.TransloaderException;
 import com.googlecode.transloader.Transloader;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.BaseTestCase;
-import com.googlecode.transloader.test.Triangulator;
+import com.googlecode.transloader.test.Triangulate;
 import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
@@ -23,7 +23,7 @@ public class GeneralTransloaderTest extends BaseTestCase {
 	private Object foreignObject;
 	private Object foreignObjectWithMethods;
 	private Transloader transloader = Transloader.DEFAULT;
-	private ClassLoader dummyClassLoader = (ClassLoader) Triangulator.dummyInstanceOf(ClassLoader.class);
+	private ClassLoader dummyClassLoader = (ClassLoader) Triangulate.anyInstanceOf(ClassLoader.class);
 
 	public static Test suite() throws Exception {
 		return new ActiveTestSuite(GeneralTransloaderTest.class);
@@ -83,7 +83,7 @@ public class GeneralTransloaderTest extends BaseTestCase {
 
 	public void testWrapsExceptionThrownByGivenCloningStrategy() throws Exception {
 		final Object expectedOriginal = new Object();
-		final Exception expectedException = new Exception(Triangulator.anyString());
+		final Exception expectedException = new Exception(Triangulate.anyString());
 		final CloningStrategy throwingCloningStrategy = new CloningStrategy() {
 			public Object cloneObjectUsingClassLoader(Object original, ClassLoader cloneClassLoader) throws Exception {
 				throw expectedException;
@@ -105,13 +105,13 @@ public class GeneralTransloaderTest extends BaseTestCase {
 
 	public void testPassesAndReturnsStringsToAndFromInvocations() throws Exception {
 		ObjectWrapper objectWrapper = transloader.wrap(foreignObjectWithMethods);
-		String expectedStringFieldValue = Triangulator.anyString();
+		String expectedStringFieldValue = Triangulate.anyString();
 		objectWrapper.invoke(new InvocationDescription("setStringField", expectedStringFieldValue));
 		assertEquals(expectedStringFieldValue, objectWrapper.invoke(new InvocationDescription("getStringField")));
 	}
 
 	public void testClonesParametersOfNonCommonJavaTypesInInvocations() throws Exception {
-		NonCommonJavaType first = new WithStringField(Triangulator.anyString());
+		NonCommonJavaType first = new WithStringField(Triangulate.anyString());
 		NonCommonJavaType second = new WithPrimitiveFields();
 		String expected = new WithMethods().concatenate(first, second);
 		Class[] paramTypes = {NonCommonJavaType.class, NonCommonJavaType.class};
@@ -123,7 +123,7 @@ public class GeneralTransloaderTest extends BaseTestCase {
 	}
 
 	public void testCreatesAnImplementationOfAGivenInterfaceThatCallsThroughToTheWrappedObject() throws Exception {
-		String expectedStringFieldValue = Triangulator.anyString();
+		String expectedStringFieldValue = Triangulate.anyString();
 		Transloader.DEFAULT.wrap(foreignObjectWithMethods).invoke(
 				new InvocationDescription("setStringField", expectedStringFieldValue));
 		NonCommonJavaTypeWithMethods withMethods =

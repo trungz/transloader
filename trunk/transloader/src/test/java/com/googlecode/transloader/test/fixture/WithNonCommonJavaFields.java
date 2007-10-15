@@ -1,9 +1,9 @@
 package com.googlecode.transloader.test.fixture;
 
-import com.googlecode.transloader.test.Triangulator;
+import com.googlecode.transloader.test.Triangulate;
 
 public class WithNonCommonJavaFields extends NonCommonJavaObject {
-	private NonCommonJavaObject object = new WithStringField(Triangulator.anyString());
+	private NonCommonJavaObject object = new WithStringField(Triangulate.anyString());
 	private NonCommonJavaType type;
 
 	public WithNonCommonJavaFields(NonCommonJavaType fieldValue) {

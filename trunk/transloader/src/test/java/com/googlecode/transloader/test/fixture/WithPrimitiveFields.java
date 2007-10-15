@@ -1,6 +1,6 @@
 package com.googlecode.transloader.test.fixture;
 
-import com.googlecode.transloader.test.Triangulator;
+import com.googlecode.transloader.test.Triangulate;
 
 public class WithPrimitiveFields extends NonCommonJavaObject {
 	private boolean booleanField;
@@ -13,13 +13,13 @@ public class WithPrimitiveFields extends NonCommonJavaObject {
 	private double doubleField;
 
 	public WithPrimitiveFields() {
-		booleanField = Triangulator.eitherBoolean();
-		byteField = Triangulator.anyByte();
-		charField = Triangulator.anyChar();
-		shortField = Triangulator.anyShort();
-		intField = Triangulator.anyInt();
-		longField = Triangulator.anyLong();
-		floatField = Triangulator.anyFloat();
-		doubleField = Triangulator.anyDouble();
+		booleanField = Triangulate.eitherBoolean();
+		byteField = Triangulate.anyByte();
+		charField = Triangulate.anyChar();
+		shortField = Triangulate.anyShort();
+		intField = Triangulate.anyInt();
+		longField = Triangulate.anyLong();
+		floatField = Triangulate.anyFloat();
+		doubleField = Triangulate.anyDouble();
 	}
 }

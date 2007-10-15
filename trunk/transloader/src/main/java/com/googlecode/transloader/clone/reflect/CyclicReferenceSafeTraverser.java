@@ -8,7 +8,7 @@ import com.googlecode.transloader.Assert;
 
 /**
  * A utility for traversing through entire object graphs which may contain cyclic references, without thereby entering
- * an endless loop. It is thread safe also.
+ * an endless loop. The implementation is thread-safe.
  * 
  * @author Jeremy Wales
  */

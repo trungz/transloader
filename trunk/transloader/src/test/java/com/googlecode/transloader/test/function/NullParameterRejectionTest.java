@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import com.googlecode.transloader.Assert;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.ProductionClassFinder;
-import com.googlecode.transloader.test.Triangulator;
+import com.googlecode.transloader.test.Triangulate;
 
 public class NullParameterRejectionTest extends BaseTestCase {
 	private static final Class PRODUCTION_ASSERT_CLASS = Assert.class;
@@ -25,30 +25,30 @@ public class NullParameterRejectionTest extends BaseTestCase {
 	private static final Class[] ALL_PRODUCTION_CLASSES =
 			ProductionClassFinder.getAllProductionClasses(PRODUCTION_ASSERT_CLASS, TEST_PACKAGE_NAME);
 
-	private static class ExcemptParam {
+	private static class ExemptParam {
 		String methodDescription;
 		int paramNumber;
 
-		ExcemptParam(String methodDescription, int paramNumber) {
+		ExemptParam(String methodDescription, int paramNumber) {
 			this.methodDescription = methodDescription;
 			this.paramNumber = paramNumber;
 		}
 
 		public boolean equals(Object obj) {
-			ExcemptParam other = (ExcemptParam) obj;
+			ExemptParam other = (ExemptParam) obj;
 			return StringUtils.contains(methodDescription, other.methodDescription) && paramNumber == other.paramNumber;
 		}
 	}
 
-	private static final List EXCEMPT_PARAMS =
-			Arrays.asList(new ExcemptParam[] {
-					new ExcemptParam("DefaultTransloader.wrap(java.lang.Class)", 0),
-					new ExcemptParam("ClassWrapper(java.lang.Class)", 0),
-					new ExcemptParam("InvocationDescription(java.lang.String,java.lang.Class,java.lang.Object)", 2),
-					new ExcemptParam("InvocationDescription(java.lang.String,java.lang.String,java.lang.Object)", 2),
-					new ExcemptParam("InvocationDescription(java.lang.reflect.Method,java.lang.Object[])", 1),
-					new ExcemptParam(
-							"ObjectWrapper(java.lang.Object,com.googlecode.transloader.clone.CloningStrategy)", 0),});
+	private static final List EXEMPT_PARAMS =
+			Arrays.asList(new ExemptParam[] {
+					new ExemptParam("DefaultTransloader.wrap(java.lang.Class)", 0),
+					new ExemptParam("ClassWrapper(java.lang.Class)", 0),
+					new ExemptParam("InvocationDescription(java.lang.String,java.lang.Class,java.lang.Object)", 2),
+					new ExemptParam("InvocationDescription(java.lang.String,java.lang.String,java.lang.Object)", 2),
+					new ExemptParam("InvocationDescription(java.lang.reflect.Method,java.lang.Object[])", 1),
+					new ExemptParam("ObjectWrapper(java.lang.Object,com.googlecode.transloader.clone.CloningStrategy)",
+							0),});
 
 	public static Test suite() throws Exception {
 		return new ActiveTestSuite(NullParameterRejectionTest.class);
@@ -75,7 +75,7 @@ public class NullParameterRejectionTest extends BaseTestCase {
 	}
 
 	private void assertPublicMethodsRejectNullParameters(Class productionClass) throws Exception {
-		Object instance = Triangulator.dummyInstanceOf(productionClass);
+		Object instance = Triangulate.anyInstanceOf(productionClass);
 		Method[] methods = productionClass.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
@@ -141,13 +141,13 @@ public class NullParameterRejectionTest extends BaseTestCase {
 		List nonNullParameters = new ArrayList();
 		for (int i = 0; i < parameterTypes.length; i++) {
 			Class parameterType = parameterTypes[i];
-			nonNullParameters.add(Triangulator.dummyInstanceOf(parameterType));
+			nonNullParameters.add(Triangulate.anyInstanceOf(parameterType));
 		}
 		return nonNullParameters;
 	}
 
 	private boolean shouldTestNullRejectionForParameter(Object methodOrConstructor, Class[] parameterTypes, int i) {
-		return !(parameterTypes[i].isPrimitive() || EXCEMPT_PARAMS.contains(new ExcemptParam(
+		return !(parameterTypes[i].isPrimitive() || EXEMPT_PARAMS.contains(new ExemptParam(
 				methodOrConstructor.toString(), i)));
 	}
 }
