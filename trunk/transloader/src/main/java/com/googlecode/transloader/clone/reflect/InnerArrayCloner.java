@@ -12,16 +12,16 @@ final class InnerArrayCloner implements InnerCloner {
 		parent = outerCloner;
 	}
 
-	public Object instantiateClone(Object originalArray, ClassLoader targetClassLoader) throws Exception {
+	public Object instantiateCloneOf(Object originalArray, ClassLoader targetClassLoader) throws Exception {
 		Class originalComponentType = originalArray.getClass().getComponentType();
-		Class cloneComponentType = ClassWrapper.getClass(originalComponentType.getName(), targetClassLoader);
+		Class cloneComponentType = ClassWrapper.getClassFrom(targetClassLoader, originalComponentType.getName());
 		return Array.newInstance(cloneComponentType, Array.getLength(originalArray));
 	}
 
-	public void cloneContent(Object original, Object clone, ClassLoader targetClassLoader) throws Exception {
+	public void cloneObjectsReferencedBy(Object original, Object clone, ClassLoader targetClassLoader) throws Exception {
 		for (int i = 0; i < Array.getLength(original); i++) {
 			Object originalComponent = Array.get(original, i);
-			Object cloneComponent = parent.cloneObjectUsingClassLoader(originalComponent, targetClassLoader);
+			Object cloneComponent = parent.cloneObjectUsing(targetClassLoader, originalComponent);
 			Array.set(clone, i, cloneComponent);
 		}
 	}

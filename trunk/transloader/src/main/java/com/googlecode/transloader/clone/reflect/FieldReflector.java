@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.googlecode.transloader.Assert;
+import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.ClassWrapper;
+import com.googlecode.transloader.except.ImpossibleTransloaderException;
 
 /**
  * A reflective wrapper around any object, exposing its fields.
@@ -32,7 +33,7 @@ public final class FieldReflector {
 	 * @param objectToWrap the object whose fields you want to expose.
 	 */
 	public FieldReflector(Object objectToWrap) {
-		this(objectToWrap, getClassLoader(objectToWrap));
+		this(objectToWrap, ClassWrapper.getClassLoaderFrom(objectToWrap));
 	}
 
 	/**
@@ -49,9 +50,10 @@ public final class FieldReflector {
 	}
 
 	/**
-	 * Gets all the instance fields in the entire class hierarchy extended by the wrapped object.
+	 * Gets descriptions of all the instance fields in the entire class hierarchy extended by the class of the wrapped
+     * object.
 	 * 
-	 * @return a description of each instance field in the class hierarchy extended by the wrapped object (<code>final</code>
+	 * @return a description of each instance field in the relevant class hierarchy (<code>final</code>
 	 *         fields are not excluded, even though {@link #setValue(FieldDescription, Object)} can be attempted with
 	 *         such descriptions)
 	 */
@@ -59,7 +61,29 @@ public final class FieldReflector {
 		return getAllInstanceFieldDescriptions(wrappedObject.getClass());
 	}
 
-	private static FieldDescription[] getAllInstanceFieldDescriptions(Class currentClass) {
+    /**
+     * A convenience method combining {@link #getAllInstanceFieldDescriptions()} with
+     * {@link #getValue(FieldDescription)} to just get the values.
+     *
+     * @return the value of each instance field in the wrapped object.
+	 * @throws IllegalAccessException if the installed Security Manager does not allow access to a field
+     */
+    public Object[] getAllInstanceFieldValues() throws IllegalAccessException {
+        List values = new ArrayList();
+        FieldDescription[] descriptions = getAllInstanceFieldDescriptions(wrappedObject.getClass());
+        for (int i = 0; i < descriptions.length; i++) {
+            try {
+                values.add(getValue(descriptions[i]));
+            } catch (ClassNotFoundException e) {
+                throw new ImpossibleTransloaderException(e);
+            } catch (NoSuchFieldException e) {
+                throw new ImpossibleTransloaderException(e);
+            }
+        }
+        return values.toArray();
+    }
+
+    private static FieldDescription[] getAllInstanceFieldDescriptions(Class currentClass) {
 		List descriptions = new ArrayList();
 		while (currentClass != null) {
 			descriptions.addAll(getInstanceFieldDescriptions(currentClass));
@@ -98,7 +122,7 @@ public final class FieldReflector {
 	public Object getValue(FieldDescription description) throws ClassNotFoundException, NoSuchFieldException,
 			IllegalAccessException {
 		Assert.isNotNull(description);
-		return getFieldHavingMadeItAccessible(wrappedObject, description, classLoader).get(wrappedObject);
+		return getFieldHavingMadeItAccessible(description, classLoader).get(wrappedObject);
 	}
 
 	/**
@@ -119,20 +143,14 @@ public final class FieldReflector {
 	public void setValue(FieldDescription description, Object fieldValue) throws ClassNotFoundException,
 			NoSuchFieldException, IllegalAccessException {
 		Assert.areNotNull(description, fieldValue);
-		getFieldHavingMadeItAccessible(wrappedObject, description, classLoader).set(wrappedObject, fieldValue);
+		getFieldHavingMadeItAccessible(description, classLoader).set(wrappedObject, fieldValue);
 	}
 
-	private static Field getFieldHavingMadeItAccessible(Object object, FieldDescription description,
-			ClassLoader classLoader) throws ClassNotFoundException, NoSuchFieldException {
-		Class declaringClass = ClassWrapper.getClass(description.getDeclaringClassName(), classLoader);
+	private static Field getFieldHavingMadeItAccessible(FieldDescription description, ClassLoader classLoader)
+            throws ClassNotFoundException, NoSuchFieldException {
+		Class declaringClass = ClassWrapper.getClassFrom(classLoader, description.getDeclaringClassName());
 		Field field = declaringClass.getDeclaredField(description.getFieldName());
 		field.setAccessible(true);
 		return field;
-	}
-
-	private static ClassLoader getClassLoader(Object object) {
-		Assert.isNotNull(object);
-		ClassLoader classLoader = object.getClass().getClassLoader();
-		return classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader;
 	}
 }

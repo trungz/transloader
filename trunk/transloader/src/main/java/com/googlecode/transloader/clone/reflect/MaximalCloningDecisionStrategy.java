@@ -1,6 +1,6 @@
 package com.googlecode.transloader.clone.reflect;
 
-import com.googlecode.transloader.Assert;
+import com.googlecode.transloader.except.Assert;
 
 /**
  * When injected into a {@link ReflectionCloningStrategy}, decides that all given objects and those that they reference
@@ -28,7 +28,7 @@ public final class MaximalCloningDecisionStrategy implements CloningDecisionStra
 	 * @param targetClassLoader ignored; returns <code>true</code> regardless
 	 * @return <code>true</code> always
 	 */
-	public boolean shouldCloneObjectContent(Object original, ClassLoader targetClassLoader) {
+	public boolean shouldCloneObjectReferences(Object original, ClassLoader targetClassLoader) {
 		return shouldCloneObjectItself(original, targetClassLoader);
 	}
 }

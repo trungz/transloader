@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import com.googlecode.transloader.Assert;
+import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.ClassWrapper;
 
 /**
@@ -34,7 +34,7 @@ public final class MinimalCloningDecisionStrategy implements CloningDecisionStra
 	}
 
 	private boolean isSameInClassLoader(Class originalClass, ClassLoader targetClassLoader) {
-		return originalClass.equals(ClassWrapper.getClass(originalClass.getName(), targetClassLoader));
+		return originalClass.equals(ClassWrapper.getClassFrom(targetClassLoader, originalClass.getName()));
 	}
 
 	/**
@@ -47,7 +47,7 @@ public final class MinimalCloningDecisionStrategy implements CloningDecisionStra
 	 * @return <code>true</code> unless <code>original</code>'s <code>Class</code> makes it a known immutable of
 	 *         type shared among all <code>ClassLoader</code>s
 	 */
-	public boolean shouldCloneObjectContent(Object original, ClassLoader targetClassLoader) {
+	public boolean shouldCloneObjectReferences(Object original, ClassLoader targetClassLoader) {
 		Assert.areNotNull(original, targetClassLoader);
 		return !isEffectivelyPrimitive(original.getClass());
 	}

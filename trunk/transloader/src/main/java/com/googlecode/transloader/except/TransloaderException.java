@@ -1,13 +1,14 @@
-package com.googlecode.transloader;
+package com.googlecode.transloader.except;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import com.googlecode.transloader.except.Assert;
 
 /**
  * The <code>RuntimeException</code> thrown by the Transloader library itself.
  * 
  * @author Jeremy Wales
  */
-public final class TransloaderException extends NestableRuntimeException {
+public class TransloaderException extends NestableRuntimeException {
 	private static final long serialVersionUID = -8191856547135359324L;
 
 	/**
