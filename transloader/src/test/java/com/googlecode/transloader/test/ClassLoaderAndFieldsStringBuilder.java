@@ -10,7 +10,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser;
 import com.googlecode.transloader.clone.reflect.FieldDescription;
 import com.googlecode.transloader.clone.reflect.FieldReflector;
-import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Traversal;
+import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Operation;
 
 public class ClassLoaderAndFieldsStringBuilder {
 	private static final String FIELD_SEPERATOR = " ";
@@ -25,8 +25,8 @@ public class ClassLoaderAndFieldsStringBuilder {
 	}
 
 	private static void append(final StringBuffer buffer, final Object object) {
-		Traversal toStringTraversal = new Traversal() {
-			public Object traverse(Object currentObject, Map referenceHistory) throws Exception {
+		Operation toStringOperation = new Operation() {
+			public Object performOn(Object currentObject, Map referenceHistory) throws Exception {
 				Class objectClass = object.getClass();
 				String className = getName(objectClass);
 				referenceHistory.put(currentObject, className + "<circular reference>");
@@ -36,7 +36,7 @@ public class ClassLoaderAndFieldsStringBuilder {
 			}
 		};
 		try {
-			CYCLIC_REFERENCE_TRAVERSER.performWithoutFollowingCircles(toStringTraversal, object);
+			CYCLIC_REFERENCE_TRAVERSER.performOperationWithoutLoopingOn(object, toStringOperation);
 		} catch (Exception e) {
 			throw new NestableRuntimeException(e);
 		}
@@ -60,7 +60,7 @@ public class ClassLoaderAndFieldsStringBuilder {
 				} else if (fieldValue.getClass().isArray()) {
 					appendArray(buffer, fieldValue);
 				} else {
-					appendValue(buffer, fieldValue, description.isPrimitive());
+					appendValue(buffer, fieldValue, description.isOfPrimitiveType());
 				}
 				buffer.append(FIELD_SEPERATOR);
 			} catch (Exception e) {

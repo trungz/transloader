@@ -1,5 +1,7 @@
 package com.googlecode.transloader;
 
+import com.googlecode.transloader.except.Assert;
+
 import java.lang.reflect.Method;
 
 /**

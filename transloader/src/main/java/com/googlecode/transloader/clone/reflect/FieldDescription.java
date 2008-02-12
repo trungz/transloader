@@ -1,9 +1,9 @@
 package com.googlecode.transloader.clone.reflect;
 
-import com.googlecode.transloader.Assert;
+import com.googlecode.transloader.except.Assert;
 
 /**
- * Describes a field by its name, declaring class name and whether or not it is it of primitive type.
+ * Describes a field by its name, declaring class name and whether or not it is of a primitive type.
  * 
  * @author Jeremy Wales
  */
@@ -48,9 +48,9 @@ public final class FieldDescription {
 	/**
 	 * Indicates whether or not the declared type of the field is primitive.
 	 * 
-	 * @return <code>true</code> if the field is primitive
+	 * @return <code>true</code> if the field is of primitive type
 	 */
-	public boolean isPrimitive() {
+	public boolean isOfPrimitiveType() {
 		return primitive;
 	}
 }

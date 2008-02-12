@@ -13,7 +13,7 @@ import junit.framework.Test;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.googlecode.transloader.Assert;
+import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.ProductionClassFinder;
 import com.googlecode.transloader.test.Triangulate;
@@ -44,13 +44,15 @@ public class NullParameterRejectionTest extends BaseTestCase {
 			Arrays.asList(new ExemptParam[] {
 					new ExemptParam("DefaultTransloader.wrap(java.lang.Class)", 0),
 					new ExemptParam("ClassWrapper(java.lang.Class)", 0),
+					new ExemptParam("ClassWrapper.getClassLoaderFrom(java.lang.Object)", 0),
 					new ExemptParam("InvocationDescription(java.lang.String,java.lang.Class,java.lang.Object)", 2),
 					new ExemptParam("InvocationDescription(java.lang.String,java.lang.String,java.lang.Object)", 2),
 					new ExemptParam("InvocationDescription(java.lang.reflect.Method,java.lang.Object[])", 1),
-					new ExemptParam("ObjectWrapper(java.lang.Object,com.googlecode.transloader.clone.CloningStrategy)",
-							0),});
+					new ExemptParam("ObjectWrapper(java.lang.Object,com.googlecode.transloader.clone.CloningStrategy)", 0),
+					new ExemptParam("CollectedClassLoader(java.lang.Object)", 0)
+            });
 
-	public static Test suite() throws Exception {
+    public static Test suite() throws Exception {
 		return new ActiveTestSuite(NullParameterRejectionTest.class);
 	}
 
@@ -103,8 +105,8 @@ public class NullParameterRejectionTest extends BaseTestCase {
 				method.invoke(instance, parameters.toArray());
 			}
 		};
-		assertThrows(thrower, new InvocationTargetException(new IllegalArgumentException(
-				"Expecting no null parameters but received " + parameters + ".")));
+		assertThrows(new InvocationTargetException(new IllegalArgumentException(
+				"Expecting no null parameters but received " + parameters + ".")), thrower);
 	}
 
 	private void assertPublicConstuctorsRejectNullParameters(Class productionClass) {
@@ -133,8 +135,8 @@ public class NullParameterRejectionTest extends BaseTestCase {
 				constructor.newInstance(parameters.toArray());
 			}
 		};
-		assertThrows(thrower, new InvocationTargetException(new IllegalArgumentException(
-				"Expecting no null parameters but received ")));
+		assertThrows(new InvocationTargetException(new IllegalArgumentException(
+				"Expecting no null parameters but received ")), thrower);
 	}
 
 	private List getNonNullParameters(Class[] parameterTypes) {

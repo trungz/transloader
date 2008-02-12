@@ -1,11 +1,13 @@
 package com.googlecode.transloader;
 
+import com.googlecode.transloader.clone.CloningStrategy;
+import com.googlecode.transloader.except.Assert;
+import com.googlecode.transloader.except.TransloaderException;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-
-import com.googlecode.transloader.clone.CloningStrategy;
 
 /**
  * The wrapper appropriate for wrapping around all <code>Object</code>s referencing <code>Class</code>es from
@@ -16,20 +18,24 @@ import com.googlecode.transloader.clone.CloningStrategy;
 public final class ObjectWrapper {
 	private final Object wrappedObject;
 	private final CloningStrategy cloner;
+    private final ClassLoader parameterClassLoader;
 
-	/**
+    /**
 	 * Constructs a new <code>ObjectWrapper</code> around the given object, which will use the given
-	 * <code>CloningStrategy</code> when required. Note that using implementation of {@link Transloader} is the
+	 * <code>CloningStrategy</code> when required. Note that using an implementation of {@link Transloader} is the
 	 * recommended way to produce these.
 	 * 
-	 * @param objectToWrap the object to wrap
-	 * @param cloningStrategy the strategy for cloning
-	 */
-	public ObjectWrapper(Object objectToWrap, CloningStrategy cloningStrategy) {
-		Assert.isNotNull(cloningStrategy);
+	 * @param objectToWrap the object to wrap (can be <code>null</code>)
+     * @param cloningStrategy the strategy for cloning
+     * @param parameterClassLoader the <code>ClassLoader</code> with which to clone parameters passed into methods of
+     * the <code>objectToWrap</code>
+     */
+	public ObjectWrapper(Object objectToWrap, CloningStrategy cloningStrategy, ClassLoader parameterClassLoader) {
+		Assert.areNotNull(cloningStrategy, parameterClassLoader);
 		wrappedObject = objectToWrap;
-		cloner = cloningStrategy;
-	}
+        cloner = cloningStrategy;
+        this.parameterClassLoader = parameterClassLoader;
+    }
 
 	/**
 	 * Indicates whether or not <code>null</code> is what is wrapped.
@@ -88,7 +94,7 @@ public final class ObjectWrapper {
 		Assert.isNotNull(classLoader);
 		if (isNull()) return null;
 		try {
-			return cloner.cloneObjectUsingClassLoader(getUnwrappedSelf(), classLoader);
+			return cloner.cloneObjectUsing(classLoader, getUnwrappedSelf());
 		} catch (Exception e) {
 			throw new TransloaderException("Unable to clone '" + getUnwrappedSelf() + "'.", e);
 		}
@@ -108,11 +114,9 @@ public final class ObjectWrapper {
 		Assert.isNotNull(description);
 		try {
 			Class wrappedClass = getUnwrappedSelf().getClass();
-			// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
-			ClassLoader wrappedClassLoader = wrappedClass.getClassLoader();
-			Class[] parameterTypes = ClassWrapper.getClasses(description.getParameterTypeNames(), wrappedClassLoader);
+			Class[] parameterTypes = ClassWrapper.getClassesFrom(parameterClassLoader, description.getParameterTypeNames());
 			Object[] clonedParameters =
-					(Object[]) cloner.cloneObjectUsingClassLoader(description.getParameters(), wrappedClassLoader);
+					(Object[]) cloner.cloneObjectUsing(parameterClassLoader, description.getParameters());
 			Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
 			return method.invoke(getUnwrappedSelf(), clonedParameters);
 		} catch (Exception e) {
@@ -125,14 +129,16 @@ public final class ObjectWrapper {
 
 	/**
 	 * Makes an implementation of the given <code>interface</code> that calls through to the wrapped object. This is
-	 * particularly useful if you have access in the current <code>ClassLoader</code> to an <code>interface</code>
-	 * that the wrapped object is expected to implement, except that it actually implements the equivalent from a
-	 * different <code>ClassLoader</code>. It is therefore usefully employed in conjunction with
-	 * {@link #isInstanceOf(String)}.
+	 * particularly useful if you have access in the current <code>ClassLoader</code> to an interface that the wrapped
+	 * object is expected to implement, except that it actually implements the equivalent from a different
+	 * <code>ClassLoader</code>. It is therefore usefully employed in conjunction with {@link #isInstanceOf(String)}.
 	 * <p>
-	 * This method will not fail fast if the wrapped object does not implement its own <code>ClassLoader</code>'s
-	 * equivalent to the given <code>interface</code>, so can also be used for "duck"-typing, as a more syntactically
-	 * elegant alternative to using {@link #invoke(InvocationDescription)}, if desired.
+	 * This method will <i>not</i> fail fast if the wrapped object does not implement its own <code>ClassLoader</code>'s
+	 * equivalent of the given <code>interface</code>. Therefore it can be used for "duck"-typing i.e. it will
+	 * execute the methods on the given <code>interface</code>, expecting them to be there on the wrapped object even
+	 * if it does not actually <code>implement</code> the interface, and if the methods happen to be there it will work.
+     * It can therefore work as a more syntactically elegant alternative to using
+     * {@link #invoke(InvocationDescription)}, if desired.
 	 * </p>
 	 * 
 	 * @param targetInterface the <code>interface</code> that the returned object can be cast to
@@ -140,8 +146,7 @@ public final class ObjectWrapper {
 	 */
 	public Object makeCastableTo(Class targetInterface) {
 		Assert.isNotNull(targetInterface);
-		// TODO collect all ClassLoaders from the object graph into an abstraction named CollectedClassLoader
-		return Proxy.newProxyInstance(getClass().getClassLoader(), new Class[] {targetInterface}, new Invoker());
+		return Proxy.newProxyInstance(targetInterface.getClassLoader(), new Class[] {targetInterface}, new Invoker());
 	}
 
 	private class Invoker implements InvocationHandler {

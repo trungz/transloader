@@ -2,9 +2,9 @@ package com.googlecode.transloader.clone.reflect;
 
 import java.util.Map;
 
-import com.googlecode.transloader.Assert;
+import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.clone.CloningStrategy;
-import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Traversal;
+import com.googlecode.transloader.clone.reflect.CyclicReferenceSafeTraverser.Operation;
 
 /**
  * A <code>CloningStrategy</code> that uses Java Reflection as its mechanism. Can clone whole object graphs or just
@@ -52,15 +52,15 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
 	 *         with potentially the <code>original</code> itself being the top-level object in the graph returned if
 	 *         it was not cloned
 	 */
-	public Object cloneObjectUsingClassLoader(final Object original, final ClassLoader targetClassLoader)
+	public Object cloneObjectUsing(final ClassLoader targetClassLoader, final Object original)
 			throws Exception {
 		Assert.areNotNull(original, targetClassLoader);
-		Traversal cloningTraversal = new Traversal() {
-			public Object traverse(Object currentObject, Map referenceHistory) throws Exception {
+		Operation cloningOperation = new Operation() {
+			public Object performOn(Object currentObject, Map referenceHistory) throws Exception {
 				return ReflectionCloningStrategy.this.clone(currentObject, targetClassLoader, referenceHistory);
 			}
 		};
-		return cyclicReferenceSafeTraverser.performWithoutFollowingCircles(cloningTraversal, original);
+		return cyclicReferenceSafeTraverser.performOperationWithoutLoopingOn(original, cloningOperation);
 	}
 
 	private Object clone(Object original, ClassLoader targetClassLoader, Map cloneHistory) throws Exception {
@@ -77,14 +77,14 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
 		InnerCloner innerCloner = original.getClass().isArray() ? arrayCloner : normalObjectCloner;
 		Object clone = original;
 		if (decider.shouldCloneObjectItself(original, targetClassLoader))
-			clone = innerCloner.instantiateClone(original, targetClassLoader);
+			clone = innerCloner.instantiateCloneOf(original, targetClassLoader);
 		cloneHistory.put(original, clone);
-		if (decider.shouldCloneObjectContent(original, targetClassLoader))
-			innerCloner.cloneContent(original, clone, targetClassLoader);
+		if (decider.shouldCloneObjectReferences(original, targetClassLoader))
+			innerCloner.cloneObjectsReferencedBy(original, clone, targetClassLoader);
 		return clone;
 	}
 
 	private Object performFallbackCloning(Object original, ClassLoader targetClassLoader) throws Exception {
-		return fallbackCloner.cloneObjectUsingClassLoader(original, targetClassLoader);
+		return fallbackCloner.cloneObjectUsing(targetClassLoader, original);
 	}
 }

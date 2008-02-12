@@ -29,5 +29,5 @@ public interface CloningDecisionStrategy {
 	 * @throws ClassNotFoundException if the <code>targetClassLoader</code> cannot be used to clone the objects
 	 *             refernced by <code>original</code> because it cannot find a required <code>Class</code>
 	 */
-	boolean shouldCloneObjectContent(Object original, ClassLoader targetClassLoader) throws ClassNotFoundException;
+	boolean shouldCloneObjectReferences(Object original, ClassLoader targetClassLoader) throws ClassNotFoundException;
 }

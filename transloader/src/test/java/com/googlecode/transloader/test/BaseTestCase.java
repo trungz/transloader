@@ -10,7 +10,7 @@ import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 public abstract class BaseTestCase extends TestCase {
 
 	protected void dump(Object object) {
-		// System.out.println("[" + getName() + "] " + object.toString());
+		 //System.out.println("<" + getName() + "> " + object.toString());
 	}
 
 	protected void assertEqualExceptForClassLoader(String originalString, Object clone) {
@@ -48,7 +48,7 @@ public abstract class BaseTestCase extends TestCase {
 		return "Expected " + attributeName + ": '" + expectedValue + "'. Actual: '" + ExceptionUtils.getFullStackTrace(actual) + "'.";
 	}
 
-	protected static final void assertThrows(Thrower thrower, Throwable expected) {
+	protected static void assertThrows(Throwable expected, Thrower thrower) {
 		try {
 			thrower.executeUntilThrow();
 		} catch (Throwable actual) {

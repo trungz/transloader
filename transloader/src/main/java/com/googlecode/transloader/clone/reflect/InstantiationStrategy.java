@@ -14,5 +14,5 @@ public interface InstantiationStrategy {
 	 * @return the new instance of the given <code>type</code>
 	 * @throws Exception can throw any <code>Exception</code> depending on the implementation
 	 */
-	Object newInstance(Class type) throws Exception;
+	Object newInstanceOf(Class type) throws Exception;
 }
