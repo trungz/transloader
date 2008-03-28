@@ -3,18 +3,16 @@ package com.googlecode.transloader.test.function;
 import com.googlecode.transloader.Transloader;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.HiearchyWithFieldsBottom;
+import com.googlecode.transloader.test.fixture.hierarchy.Bottom;
 import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
-import com.googlecode.transloader.test.fixture.SelfAndChildReferencingParent;
-import com.googlecode.transloader.test.fixture.SelfAndParentReferencingChild;
-import com.googlecode.transloader.test.fixture.SerializableWithAnonymousClassFields;
-import com.googlecode.transloader.test.fixture.WithArrayFields;
-import com.googlecode.transloader.test.fixture.WithListFields;
-import com.googlecode.transloader.test.fixture.WithNonCommonJavaFields;
-import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
-import com.googlecode.transloader.test.fixture.WithStringField;
+import com.googlecode.transloader.test.fixture.cyclic.SelfAndChildReferencingParent;
+import com.googlecode.transloader.test.fixture.cyclic.SelfAndParentReferencingChild;
+import com.googlecode.transloader.test.fixture.serializable.WithAnonymousClassFields;
+import com.googlecode.transloader.test.fixture.fields.WithPrimitiveFields;
+import com.googlecode.transloader.test.fixture.fields.*;
+import com.googlecode.transloader.test.fixture.fields.WithStringField;
 
 public abstract class CloningTestCase extends BaseTestCase {
 
@@ -49,12 +47,12 @@ public abstract class CloningTestCase extends BaseTestCase {
 	}
 
 	public void testClonesFieldsThroughoutHierarchies() throws Exception {
-		assertDeeplyClonedToOtherClassLoader(new HiearchyWithFieldsBottom(new NonCommonJavaObject(),
+		assertDeeplyClonedToOtherClassLoader(new Bottom(new NonCommonJavaObject(),
 				Triangulate.anyInt(), Triangulate.anyString(), Triangulate.eitherBoolean()));
 	}
 
 	public void testClonesObjectsOfSerializableAnonymousClasses() throws Exception {
-		assertDeeplyClonedToOtherClassLoader(new SerializableWithAnonymousClassFields(Triangulate.anyInteger()));
+		assertDeeplyClonedToOtherClassLoader(new WithAnonymousClassFields(Triangulate.anyInteger()));
 	}
 
 	public void testClonesObjectsWithListFields() throws Exception {

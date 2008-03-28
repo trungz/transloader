@@ -12,10 +12,10 @@ import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NonCommonJavaType;
 import com.googlecode.transloader.test.fixture.NonCommonJavaTypeWithMethods;
-import com.googlecode.transloader.test.fixture.WithMapFields;
-import com.googlecode.transloader.test.fixture.WithMethods;
-import com.googlecode.transloader.test.fixture.WithPrimitiveFields;
-import com.googlecode.transloader.test.fixture.WithStringField;
+import com.googlecode.transloader.test.fixture.fields.WithPrimitiveFields;
+import com.googlecode.transloader.test.fixture.fields.WithStringField;
+import com.googlecode.transloader.test.fixture.fields.WithMapFields;
+import com.googlecode.transloader.test.fixture.fields.WithMethods;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 

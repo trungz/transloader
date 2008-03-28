@@ -4,13 +4,17 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public final class IndependentClassLoader extends URLClassLoader {
-	private static final ClassLoader INSTANCE = new IndependentClassLoader();
+	private static final ClassLoader INSTANCE = createNewInstance();
 
 	public static ClassLoader getInstance() {
 		return INSTANCE;
 	}
 
-	private IndependentClassLoader() {
+    public static ClassLoader createNewInstance() {
+		return new IndependentClassLoader();
+	}
+
+    private IndependentClassLoader() {
 		super(getAppClassLoaderUrls(), null);
 	}
 
