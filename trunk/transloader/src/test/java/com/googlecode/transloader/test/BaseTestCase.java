@@ -33,7 +33,7 @@ public abstract class BaseTestCase extends TestCase {
 					notExpected.equals(actual));
 	}
 
-	protected static final void assertMatches(Throwable expected, Throwable actual) {
+	protected static void assertMatches(Throwable expected, Throwable actual) {
 		assertTrue(getComparisonFailedMessage("type", expected.getClass().getName(), actual),
 				expected.getClass().isAssignableFrom(actual.getClass()));
 		assertTrue(getComparisonFailedMessage("message", expected.getMessage(), actual),

@@ -48,7 +48,7 @@ public class NullParameterRejectionTest extends BaseTestCase {
 					new ExemptParam("InvocationDescription(java.lang.String,java.lang.Class,java.lang.Object)", 2),
 					new ExemptParam("InvocationDescription(java.lang.String,java.lang.String,java.lang.Object)", 2),
 					new ExemptParam("InvocationDescription(java.lang.reflect.Method,java.lang.Object[])", 1),
-					new ExemptParam("ObjectWrapper(java.lang.Object,com.googlecode.transloader.clone.CloningStrategy)", 0),
+					new ExemptParam("ObjectWrapper(", 0),
 					new ExemptParam("CollectedClassLoader(java.lang.Object)", 0)
             });
 
