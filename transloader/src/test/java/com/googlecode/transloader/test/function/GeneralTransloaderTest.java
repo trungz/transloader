@@ -8,10 +8,9 @@ import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.except.TransloaderException;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.IndependentClassLoader;
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
-import com.googlecode.transloader.test.fixture.NonCommonJavaType;
-import com.googlecode.transloader.test.fixture.NonCommonJavaTypeWithMethods;
+import com.googlecode.transloader.test.fixture.NotCommonJavaTypeWithMethods;
+import com.googlecode.transloader.test.fixture.NotCommonJavaType;
+import com.googlecode.transloader.test.fixture.*;
 import com.googlecode.transloader.test.fixture.fields.WithPrimitiveFields;
 import com.googlecode.transloader.test.fixture.fields.WithStringField;
 import com.googlecode.transloader.test.fixture.fields.WithMapFields;
@@ -35,7 +34,7 @@ public class GeneralTransloaderTest extends BaseTestCase {
     }
 
     private static Object getNewInstanceFromOtherClassLoader(Class clazz) throws Exception {
-        return IndependentClassLoader.getInstance().loadClass(clazz.getName()).newInstance();
+        return IndependentClassLoader.INSTANCE.loadClass(clazz.getName()).newInstance();
     }
 
     public void testReportsIsNullWhenGivenNull() throws Exception {
@@ -47,7 +46,7 @@ public class GeneralTransloaderTest extends BaseTestCase {
     }
 
     public void testReportsIsNotInstanceOfUnrelatedType() throws Exception {
-        assertFalse(transloader.wrap(new Object()).isInstanceOf(NonCommonJavaType.class.getName()));
+        assertFalse(transloader.wrap(new Object()).isInstanceOf(NotCommonJavaType.class.getName()));
     }
 
     public void testReportsIsInstanceOfSameClass() throws Exception {
@@ -55,11 +54,11 @@ public class GeneralTransloaderTest extends BaseTestCase {
     }
 
     public void testReportsIsInstanceOfSuperClass() throws Exception {
-        assertTrue(transloader.wrap(foreignObject).isInstanceOf(NonCommonJavaObject.class.getName()));
+        assertTrue(transloader.wrap(foreignObject).isInstanceOf(NotCommonJavaObject.class.getName()));
     }
 
     public void testReportsIsInstanceOfImplementedInterface() throws Exception {
-        assertTrue(transloader.wrap(foreignObject).isInstanceOf(NonCommonJavaType.class.getName()));
+        assertTrue(transloader.wrap(foreignObject).isInstanceOf(NotCommonJavaType.class.getName()));
     }
 
     public void testReturnsNullWhenAskedToCloneNull() throws Exception {
@@ -111,10 +110,10 @@ public class GeneralTransloaderTest extends BaseTestCase {
     }
 
     public void testClonesParametersOfNonCommonJavaTypesInInvocations() throws Exception {
-        NonCommonJavaType first = new WithStringField(Triangulate.anyString());
-        NonCommonJavaType second = new WithPrimitiveFields();
+        NotCommonJavaType first = new WithStringField(Triangulate.anyString());
+        NotCommonJavaType second = new WithPrimitiveFields();
         String expected = new WithMethods().concatenate(first, second);
-        Class[] paramTypes = {NonCommonJavaType.class, NonCommonJavaType.class};
+        Class[] paramTypes = {NotCommonJavaType.class, NotCommonJavaType.class};
         Object[] params = {first, second};
         String actual = (String) transloader.wrap(foreignObjectWithMethods).invoke(new InvocationDescription("concatenate", paramTypes, params));
         assertEqualExceptForClassLoader(expected, actual);
@@ -124,9 +123,9 @@ public class GeneralTransloaderTest extends BaseTestCase {
         String expectedStringFieldValue = Triangulate.anyString();
         Transloader.DEFAULT.wrap(foreignObjectWithMethods).invoke(
                 new InvocationDescription("setStringField", expectedStringFieldValue));
-        NonCommonJavaTypeWithMethods withMethods =
-                (NonCommonJavaTypeWithMethods) transloader.wrap(foreignObjectWithMethods).makeCastableTo(
-                        NonCommonJavaTypeWithMethods.class);
+        NotCommonJavaTypeWithMethods withMethods =
+                (NotCommonJavaTypeWithMethods) transloader.wrap(foreignObjectWithMethods).makeCastableTo(
+                        NotCommonJavaTypeWithMethods.class);
         assertEquals(expectedStringFieldValue, withMethods.getStringField());
     }
 }

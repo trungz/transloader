@@ -1,9 +1,10 @@
-package com.googlecode.transloader.clone.reflect;
+package com.googlecode.transloader.clone.reflect.decide;
 
 import com.googlecode.transloader.except.Assert;
+import com.googlecode.transloader.clone.reflect.decide.CloningDecisionStrategy;
 
 /**
- * When injected into a {@link ReflectionCloningStrategy}, decides that all given objects and those that they reference
+ * When injected into a {@link com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy}, decides that all given objects and those that they reference
  * should be cloned.
  * 
  * @author Jeremy Wales

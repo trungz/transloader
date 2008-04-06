@@ -6,12 +6,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
-import com.googlecode.transloader.test.fixture.NonCommonJavaType;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
+import com.googlecode.transloader.test.fixture.NotCommonJavaType;
 
-public class WithListFields extends NonCommonJavaObject {
+public class WithListFields extends NotCommonJavaObject {
 	List listFromArray =
-			Arrays.asList(new NonCommonJavaType[] {new WithPrimitiveFields(),
+			Arrays.asList(new NotCommonJavaType[] {new WithPrimitiveFields(),
 					new WithStringField(Triangulate.anyString())});
 	private List list = new ArrayList();
 	{

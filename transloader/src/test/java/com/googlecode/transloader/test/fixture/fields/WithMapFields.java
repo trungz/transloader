@@ -7,9 +7,9 @@ import java.util.TreeMap;
 
 import com.googlecode.transloader.test.Triangulate;
 import com.googlecode.transloader.test.fixture.serializable.WithFinalFields;
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
 
-public class WithMapFields extends NonCommonJavaObject {
+public class WithMapFields extends NotCommonJavaObject {
 	private SortedMap map = new TreeMap();
 	{
 		map.put(Triangulate.anyInteger(), Triangulate.anyString());

@@ -17,13 +17,14 @@ import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.ProductionClassFinder;
 import com.googlecode.transloader.test.Triangulate;
+import com.googlecode.transloader.Transloader;
 
 public class NullParameterRejectionTest extends BaseTestCase {
-	private static final Class PRODUCTION_ASSERT_CLASS = Assert.class;
-	private static final String PRODUCTION_PACKAGE_NAME = PRODUCTION_ASSERT_CLASS.getPackage().getName();
+	private static final Class PRODUCTION_CLASS = Transloader.class;
+	private static final String PRODUCTION_PACKAGE_NAME = PRODUCTION_CLASS.getPackage().getName();
 	private static final String TEST_PACKAGE_NAME = "com.googlecode.transloader.test";
 	private static final Class[] ALL_PRODUCTION_CLASSES =
-			ProductionClassFinder.getAllProductionClasses(PRODUCTION_ASSERT_CLASS, TEST_PACKAGE_NAME);
+			ProductionClassFinder.getAllProductionClasses(PRODUCTION_CLASS, TEST_PACKAGE_NAME);
 
 	private static class ExemptParam {
 		String methodDescription;
@@ -42,14 +43,15 @@ public class NullParameterRejectionTest extends BaseTestCase {
 
 	private static final List EXEMPT_PARAMS =
 			Arrays.asList(new ExemptParam[] {
-					new ExemptParam("DefaultTransloader.wrap(java.lang.Class)", 0),
+					new ExemptParam("DefaultTransloader.wrap", 0),
 					new ExemptParam("ClassWrapper(java.lang.Class)", 0),
 					new ExemptParam("ClassWrapper.getClassLoaderFrom(java.lang.Object)", 0),
 					new ExemptParam("InvocationDescription(java.lang.String,java.lang.Class,java.lang.Object)", 2),
 					new ExemptParam("InvocationDescription(java.lang.String,java.lang.String,java.lang.Object)", 2),
 					new ExemptParam("InvocationDescription(java.lang.reflect.Method,java.lang.Object[])", 1),
 					new ExemptParam("ObjectWrapper(", 0),
-					new ExemptParam("CollectedClassLoader(java.lang.Object)", 0)
+					new ExemptParam("CollectedClassLoader(java.lang.Object)", 0),
+					new ExemptParam("ReflectionCloningStrategy.cloneObjectUsing", 1)
             });
 
     public static Test suite() throws Exception {
@@ -73,7 +75,7 @@ public class NullParameterRejectionTest extends BaseTestCase {
 	}
 
 	private boolean isPublicConcreteClassOtherThanAssert(Class productionClass) {
-		return !productionClass.isInterface() && Modifier.isPublic(productionClass.getModifiers()) && productionClass != PRODUCTION_ASSERT_CLASS;
+		return !productionClass.isInterface() && Modifier.isPublic(productionClass.getModifiers()) && productionClass != PRODUCTION_CLASS;
 	}
 
 	private void assertPublicMethodsRejectNullParameters(Class productionClass) throws Exception {
@@ -81,7 +83,7 @@ public class NullParameterRejectionTest extends BaseTestCase {
 		Method[] methods = productionClass.getMethods();
 		for (int i = 0; i < methods.length; i++) {
 			Method method = methods[i];
-			if (method.getDeclaringClass().getPackage().getName().startsWith(PRODUCTION_PACKAGE_NAME))
+            if (method.getDeclaringClass().getPackage().getName().startsWith(PRODUCTION_PACKAGE_NAME))
 				assertRejectsNullParameters(instance, methods[i]);
 		}
 	}

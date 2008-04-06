@@ -4,11 +4,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public final class IndependentClassLoader extends URLClassLoader {
-	private static final ClassLoader INSTANCE = createNewInstance();
-
-	public static ClassLoader getInstance() {
-		return INSTANCE;
-	}
+	public static final ClassLoader INSTANCE = createNewInstance();
 
     public static ClassLoader createNewInstance() {
 		return new IndependentClassLoader();

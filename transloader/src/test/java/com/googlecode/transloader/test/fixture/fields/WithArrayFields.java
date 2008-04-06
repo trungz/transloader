@@ -1,13 +1,13 @@
 package com.googlecode.transloader.test.fixture.fields;
 
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
-import com.googlecode.transloader.test.fixture.NonCommonJavaType;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
+import com.googlecode.transloader.test.fixture.NotCommonJavaType;
 
-public class WithArrayFields extends NonCommonJavaObject {
+public class WithArrayFields extends NotCommonJavaObject {
 	private int[] ints = {Triangulate.anyInt(), Triangulate.anyInt()};
 	private Object[] objects = {Triangulate.anyString(), new WithPrimitiveFields(), Triangulate.anyString()};
 	private boolean[] noBooleans = {};
-	private NonCommonJavaObject[] nonCommonJavaObjects = {new WithStringField(Triangulate.anyString())};
-	private NonCommonJavaType[] nonCommonJavaTypes = {new WithPrimitiveFields()};
+	private NotCommonJavaObject[] notCommonJavaObjects = {new WithStringField(Triangulate.anyString())};
+	private NotCommonJavaType[] notCommonJavaTypes = {new WithPrimitiveFields()};
 }

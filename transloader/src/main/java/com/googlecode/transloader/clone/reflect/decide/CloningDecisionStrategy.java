@@ -1,7 +1,7 @@
-package com.googlecode.transloader.clone.reflect;
+package com.googlecode.transloader.clone.reflect.decide;
 
 /**
- * A strategy interface for customising which parts of an object graph {@link ReflectionCloningStrategy} should actually
+ * A strategy interface for customising which parts of an object graph {@link com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy} should actually
  * clone.
  * 
  * @author Jeremy Wales

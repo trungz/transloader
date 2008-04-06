@@ -1,10 +1,10 @@
 package com.googlecode.transloader.test.fixture.fields;
 
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
-import com.googlecode.transloader.test.fixture.NonCommonJavaTypeWithMethods;
-import com.googlecode.transloader.test.fixture.NonCommonJavaType;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
+import com.googlecode.transloader.test.fixture.NotCommonJavaTypeWithMethods;
+import com.googlecode.transloader.test.fixture.NotCommonJavaType;
 
-public class WithMethods extends NonCommonJavaObject implements NonCommonJavaTypeWithMethods {
+public class WithMethods extends NotCommonJavaObject implements NotCommonJavaTypeWithMethods {
 	private String stringField;
 
 	public String getStringField() {
@@ -15,7 +15,7 @@ public class WithMethods extends NonCommonJavaObject implements NonCommonJavaTyp
 		stringField = stringFieldValue;
 	}
 
-	public String concatenate(NonCommonJavaType first, NonCommonJavaType second) {
+	public String concatenate(NotCommonJavaType first, NotCommonJavaType second) {
 		return first.toString() + second.toString();
 	}
 }
