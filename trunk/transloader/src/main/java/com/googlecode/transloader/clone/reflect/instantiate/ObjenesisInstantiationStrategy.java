@@ -1,9 +1,10 @@
-package com.googlecode.transloader.clone.reflect;
+package com.googlecode.transloader.clone.reflect.instantiate;
 
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
 import com.googlecode.transloader.except.Assert;
+import com.googlecode.transloader.clone.reflect.instantiate.InstantiationStrategy;
 
 /**
  * Uses {@link ObjenesisStd} to create new instances of <code>Class</code>es without invoking their constructors.

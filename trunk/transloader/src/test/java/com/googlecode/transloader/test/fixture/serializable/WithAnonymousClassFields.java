@@ -1,11 +1,11 @@
 package com.googlecode.transloader.test.fixture.serializable;
 
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.NonCommonJavaType;
+import com.googlecode.transloader.test.fixture.NotCommonJavaType;
 
 public class WithAnonymousClassFields extends WithFinalFields {
 	private java.io.Serializable anonymousClassField = new Serializable() {
-		private NonCommonJavaType instanceInitializerField;
+		private NotCommonJavaType instanceInitializerField;
 		{
 			instanceInitializerField = new WithFinalFields(Triangulate.anyInteger());
 		}

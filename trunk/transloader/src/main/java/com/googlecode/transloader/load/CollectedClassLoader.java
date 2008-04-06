@@ -1,8 +1,9 @@
 package com.googlecode.transloader.load;
 
 import com.googlecode.transloader.ClassWrapper;
-import com.googlecode.transloader.clone.reflect.FieldReflector;
 import com.googlecode.transloader.except.TransloaderException;
+import com.googlecode.transloader.reference.ReferenceReflecter;
+import com.googlecode.transloader.reference.Reference;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,8 +43,8 @@ public class CollectedClassLoader extends ClassLoader {
             alreadyVisited.add(currentObjectInGraph);
             ClassLoader classLoader = ClassWrapper.getClassLoaderFrom(currentObjectInGraph);
             if (!classLoaders.contains(classLoader)) classLoaders.add(classLoader);
-            Object[] fieldValues = new FieldReflector(currentObjectInGraph).getAllInstanceFieldValues();
-            for (int i = 0; i < fieldValues.length; i++) collectClassLoadersFrom(fieldValues[i]);
+            Reference[] references = ReferenceReflecter.wrap(currentObjectInGraph).getAllReferences();
+            for (int i = 0; i < references.length; i++) collectClassLoadersFrom(references[i].getValue());
         }
     }
 }

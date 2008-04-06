@@ -1,9 +1,10 @@
 package com.googlecode.transloader.clone;
 
-import com.googlecode.transloader.clone.reflect.MaximalCloningDecisionStrategy;
-import com.googlecode.transloader.clone.reflect.MinimalCloningDecisionStrategy;
-import com.googlecode.transloader.clone.reflect.ObjenesisInstantiationStrategy;
+
+import com.googlecode.transloader.clone.reflect.instantiate.ObjenesisInstantiationStrategy;
 import com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy;
+import com.googlecode.transloader.clone.reflect.decide.MinimalCloningDecisionStrategy;
+import com.googlecode.transloader.clone.reflect.decide.MaximalCloningDecisionStrategy;
 
 /**
  * The API by which an object can be cloned using a different <code>ClassLoader</code> than that/those which loaded
@@ -33,7 +34,7 @@ public interface CloningStrategy {
 	 * </p>
 	 * 
 	 * @see ReflectionCloningStrategy
-	 * @see MinimalCloningDecisionStrategy
+	 * @see com.googlecode.transloader.clone.reflect.decide.MinimalCloningDecisionStrategy
 	 */
 	CloningStrategy MINIMAL =
 			new ReflectionCloningStrategy(new MinimalCloningDecisionStrategy(), new ObjenesisInstantiationStrategy(),
@@ -49,7 +50,7 @@ public interface CloningStrategy {
 	 * {@link java.io.Serializable} and also performs much faster than serialization.
 	 * 
 	 * @see ReflectionCloningStrategy
-	 * @see MaximalCloningDecisionStrategy
+	 * @see com.googlecode.transloader.clone.reflect.decide.MaximalCloningDecisionStrategy
 	 */
 	CloningStrategy MAXIMAL =
 			new ReflectionCloningStrategy(new MaximalCloningDecisionStrategy(), new ObjenesisInstantiationStrategy(),
@@ -59,7 +60,7 @@ public interface CloningStrategy {
 	 * Clones the given object using the given <code>ClassLoader</code>.
 	 * 
 	 * @param targetClassLoader the <code>ClassLoader</code> by which to load <code>Class</code>es for clones
-	 * @param original the original object to be cloned
+	 * @param original the original object to be cloned (can be <code>null</code>).
 	 * @return the result of cloning the object graph
 	 * @throws Exception can throw any <code>Exception</code> depending on the implementation
 	 */

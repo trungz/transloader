@@ -1,8 +1,8 @@
-package com.googlecode.transloader.clone.reflect;
+package com.googlecode.transloader.clone.reflect.instantiate;
 
 /**
  * A strategy interface for customising how normal objects (as opposed to arrays) are instantiated by
- * {@link ReflectionCloningStrategy}.
+ * {@link com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy}.
  * 
  * @author Jeremy Wales
  */

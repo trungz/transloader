@@ -3,6 +3,7 @@ package com.googlecode.transloader;
 import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.except.TransloaderException;
+import com.googlecode.transloader.InvocationDescription;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

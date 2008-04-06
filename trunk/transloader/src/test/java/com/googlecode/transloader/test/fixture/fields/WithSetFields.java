@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
 
 // TODO find a way to clone HashSets and TreeSets without serialization so that non-Serializable Objects can be put into them!
 /*
@@ -19,7 +19,7 @@ import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
  * HashSets and TreeSets because their implementation in the Sun JRE is backed by a Map which has a keySet field
  * which is assigned an anonymous class.
  */
-public class WithSetFields extends NonCommonJavaObject {
+public class WithSetFields extends NotCommonJavaObject {
 
 	private Set set = new TreeSet(new ToStringComparator());
 	{

@@ -10,17 +10,17 @@ import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 public abstract class BaseTestCase extends TestCase {
 
 	protected void dump(Object object) {
-		 //System.out.println("<" + getName() + "> " + object.toString());
+		 System.out.println("<" + getName() + "> " + object.toString());
 	}
 
-	protected void assertEqualExceptForClassLoader(String originalString, Object clone) {
+	protected void assertEqualExceptForClassLoader(String originalDumpString, Object clone) {
 		String originalClassLoaderString = this.getClass().getClassLoader().toString();
-		String cloneClassLoaderString = IndependentClassLoader.getInstance().toString();
+        String cloneClassLoaderString = IndependentClassLoader.INSTANCE.toString();
 		assertNotEquals(originalClassLoaderString, cloneClassLoaderString);
 		String expectedCloneString =
-				StringUtils.replace(originalString, originalClassLoaderString, cloneClassLoaderString);
+				StringUtils.replace(originalDumpString, originalClassLoaderString, cloneClassLoaderString);
 		String cloneString = clone.toString();
-		dump(originalString);
+		dump(originalDumpString);
 		dump(cloneString);
 		assertEquals(expectedCloneString, cloneString);
 	}

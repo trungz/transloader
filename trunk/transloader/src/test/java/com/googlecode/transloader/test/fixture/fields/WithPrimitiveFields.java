@@ -1,9 +1,9 @@
 package com.googlecode.transloader.test.fixture.fields;
 
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.NonCommonJavaObject;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
 
-public class WithPrimitiveFields extends NonCommonJavaObject {
+public class WithPrimitiveFields extends NotCommonJavaObject {
 	private boolean booleanField;
 	private byte byteField;
 	private char charField;

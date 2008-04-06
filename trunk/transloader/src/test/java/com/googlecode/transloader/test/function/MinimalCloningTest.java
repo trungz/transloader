@@ -18,15 +18,7 @@ public class MinimalCloningTest extends CloningTestCase {
 
 	public void testDoesNotCloneStrings() throws Exception {
 		Object string = Triangulate.anyString();
-		assertSame(string, getTransloader().wrap(string).cloneWith(IndependentClassLoader.getInstance()));
-	}
-
-	public void testClonesObjectsWithSetFields() throws Exception {
-		assertDeeplyClonedToOtherClassLoader(new WithSetFields());
-	}
-
-	public void testClonesObjectsWithMapFields() throws Exception {
-		assertDeeplyClonedToOtherClassLoader(new WithMapFields());
+        assertSame(string, getTransloader().wrap(string).cloneWith(IndependentClassLoader.INSTANCE));
 	}
 
 	protected Transloader getTransloader() {
