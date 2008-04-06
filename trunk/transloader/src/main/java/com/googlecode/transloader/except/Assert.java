@@ -107,8 +107,8 @@ public final class Assert {
     public static void areSameLength(Object[] array1, Object[] array2) {
         if (array1.length != array2.length)
             throw new IllegalArgumentException(
-					"Expecting equal length arrays but received " + Arrays.asList(array1) + " and " + Arrays.asList(array2) + ".");
-	}
+                    "Expecting equal length arrays but received " + Arrays.asList(array1) + " and " + Arrays.asList(array2) + ".");
+    }
 
     /**
      * Asserts that the given object is an array.

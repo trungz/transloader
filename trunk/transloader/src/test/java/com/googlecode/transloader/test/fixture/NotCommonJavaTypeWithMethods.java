@@ -1,9 +1,9 @@
 package com.googlecode.transloader.test.fixture;
 
 public interface NotCommonJavaTypeWithMethods extends NotCommonJavaType {
-	String getStringField();
+    String getStringField();
 
-	void setStringField(String stringFieldValue);
+    void setStringField(String stringFieldValue);
 
-	String concatenate(NotCommonJavaType first, NotCommonJavaType second);
+    String concatenate(NotCommonJavaType first, NotCommonJavaType second);
 }

@@ -79,7 +79,7 @@ public final class FieldDescription implements ReferenceDescription {
 
     /**
      * Retrieves the name of the field.
-     * 
+     *
      * @return the name of the field within the class.
      */
     public String getName() {

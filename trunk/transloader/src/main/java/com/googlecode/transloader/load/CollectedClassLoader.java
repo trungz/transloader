@@ -2,8 +2,8 @@ package com.googlecode.transloader.load;
 
 import com.googlecode.transloader.ClassWrapper;
 import com.googlecode.transloader.except.TransloaderException;
-import com.googlecode.transloader.reference.ReferenceReflecter;
 import com.googlecode.transloader.reference.Reference;
+import com.googlecode.transloader.reference.ReferenceReflecter;
 
 import java.util.ArrayList;
 import java.util.HashSet;

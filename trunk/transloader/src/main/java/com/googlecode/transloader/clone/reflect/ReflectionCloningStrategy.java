@@ -1,16 +1,9 @@
 package com.googlecode.transloader.clone.reflect;
 
 import com.googlecode.transloader.clone.CloningStrategy;
-import com.googlecode.transloader.clone.reflect.instantiate.CloneInstantiater;
-import com.googlecode.transloader.clone.reflect.instantiate.InstantiationStrategy;
 import com.googlecode.transloader.clone.reflect.decide.CloningDecisionStrategy;
+import com.googlecode.transloader.clone.reflect.instantiate.InstantiationStrategy;
 import com.googlecode.transloader.except.Assert;
-import com.googlecode.transloader.reference.Reference;
-import com.googlecode.transloader.reference.ReferenceReflecter;
-import org.apache.commons.collections.map.IdentityMap;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A <code>CloningStrategy</code> that uses Java Reflection as its mechanism. Can clone whole object graphs or just
@@ -43,7 +36,7 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return a completely or partially cloned object graph, depending on the <code>CloningDecisionStrategy</code>
      *         injected in
      *         {@link #ReflectionCloningStrategy(CloningDecisionStrategy, InstantiationStrategy, CloningStrategy)},

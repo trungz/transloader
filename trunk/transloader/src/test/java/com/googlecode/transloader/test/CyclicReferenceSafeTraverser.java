@@ -24,7 +24,7 @@ public final class CyclicReferenceSafeTraverser {
      * traversed in the current journey through the graph.
      *
      * @param currentObjectInGraph the location in the object graph over which to perform the operation
-     * @param operation the operation to execute
+     * @param operation            the operation to execute
      * @return the result of performing the operation
      * @throws Exception can throw any <code>Exception</code> from the operation itself
      */
@@ -61,7 +61,7 @@ public final class CyclicReferenceSafeTraverser {
          * reused next time the same object is encountered in the same journey over the graph.
          *
          * @param currentObjectInGraph the location in the object graph over which to perform the traversal
-         * @param referenceHistory the history of objects already traversed and the results of traversing them
+         * @param referenceHistory     the history of objects already traversed and the results of traversing them
          * @return the result of traversing <code>currentObjectInGraph</code>
          * @throws Exception can throw any <code>Exception</code> depending on the implementation
          */

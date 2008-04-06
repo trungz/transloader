@@ -38,7 +38,7 @@ public final class ArrayElementDescription implements ReferenceDescription {
      * Assigns the given value to the field matching <code>this</code> description on the given object.
      *
      * @param array the object on which to set the field
-     * @param value   the value to set (can be <code>null</code>)
+     * @param value the value to set (can be <code>null</code>)
      */
     public void setValueIn(Object array, Object value) {
         Array.set(Assert.isArray(array), elementIndex, value);
