@@ -1,7 +1,7 @@
 package com.googlecode.transloader.clone.reflect.instantiate;
 
-import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.ClassWrapper;
+import com.googlecode.transloader.except.Assert;
 
 public abstract class CloneInstantiater {
     public static CloneInstantiater wrap(Object object, InstantiationStrategy instantiationStrategy) {
@@ -11,7 +11,7 @@ public abstract class CloneInstantiater {
     protected final Object original;
 
     public CloneInstantiater(Object original) {
-         this.original = Assert.isNotNull(original);
+        this.original = Assert.isNotNull(original);
     }
 
     public abstract Object instantiateShallowCloneUsing(ClassLoader targetClassLoader) throws Exception;

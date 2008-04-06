@@ -55,7 +55,8 @@ public class ClassLoaderAndReferencesStringBuilder {
     private static void append(Reference reference, StringBuffer buffer) {
         if (reference.getValue() == null) {
             buffer.append("null");
-        } else if (reference.getDescription().isOfPrimitiveType() || referenceBasedStringIsNotDeterministic(reference.getValue())) {
+        } else
+        if (reference.getDescription().isOfPrimitiveType() || referenceBasedStringIsNotDeterministic(reference.getValue())) {
             buffer.append(reference.getValue());
         } else {
             append(reference.getValue(), buffer);

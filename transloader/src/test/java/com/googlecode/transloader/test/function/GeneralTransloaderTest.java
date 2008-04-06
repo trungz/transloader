@@ -8,13 +8,14 @@ import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.except.TransloaderException;
 import com.googlecode.transloader.test.BaseTestCase;
 import com.googlecode.transloader.test.Triangulate;
-import com.googlecode.transloader.test.fixture.NotCommonJavaTypeWithMethods;
+import com.googlecode.transloader.test.fixture.IndependentClassLoader;
+import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
 import com.googlecode.transloader.test.fixture.NotCommonJavaType;
-import com.googlecode.transloader.test.fixture.*;
-import com.googlecode.transloader.test.fixture.fields.WithPrimitiveFields;
-import com.googlecode.transloader.test.fixture.fields.WithStringField;
+import com.googlecode.transloader.test.fixture.NotCommonJavaTypeWithMethods;
 import com.googlecode.transloader.test.fixture.fields.WithMapFields;
 import com.googlecode.transloader.test.fixture.fields.WithMethods;
+import com.googlecode.transloader.test.fixture.fields.WithPrimitiveFields;
+import com.googlecode.transloader.test.fixture.fields.WithStringField;
 import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 

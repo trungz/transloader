@@ -1,9 +1,9 @@
 package com.googlecode.transloader.clone.reflect;
 
 import com.googlecode.transloader.clone.CloningStrategy;
+import com.googlecode.transloader.clone.reflect.decide.CloningDecisionStrategy;
 import com.googlecode.transloader.clone.reflect.instantiate.CloneInstantiater;
 import com.googlecode.transloader.clone.reflect.instantiate.InstantiationStrategy;
-import com.googlecode.transloader.clone.reflect.decide.CloningDecisionStrategy;
 import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.reference.Reference;
 import com.googlecode.transloader.reference.ReferenceReflecter;

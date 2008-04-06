@@ -4,9 +4,9 @@ import com.googlecode.transloader.test.fixture.NotCommonJavaObject;
 
 
 public class WithStringField extends NotCommonJavaObject {
-	private String field;
-	
-	public WithStringField(String fieldValue) {
-		field = fieldValue;
-	}
+    private String field;
+
+    public WithStringField(String fieldValue) {
+        field = fieldValue;
+    }
 }
