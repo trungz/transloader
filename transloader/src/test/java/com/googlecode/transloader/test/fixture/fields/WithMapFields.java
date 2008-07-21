@@ -14,10 +14,10 @@ public class WithMapFields extends NotCommonJavaObject {
 
     {
         map.put(Triangulate.anyInteger(), Triangulate.anyString());
-        map.put(Triangulate.anyInteger(), new WithFinalFields(Triangulate.anyInteger()));
+        map.put(Triangulate.anyInteger(), Triangulate.anyString());
     }
 
     private Map unmodifiable = Collections.unmodifiableMap(map);
     private Map synchronizedMap = Collections.synchronizedSortedMap(map);
-    private Map singleton = Collections.singletonMap(Triangulate.anyInteger(), Triangulate.anyString());
+    private Map singleton = Collections.singletonMap(Triangulate.anyString(), Triangulate.anyInteger());
 }

@@ -14,24 +14,23 @@ import com.googlecode.transloader.except.Assert;
 public final class ReflectionCloningStrategy implements CloningStrategy {
     private final CloningDecisionStrategy decider;
     private final InstantiationStrategy instantiater;
-    private final CloningStrategy fallbackCloner;
+    private final CloningStrategy fallback;
 
     /**
      * Constructs a new <code>ReflectionCloningStrategy</code> with its dependencies injected.
      *
-     * @param cloningDecisionStrategy the strategy by which the decision to clone or not to clone a particular given
-     *                                object is made
-     * @param instantiationStrategy   the strategy by which to instantiate normal objects (as opposed to arrays, for which
-     *                                standard reflection is always adequate)
-     * @param fallbackCloningStrategy the <code>CloningStrategy</code> to fall back to when <code>this</code>
-     *                                strategy fails
+     * @param decider      the strategy by which the decision to clone or not to clone a particular given
+     *                     object is made
+     * @param instantiater the strategy by which to instantiate normal objects (as opposed to arrays, for which
+     *                     standard reflection is always adequate)
+     * @param fallback     the <code>CloningStrategy</code> to fall back to when <code>this</code>
+     *                     strategy fails
      */
-    public ReflectionCloningStrategy(CloningDecisionStrategy cloningDecisionStrategy,
-                                     InstantiationStrategy instantiationStrategy, CloningStrategy fallbackCloningStrategy) {
-        Assert.areNotNull(cloningDecisionStrategy, instantiationStrategy, fallbackCloningStrategy);
-        decider = cloningDecisionStrategy;
-        instantiater = instantiationStrategy;
-        fallbackCloner = fallbackCloningStrategy;
+    public ReflectionCloningStrategy(CloningDecisionStrategy decider, InstantiationStrategy instantiater, CloningStrategy fallback) {
+        Assert.areNotNull(decider, instantiater, fallback);
+        this.decider = decider;
+        this.instantiater = instantiater;
+        this.fallback = fallback;
     }
 
     /**
@@ -45,6 +44,9 @@ public final class ReflectionCloningStrategy implements CloningStrategy {
      */
     public Object cloneObjectUsing(final ClassLoader targetClassLoader, final Object original) throws Exception {
         Assert.areNotNull(targetClassLoader, original);
-        return new MutableReflectiveCloner(original, targetClassLoader, decider, instantiater, fallbackCloner).performCloning();
+        CloneMapper mapper = new StatefulMapper(original, targetClassLoader, decider, instantiater);
+        CloneWeaver weaver = new StatefulWeaver(mapper);
+        weaver.weaveTransformedReferences();
+        return mapper.getTransformationOf(original);
     }
 }

@@ -22,7 +22,7 @@ public final class Triangulate {
         return anyDouble() + "";
     }
 
-    public static String anyAlphaNumbericString() {
+    public static String anyAlphanumbericString() {
         return Long.toHexString(anyLong());
     }
 

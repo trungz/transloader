@@ -52,6 +52,13 @@ public final class ArrayElementDescription implements ReferenceDescription {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public boolean isTransient() {
+        return false;
+    }
+
+    /**
      * Retreives the element index.
      *
      * @return the index within the array of the element reference.

@@ -34,6 +34,10 @@ public class NullParameterRejectionTest extends BaseTestCase {
 
         public boolean equals(Object obj) {
             ExemptParam other = (ExemptParam) obj;
+            return matches(other);
+        }
+
+        private boolean matches(ExemptParam other) {
             return StringUtils.contains(methodDescription, other.methodDescription) && paramNumber == other.paramNumber;
         }
     }

@@ -2,7 +2,13 @@ package com.googlecode.transloader.reference;
 
 import com.googlecode.transloader.except.Assert;
 
-public class Reference {
+public final class Reference {
+    public static final Object NULL = new Object() {
+        public String toString() {
+            return "null";
+        }
+    };
+
     private final ReferenceDescription description;
     private final Object value;
 
