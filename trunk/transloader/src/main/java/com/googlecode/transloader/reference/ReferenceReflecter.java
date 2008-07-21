@@ -1,7 +1,7 @@
 package com.googlecode.transloader.reference;
 
 import com.googlecode.transloader.except.Assert;
-import com.googlecode.transloader.except.ImpossibleTransloaderException;
+import com.googlecode.transloader.except.ImpossibleException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,7 +11,8 @@ import java.util.List;
 
 public abstract class ReferenceReflecter {
     public static ReferenceReflecter wrap(Object object) {
-        return Assert.isNotNull(object).getClass().isArray() ? new Array(object) : (ReferenceReflecter) new NormalObject(object);
+        Class objectType = Assert.isNotNull(object).getClass();
+        return objectType.isArray() ? new Array(object) : (ReferenceReflecter) new NormalObject(object);
     }
 
     protected Object object;
@@ -28,9 +29,9 @@ public abstract class ReferenceReflecter {
         for (int i = 0; i < descriptions.length; i++)
             try {
                 Object value = descriptions[i].getValueFrom(object);
-                if (value != null) references.add(new Reference(descriptions[i], value));
+                references.add(new Reference(descriptions[i], value == null ? Reference.NULL : value));
             } catch (NoSuchFieldException e) {
-                throw new ImpossibleTransloaderException(e);
+                throw new ImpossibleException(e);
             }
         return (Reference[]) references.toArray(new Reference[references.size()]);
     }

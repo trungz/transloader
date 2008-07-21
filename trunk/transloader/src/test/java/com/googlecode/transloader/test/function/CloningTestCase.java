@@ -11,6 +11,7 @@ import com.googlecode.transloader.test.fixture.cyclic.SelfAndParentReferencingCh
 import com.googlecode.transloader.test.fixture.fields.*;
 import com.googlecode.transloader.test.fixture.hierarchy.Bottom;
 import com.googlecode.transloader.test.fixture.serializable.WithAnonymousClassFields;
+import com.googlecode.transloader.test.fixture.serializable.WithFinalFields;
 
 public abstract class CloningTestCase extends BaseTestCase {
 
@@ -47,6 +48,18 @@ public abstract class CloningTestCase extends BaseTestCase {
     public void testClonesFieldsThroughoutHierarchies() throws Exception {
         assertDeeplyClonedToOtherClassLoader(new Bottom(new NotCommonJavaObject(),
                 Triangulate.anyInt(), Triangulate.anyString(), Triangulate.eitherBoolean()));
+    }
+
+    public void testClonesSerializableObjectsWithFinalFields() throws Exception {
+        assertDeeplyClonedToOtherClassLoader(new WithFinalFields(Triangulate.anyInteger()));
+    }
+
+    public void testCloneObjectsWithTransientFieldsButNotThoseFieldsThemselves() throws Exception {
+        assertDeeplyClonedToOtherClassLoader(new WithTransientFields(Triangulate.anyLong()));
+    }
+
+    public void testClonesNonserializableObjectsWithTransientFinalFields() throws Exception {
+        assertDeeplyClonedToOtherClassLoader(new WithTransientFinalFields(Triangulate.anyInteger()));
     }
 
     public void testClonesObjectsOfSerializableAnonymousClasses() throws Exception {

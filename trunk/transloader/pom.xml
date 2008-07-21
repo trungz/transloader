@@ -6,7 +6,7 @@
     <groupId>com.googlecode.transloader</groupId>
     <artifactId>transloader</artifactId>
     <packaging>jar</packaging>
-    <version>0.4</version>
+    <version>0.5</version>
     <description>Bridges the divide between ClassLoaders</description>
     <build>
         <plugins>

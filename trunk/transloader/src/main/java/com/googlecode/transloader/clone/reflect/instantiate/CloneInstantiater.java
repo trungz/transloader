@@ -5,7 +5,8 @@ import com.googlecode.transloader.except.Assert;
 
 public abstract class CloneInstantiater {
     public static CloneInstantiater wrap(Object object, InstantiationStrategy instantiationStrategy) {
-        return Assert.isNotNull(object).getClass().isArray() ? new Array(object) : (CloneInstantiater) new NormalObject(object, instantiationStrategy);
+        Class objectType = Assert.isNotNull(object).getClass();
+        return objectType.isArray() ? new Array(object) : (CloneInstantiater) new NormalObject(object, instantiationStrategy);
     }
 
     protected final Object original;

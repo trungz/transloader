@@ -9,7 +9,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 import java.util.Map;
 import java.util.Set;
 
-public class ClassLoaderAndReferencesStringBuilder {
+public class StringSerializer {
     private static final String FIELD_SEPERATOR = " ";
     private static final String OPEN_BRACKET = "[" + FIELD_SEPERATOR;
     private static final String CLOSE_BRACKET = "]";
@@ -21,12 +21,12 @@ public class ClassLoaderAndReferencesStringBuilder {
         return buffer.toString();
     }
 
-    private static void append(final Object object, final StringBuffer buffer) {
+    private static void append(Object object, final StringBuffer buffer) {
         Operation toStringOperation = new Operation() {
             public Object performOn(Object currentObject, Map referenceHistory) throws Exception {
-                referenceHistory.put(currentObject, getName(object.getClass()) + "<circular reference>");
-                append(object.getClass(), buffer);
-                appendReferencesOf(object, buffer);
+                referenceHistory.put(currentObject, getName(currentObject.getClass()) + "<cyclic reference>");
+                append(currentObject.getClass(), buffer);
+                appendReferencesOf(currentObject, buffer);
                 return buffer.toString();
             }
         };
@@ -55,8 +55,9 @@ public class ClassLoaderAndReferencesStringBuilder {
     private static void append(Reference reference, StringBuffer buffer) {
         if (reference.getValue() == null) {
             buffer.append("null");
-        } else
-        if (reference.getDescription().isOfPrimitiveType() || referenceBasedStringIsNotDeterministic(reference.getValue())) {
+        } else if (reference.getDescription().isTransient()) {
+            buffer.append("<transient>");
+        } else if (reference.getDescription().isOfPrimitiveType() || referenceBasedStringIsNotDeterministic(reference.getValue())) {
             buffer.append(reference.getValue());
         } else {
             append(reference.getValue(), buffer);
