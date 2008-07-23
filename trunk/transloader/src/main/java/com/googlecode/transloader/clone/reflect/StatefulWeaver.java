@@ -29,19 +29,20 @@ class StatefulWeaver implements CloneWeaver {
     private void transferTransformedReferencesFrom(Object original, Object clone) throws NoSuchFieldException {
         Reference[] originalReferences = mapper.getReferencesFrom(original);
         for (int i = 0; i < originalReferences.length; i++)
-            setTransformedReferenceIn(clone, originalReferences[i]);
+            transferTransformed(originalReferences[i], clone);
     }
 
-    private void setTransformedReferenceIn(Object clone, Reference originalReference) throws NoSuchFieldException {
+    private void transferTransformed(Reference originalReference, Object clone) throws NoSuchFieldException {
         Object transformation = mapper.getTransformationOf(originalReference.getValue());
         ReferenceDescription description = originalReference.getDescription();
-        if (shouldSetTransformedReferenceIn(clone, description, transformation))
+        if (shouldTransfer(transformation, description, clone))
             description.setValueIn(clone, transformation);
     }
 
-    private boolean shouldSetTransformedReferenceIn(Object clone, ReferenceDescription description, Object transformation) throws NoSuchFieldException {
-        boolean isNotTransient = !description.isTransient();
-        boolean isNotAlreadyEqual = !transformation.equals(description.getValueFrom(clone));
-        return isNotTransient && transformation != Reference.NULL && isNotAlreadyEqual;
+    private boolean shouldTransfer(Object transformation, ReferenceDescription description, Object clone) throws NoSuchFieldException {
+        boolean notTransient = !description.isTransient();
+        boolean notAlreadyEqual = !transformation.equals(description.getValueFrom(clone));
+        boolean notNull = transformation != Reference.NULL;
+        return notTransient && notAlreadyEqual && notNull;
     }
 }

@@ -39,12 +39,24 @@ public class CollectedClassLoader extends ClassLoader {
     }
 
     private void collectClassLoadersFrom(Object currentObjectInGraph) throws IllegalAccessException {
-        if (currentObjectInGraph != null && !alreadyVisited.contains(currentObjectInGraph)) {
-            alreadyVisited.add(currentObjectInGraph);
-            ClassLoader classLoader = ClassWrapper.getClassLoaderFrom(currentObjectInGraph);
-            if (!classLoaders.contains(classLoader)) classLoaders.add(classLoader);
+        if (shouldCollectFrom(currentObjectInGraph)) {
+            collectFrom(currentObjectInGraph);
             Reference[] references = ReferenceReflecter.wrap(currentObjectInGraph).getAllReferences();
-            for (int i = 0; i < references.length; i++) collectClassLoadersFrom(references[i].getValue());
+            for (int i = 0; i < references.length; i++)
+                collectClassLoadersFrom(references[i].getValue());
         }
+    }
+
+    private boolean shouldCollectFrom(Object object) {
+        boolean notNull = object != null;
+        boolean notAlreadyVisited = !alreadyVisited.contains(object);
+        return notNull && notAlreadyVisited;
+    }
+
+    private void collectFrom(Object object) {
+        alreadyVisited.add(object);
+        ClassLoader classLoader = ClassWrapper.getClassLoaderFrom(object);
+        if (!classLoaders.contains(classLoader))
+            classLoaders.add(classLoader);
     }
 }

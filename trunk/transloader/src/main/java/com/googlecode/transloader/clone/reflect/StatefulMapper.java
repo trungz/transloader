@@ -54,13 +54,15 @@ final class StatefulMapper implements CloneMapper {
     }
 
     private boolean shouldMap(Reference reference) {
-        boolean isNotPrimitive = !reference.getDescription().isOfPrimitiveType();
-        boolean isNotAlreadyMapped = !transformationMap.containsKey(reference.getValue());
-        return isNotPrimitive && isNotAlreadyMapped;
+        boolean notPrimitive = !reference.getDescription().isOfPrimitiveType();
+        boolean notAlreadyMapped = !transformationMap.containsKey(reference.getValue());
+        return notPrimitive && notAlreadyMapped;
     }
 
     private boolean shouldClone(Object original) throws ClassNotFoundException {
-        return original != Reference.NULL && decider.shouldCloneObjectItself(original, targetLoader);
+        boolean notNull = original != Reference.NULL;
+        boolean deciderSaysSo = decider.shouldCloneObjectItself(original, targetLoader);
+        return notNull && deciderSaysSo;
     }
 
     public Iterator iterateOriginals() {
