@@ -1,5 +1,6 @@
 package com.googlecode.transloader.test;
 
+import com.googlecode.transloader.reference.DefaultReflecter;
 import com.googlecode.transloader.reference.Reference;
 import com.googlecode.transloader.reference.ReferenceReflecter;
 import com.googlecode.transloader.test.CyclicReferenceSafeTraverser.Operation;
@@ -14,6 +15,7 @@ public class StringSerializer {
     private static final String OPEN_BRACKET = "[" + FIELD_SEPERATOR;
     private static final String CLOSE_BRACKET = "]";
     private static final CyclicReferenceSafeTraverser CYCLIC_REFERENCE_TRAVERSER = new CyclicReferenceSafeTraverser();
+    public static final ReferenceReflecter REFLECTER = new DefaultReflecter();
 
     public static String toString(Object object) {
         StringBuffer buffer = new StringBuffer();
@@ -43,7 +45,7 @@ public class StringSerializer {
 
     private static void appendReferencesOf(Object object, StringBuffer buffer) throws IllegalAccessException {
         buffer.append(OPEN_BRACKET);
-        Reference[] references = ReferenceReflecter.wrap(object).getAllReferences();
+        Reference[] references = REFLECTER.reflectReferencesFrom(object);
         for (int i = 0; i < references.length; i++) {
             buffer.append(references[i].getDescription().getName()).append("=");
             append(references[i], buffer);
@@ -53,15 +55,14 @@ public class StringSerializer {
     }
 
     private static void append(Reference reference, StringBuffer buffer) {
-        if (reference.getValue() == null) {
+        if (reference.getValue() == null)
             buffer.append("null");
-        } else if (reference.getDescription().isTransient()) {
+        else if (reference.getDescription().isTransient())
             buffer.append("<transient>");
-        } else if (reference.getDescription().isOfPrimitiveType() || referenceBasedStringIsNotDeterministic(reference.getValue())) {
+        else if (reference.getDescription().isOfPrimitiveType() || referenceBasedStringIsNotDeterministic(reference.getValue()))
             buffer.append(reference.getValue());
-        } else {
+        else
             append(reference.getValue(), buffer);
-        }
     }
 
     private static void append(Class clazz, StringBuffer buffer) {

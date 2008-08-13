@@ -69,7 +69,7 @@ public final class ClassWrapper {
      *          if the <code>Class</code> cannot be found in the given <code>ClassLoader</code>
      */
     public static Class getClassFrom(ClassLoader classLoader, String className) {
-        Assert.areNotNull(className, classLoader);
+        Assert.areNotNull(classLoader, className);
         try {
             return ClassUtils.getClass(classLoader, className, false);
         } catch (ClassNotFoundException e) {
@@ -90,7 +90,7 @@ public final class ClassWrapper {
      *          <code>ClassLoader</code>
      */
     public static Class[] getClassesFrom(ClassLoader classLoader, String[] classNames) {
-        Assert.areNotNull(classNames, classLoader);
+        Assert.areNotNull(classLoader, classNames);
         Class[] classes = new Class[classNames.length];
         for (int i = 0; i < classes.length; i++) {
             classes[i] = getClassFrom(classLoader, classNames[i]);
@@ -117,6 +117,7 @@ public final class ClassWrapper {
         allClasses.add(rootClass);
         allClasses.addAll(ClassUtils.getAllSuperclasses(rootClass));
         allClasses.addAll(ClassUtils.getAllInterfaces(rootClass));
-		return ClassUtils.convertClassesToClassNames(allClasses).contains(typeName);
+        List allClassNames = ClassUtils.convertClassesToClassNames(allClasses);
+        return allClassNames.contains(typeName);
 	}
 }

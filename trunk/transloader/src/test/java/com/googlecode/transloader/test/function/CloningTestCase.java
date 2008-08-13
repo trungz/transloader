@@ -46,8 +46,13 @@ public abstract class CloningTestCase extends BaseTestCase {
     }
 
     public void testClonesFieldsThroughoutHierarchies() throws Exception {
-        assertDeeplyClonedToOtherClassLoader(new Bottom(new NotCommonJavaObject(),
-                Triangulate.anyInt(), Triangulate.anyString(), Triangulate.eitherBoolean()));
+        assertDeeplyClonedToOtherClassLoader(
+                new Bottom(
+                        new NotCommonJavaObject(),
+                        Triangulate.anyInt(),
+                        Triangulate.anyString(),
+                        Triangulate.eitherBoolean()
+                ));
     }
 
     public void testClonesSerializableObjectsWithFinalFields() throws Exception {

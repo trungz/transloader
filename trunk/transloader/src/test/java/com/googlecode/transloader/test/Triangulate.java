@@ -1,10 +1,16 @@
 package com.googlecode.transloader.test;
 
+import com.googlecode.transloader.test.lang.Constructors;
 import net.sf.cglib.proxy.Enhancer;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.objenesis.ObjenesisHelper;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.util.Random;
 
 /**
@@ -14,6 +20,7 @@ public final class Triangulate {
     private static final Random RANDOM = new Random(System.currentTimeMillis());
     private static final byte[] ONE_BYTE_BUFFER = new byte[1];
     private static final Method[] MY_METHODS = Triangulate.class.getDeclaredMethods();
+    public static final Field[] MY_FIELDS = Triangulate.class.getDeclaredFields();
 
     private Triangulate() {
     }
@@ -72,24 +79,73 @@ public final class Triangulate {
     }
 
     public static Method anyMethod() {
-        return MY_METHODS[anyIntFromZeroTo(MY_METHODS.length - 1)];
+        return (Method) anyElementOf(MY_METHODS);
+    }
+
+    public static Field anyField() {
+        return (Field) anyElementOf(MY_FIELDS);
+    }
+
+    public static Object anyElementOf(Object[] array) {
+        return array[anyIntFromZeroTo(array.length - 1)];
+    }
+
+    public static Object[] anyInstancesOf(Class[] types) {
+        Object[] params = new Object[types.length];
+        for (int i = 0; i < types.length; i++) {
+            Class paramType = types[i];
+            params[i] = anyInstanceOf(paramType);
+        }
+        return params;
     }
 
     public static Object anyInstanceOf(Class type) {
         try {
-            if (type == null || type == void.class) return null;
-            if (type.isArray()) return anyArrayOf(type.getComponentType());
-            Object triangulatedInstance = tryToTriangulateFromThisClass(type);
-            if (triangulatedInstance != null) return triangulatedInstance;
+            if (isNullOrVoid(type))
+                return null;
+            if (type.isArray())
+                return anyArrayOf(type.getComponentType());
+            Object instance = tryToTriangulateFromThisClass(type);
+            if (instance != null)
+                return instance;
             if (type.isInterface())
-                return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{type},
-                        new TriangulatingInvocationHandler());
-            if (Modifier.isAbstract(type.getModifiers()))
-                return Enhancer.create(type, new TriangulatingInvocationHandler());
+                return interfaceProxy(type);
+            if (isAbstract(type))
+                return classProxy(type);
             return ObjenesisHelper.newInstance(type);
         } catch (Exception e) {
             throw new NestableRuntimeException(e);
         }
+    }
+
+    private static boolean isNullOrVoid(Class type) {
+        return type == null || type == void.class;
+    }
+
+    private static boolean isAbstract(Class type) {
+        return Modifier.isAbstract(type.getModifiers());
+    }
+
+    private static Object interfaceProxy(Class type) {
+        return Proxy.newProxyInstance(
+                Thread.currentThread().getContextClassLoader(),
+                new Class[]{type},
+                new TriangulatingInvocationHandler()
+        );
+    }
+
+    private static Object classProxy(Class type) {
+        Constructor constructor = Constructors.getLowestShortestConstructor(type);
+        Class[] paramTypes = constructor.getParameterTypes();
+        Object[] params = anyInstancesOf(paramTypes);
+        return proxy(type, paramTypes, params);
+    }
+
+    private static Object proxy(Class type, Class[] paramTypes, Object[] params) {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(type);
+        enhancer.setCallback(new TriangulatingInvocationHandler());
+        return enhancer.create(paramTypes, params);
     }
 
     private static Object anyArrayOf(Class componentType) throws Exception {
@@ -111,19 +167,5 @@ public final class Triangulate {
             }
         }
         return null;
-    }
-
-    private static class TriangulatingInvocationHandler implements InvocationHandler,
-            net.sf.cglib.proxy.InvocationHandler {
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (method.getReturnType() == Void.class) return null;
-            if (method.getName().equals("equals") && method.getParameterTypes().length == 1 && method.getParameterTypes()[0] == Object.class)
-                return new Boolean(proxy == args[0]);
-            if (method.getName().equals("hashCode") && method.getParameterTypes().length == 0)
-                return new Integer(System.identityHashCode(proxy));
-            if (method.getName().equals("toString") && method.getParameterTypes().length == 0)
-                return TriangulatingInvocationHandler.class.getName() + '#' + System.identityHashCode(proxy);
-            return anyInstanceOf(method.getReturnType());
-        }
     }
 }

@@ -25,4 +25,5 @@ public final class Reference {
     public Object getValue() {
         return value;
     }
+
 }

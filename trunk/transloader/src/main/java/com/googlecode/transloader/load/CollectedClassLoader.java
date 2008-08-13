@@ -2,6 +2,7 @@ package com.googlecode.transloader.load;
 
 import com.googlecode.transloader.ClassWrapper;
 import com.googlecode.transloader.except.TransloaderException;
+import com.googlecode.transloader.reference.DefaultReflecter;
 import com.googlecode.transloader.reference.Reference;
 import com.googlecode.transloader.reference.ReferenceReflecter;
 
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 // TODO test-drive this spiked CollectedClassLoader
-public class CollectedClassLoader extends ClassLoader {
+public final class CollectedClassLoader extends ClassLoader {
+    private final ReferenceReflecter reflecter = new DefaultReflecter();
     private final List classLoaders = new ArrayList();
     private final Set alreadyVisited = new HashSet();
 
@@ -41,7 +43,7 @@ public class CollectedClassLoader extends ClassLoader {
     private void collectClassLoadersFrom(Object currentObjectInGraph) throws IllegalAccessException {
         if (shouldCollectFrom(currentObjectInGraph)) {
             collectFrom(currentObjectInGraph);
-            Reference[] references = ReferenceReflecter.wrap(currentObjectInGraph).getAllReferences();
+            Reference[] references = reflecter.reflectReferencesFrom(currentObjectInGraph);
             for (int i = 0; i < references.length; i++)
                 collectClassLoadersFrom(references[i].getValue());
         }

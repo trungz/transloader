@@ -8,7 +8,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 public abstract class BaseTestCase extends TestCase {
 
     protected void dump(Object object) {
-        System.out.println("<" + getName() + "> " + object.toString());
+//        System.err.println("<" + getName() + "> " + object.toString());
     }
 
     protected void assertEqualExceptForClassLoader(String originalDumpString, Object clone) {

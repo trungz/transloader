@@ -1,6 +1,7 @@
 package com.googlecode.transloader.clone.reflect.decide;
 
 import com.googlecode.transloader.ClassWrapper;
+import com.googlecode.transloader.primitive.Wrapper;
 import com.googlecode.transloader.except.Assert;
 
 import java.math.BigDecimal;
@@ -18,14 +19,11 @@ public final class MinimalCloningDecisionStrategy implements CloningDecisionStra
     /**
      * The list of primitive wrapper <code>Class</code>es.
      */
-    public static final List PRIMITIVE_WRAPPERS =
-            Arrays.asList(new Class[]{Boolean.class, Byte.class, Character.class, Short.class, Integer.class,
-                    Long.class, Float.class, Double.class});
+    public static final List PRIMITIVE_WRAPPERS = Arrays.asList(Wrapper.LIST);
 
     // TODO test BigInteger and BigDecimal
     // TODO make the list of non-cloned Classes injectable
-    private static final List KNOWN_SHARED_IMMUTABLES =
-            Arrays.asList(new Class[]{String.class, BigInteger.class, BigDecimal.class});
+    private static final List KNOWN_SHARED_IMMUTABLES = Arrays.asList(new Class[]{String.class, BigInteger.class, BigDecimal.class});
 
     /**
      * Decides that the given object should be shallow copied if its <code>Class</code> would be different when loaded

@@ -23,10 +23,10 @@ public final class SerializationCloningStrategy implements CloningStrategy {
      * @throws IOException            if input fails during deserialization
      * @throws ClassNotFoundException if the <code>targetClassLoader</code> cannot find a required class
      */
-    public Object cloneObjectUsing(ClassLoader targetClassLoader, Object original)
+    public Object cloneObjectUsing(ClassLoader targetLoader, Object original)
             throws ClassCastException, SerializationException, IOException, ClassNotFoundException {
-        Assert.areNotNull(original, targetClassLoader);
+        Assert.areNotNull(targetLoader, original);
         byte[] serializedOriginal = SerializationUtils.serialize((Serializable) original);
-        return new ClassLoaderObjectInputStream(targetClassLoader, new ByteArrayInputStream(serializedOriginal)).readObject();
+        return new ClassLoaderObjectInputStream(targetLoader, new ByteArrayInputStream(serializedOriginal)).readObject();
 	}
 }

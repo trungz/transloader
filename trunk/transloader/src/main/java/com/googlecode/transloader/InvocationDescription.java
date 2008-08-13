@@ -94,7 +94,7 @@ public final class InvocationDescription {
         Assert.areNotNull(methodName, parameters);
         Assert.areNotNull(parameterTypeNames);
         // TODO test different number of params to paramTypes
-        Assert.areSameLength(parameterTypeNames, parameters);
+        Assert.isEqualTo(parameterTypeNames.length, parameters.length, "array length");
         this.methodName = methodName;
         this.parameterTypeNames = parameterTypeNames;
         this.parameters = parameters;
@@ -107,8 +107,11 @@ public final class InvocationDescription {
      * @param parameters the parameters to the method invocation (can actually be <code>null</code>)
      */
     public InvocationDescription(Method method, Object[] parameters) {
-        this(((Method) Assert.isNotNull(method)).getName(), method.getParameterTypes(), parameters == null ? NO_PARAMS
-                : parameters);
+        this(
+                ((Method) Assert.isNotNull(method)).getName(),
+                method.getParameterTypes(),
+                parameters == null ? NO_PARAMS : parameters
+        );
     }
 
     private static Class[] getClasses(Object[] objects) {
@@ -155,4 +158,11 @@ public final class InvocationDescription {
 	public Object[] getParameters() {
 		return parameters;
 	}
+
+    public static Method getMethod(String name, Class[] paramTypes, Class owner) throws NoSuchMethodException {
+        Assert.areNotNull(name, paramTypes, owner);
+        Method method = owner.getDeclaredMethod(name, paramTypes);
+        method.setAccessible(true);
+        return method;
+    }
 }

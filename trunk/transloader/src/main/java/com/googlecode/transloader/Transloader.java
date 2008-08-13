@@ -1,7 +1,5 @@
 package com.googlecode.transloader;
 
-import com.googlecode.transloader.clone.CloningStrategy;
-
 /**
  * The API by which to wrap objects that reference <code>Class</code>es from foreign <code>ClassLoader</code>s.
  *
@@ -10,10 +8,10 @@ import com.googlecode.transloader.clone.CloningStrategy;
 public interface Transloader {
     /**
      * The default implementation of <code>Transloader</code> which will produce {@link ObjectWrapper}s configured
-     * with {@link CloningStrategy#MAXIMAL} for <code>Object</code>s and {@link ClassWrapper}s for
+     * with {@link com.googlecode.transloader.configure.CloningStrategy#MAXIMAL} for <code>Object</code>s and {@link ClassWrapper}s for
      * <code>Class</code>es.
      */
-    Transloader DEFAULT = new DefaultTransloader(CloningStrategy.MAXIMAL);
+    Transloader DEFAULT = new DefaultTransloader(com.googlecode.transloader.configure.CloningStrategy.MAXIMAL);
 
     /**
      * Wraps the given object in an <code>ObjectWrapper</code>.

@@ -18,7 +18,7 @@ import java.util.Arrays;
 public final class ObjectWrapper {
     private final Object wrappedObject;
     private final CloningStrategy cloner;
-    private final ClassLoader parameterClassLoader;
+    private final ClassLoader paramLoader;
 
     /**
      * Constructs a new <code>ObjectWrapper</code> around the given object, which will use the given
@@ -34,7 +34,7 @@ public final class ObjectWrapper {
         Assert.areNotNull(cloningStrategy, parameterClassLoader);
         wrappedObject = objectToWrap;
         cloner = cloningStrategy;
-        this.parameterClassLoader = parameterClassLoader;
+        paramLoader = parameterClassLoader;
     }
 
     /**
@@ -76,14 +76,14 @@ public final class ObjectWrapper {
      * be able to be cast to its respective types in the given <code>ClassLoader</code>.
      * <p>
      * This implementation employs the <code>CloningStrategy</code> configured at construction. Note that using
-     * {@link CloningStrategy#MINIMAL} (which is not the default strategy in {@link Transloader#DEFAULT}) will often
+     * {@link com.googlecode.transloader.configure.CloningStrategy#MINIMAL} (which is not the default strategy in {@link Transloader#DEFAULT}) will often
      * effect some changes within the object graph that starts with the wrapped object itself, as opposed to producing a
-     * completely new, seperate graph. Using {@link CloningStrategy#MAXIMAL} instead prevents this, producing a purely
+     * completely new, seperate graph. Using {@link com.googlecode.transloader.configure.CloningStrategy#MAXIMAL} instead prevents this, producing a purely
      * seperate clone without any changes within the wrapped object graph, at the cost of potentially far greater
-     * cloning effort. An object graph altered by cloning with {@link CloningStrategy#MINIMAL} can of course be restored
+     * cloning effort. An object graph altered by cloning with {@link com.googlecode.transloader.configure.CloningStrategy#MINIMAL} can of course be restored
      * entirely for use with other objects of <code>Class</code>es from its original <code>ClassLoader</code>(s)
      * by cloning it back with those original <code>ClassLoader</code>(s), but this is an extra coding step and
-     * somewhat reduces the effort saved by not using {@link CloningStrategy#MAXIMAL} in the first place.
+     * somewhat reduces the effort saved by not using {@link com.googlecode.transloader.configure.CloningStrategy#MAXIMAL} in the first place.
      * </p>
      *
      * @param classLoader the <code>ClassLoader</code> to use in creating an equivalent of the wrapped object
@@ -114,16 +114,15 @@ public final class ObjectWrapper {
         Assert.isNotNull(description);
         try {
             Class wrappedClass = getUnwrappedSelf().getClass();
-            Class[] parameterTypes = ClassWrapper.getClassesFrom(parameterClassLoader, description.getParameterTypeNames());
-            Object[] clonedParameters =
-                    (Object[]) cloner.cloneObjectUsing(parameterClassLoader, description.getParameters());
+            Class[] parameterTypes = ClassWrapper.getClassesFrom(paramLoader, description.getParameterTypeNames());
+            // TODO parameterise cloning of parameters... not always desired
+            Object[] clonedParameters = (Object[]) cloner.cloneObjectUsing(paramLoader, description.getParameters());
             Method method = wrappedClass.getMethod(description.getMethodName(), parameterTypes);
             return method.invoke(getUnwrappedSelf(), clonedParameters);
         } catch (Exception e) {
             // TODO test Exception from invoke
-            throw new TransloaderException(
-                    "Unable to invoke '" + description.getMethodName() + Arrays.asList(description.getParameterTypeNames()) + "' on '" + getUnwrappedSelf() + "'.",
-                    e);
+            String method = description.getMethodName() + Arrays.asList(description.getParameterTypeNames());
+            throw new TransloaderException("Exception from invoking '" + method + "' on '" + getUnwrappedSelf() + "'.", e);
         }
     }
 

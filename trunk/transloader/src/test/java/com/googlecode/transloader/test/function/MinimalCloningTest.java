@@ -2,7 +2,6 @@ package com.googlecode.transloader.test.function;
 
 import com.googlecode.transloader.DefaultTransloader;
 import com.googlecode.transloader.Transloader;
-import com.googlecode.transloader.clone.CloningStrategy;
 import com.googlecode.transloader.test.Triangulate;
 import com.googlecode.transloader.test.fixture.IndependentClassLoader;
 import junit.extensions.ActiveTestSuite;
@@ -19,6 +18,6 @@ public class MinimalCloningTest extends CloningTestCase {
     }
 
     protected Transloader getTransloader() {
-        return new DefaultTransloader(CloningStrategy.MINIMAL);
+        return new DefaultTransloader(com.googlecode.transloader.configure.CloningStrategy.MINIMAL);
     }
 }

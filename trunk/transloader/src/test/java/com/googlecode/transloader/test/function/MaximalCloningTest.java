@@ -1,6 +1,7 @@
 package com.googlecode.transloader.test.function;
 
 import com.googlecode.transloader.Transloader;
+import com.googlecode.transloader.reference.DefaultReflecter;
 import com.googlecode.transloader.reference.Reference;
 import com.googlecode.transloader.reference.ReferenceReflecter;
 import com.googlecode.transloader.test.CyclicReferenceSafeTraverser;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 public class MaximalCloningTest extends CloningTestCase {
     private static CyclicReferenceSafeTraverser CYCLIC_REFERENCE_TRAVERSER = new CyclicReferenceSafeTraverser();
+    public static final ReferenceReflecter REFLECTER = new DefaultReflecter();
 
     public static Test suite() throws Exception {
         return new ActiveTestSuite(MaximalCloningTest.class);
@@ -28,7 +30,7 @@ public class MaximalCloningTest extends CloningTestCase {
         Operation notSameOperation = new Operation() {
             public Object performOn(Object currentObjectInGraph, Map referenceHistory) throws Exception {
                 assertNotSame(original, clone);
-                Reference[] references = ReferenceReflecter.wrap(original).getAllReferences();
+                Reference[] references = REFLECTER.reflectReferencesFrom(original);
                 for (int i = 0; i < references.length; i++) {
                     if (!references[i].getDescription().isOfPrimitiveType()) {
                         Object originalValue = references[i].getValue();
