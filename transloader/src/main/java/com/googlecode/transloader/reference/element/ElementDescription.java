@@ -1,6 +1,7 @@
-package com.googlecode.transloader.reference;
+package com.googlecode.transloader.reference.element;
 
 import com.googlecode.transloader.except.Assert;
+import com.googlecode.transloader.reference.ReferenceDescription;
 
 import java.lang.reflect.Array;
 
@@ -9,7 +10,7 @@ import java.lang.reflect.Array;
  *
  * @author Jeremy Wales
  */
-public final class ArrayElementDescription implements ReferenceDescription {
+public final class ElementDescription implements ReferenceDescription {
     private final int elementIndex;
     private final boolean primitive;
 
@@ -19,7 +20,7 @@ public final class ArrayElementDescription implements ReferenceDescription {
      * @param elementIndex the index within the array of element being described
      * @param primitive    indicator of whether the reference is to a primitive rather than an {@link Object}
      */
-    public ArrayElementDescription(int elementIndex, boolean primitive) {
+    public ElementDescription(int elementIndex, boolean primitive) {
         this.elementIndex = elementIndex;
         this.primitive = primitive;
     }
@@ -41,6 +42,7 @@ public final class ArrayElementDescription implements ReferenceDescription {
      * @param value the value to set (can be <code>null</code>)
      */
     public void setValueIn(Object array, Object value) {
+        Assert.areNotNull(array, value);
         Array.set(Assert.isArray(array), elementIndex, value);
     }
 

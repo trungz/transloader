@@ -20,10 +20,10 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.Test;
 
 public class GeneralTransloaderTest extends BaseTestCase {
-    private Object foreignObject;
-    private Object foreignObjectWithMethods;
-    private Transloader transloader = Transloader.DEFAULT;
-    private ClassLoader dummyClassLoader = (ClassLoader) Triangulate.anyInstanceOf(ClassLoader.class);
+    Object foreignObject;
+    Object foreignObjectWithMethods;
+    Transloader transloader = Transloader.DEFAULT;
+    ClassLoader dummyClassLoader = (ClassLoader) Triangulate.anyInstanceOf(ClassLoader.class);
 
     public static Test suite() throws Exception {
         return new ActiveTestSuite(GeneralTransloaderTest.class);

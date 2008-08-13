@@ -97,20 +97,6 @@ public final class Assert {
     }
 
     /**
-     * Asserts that the given arrays are of the same length.
-     *
-     * @param array1 the first array in the comparison
-     * @param array2 the second array in the comparison
-     * @throws IllegalArgumentException if the length of <code>array1</code> is not equal to the length of
-     *                                  <code>array2</code>
-     */
-    public static void areSameLength(Object[] array1, Object[] array2) {
-        if (array1.length != array2.length)
-            throw new IllegalArgumentException(
-                    "Expecting equal length arrays but received " + Arrays.asList(array1) + " and " + Arrays.asList(array2) + ".");
-    }
-
-    /**
      * Asserts that the given object is an array.
      *
      * @param parameter the parameter to check
@@ -122,5 +108,30 @@ public final class Assert {
         if (!isNotNull(parameter).getClass().isArray())
             throw new IllegalArgumentException("Expecting an array but received '" + parameter + "'.");
         return parameter;
+    }
+
+    /**
+     * Asserts that the given arrays are of the same length.
+     *
+     * @param expected the number to compare to
+     * @param actual the actual number to compare
+     * @param name the name of the number being compared
+     * @throws IllegalArgumentException if actual is not equal to expected
+     */
+    public static void isEqualTo(long expected, long actual, String name) {
+        areNotNull(wrap(expected), wrap(actual), name);
+        if (!(expected == actual))
+            throw new IllegalArgumentException("Expecting " + name + " equal to " + expected + " but received " + actual + ".");
+    }
+
+    public static void contains(Object element, Object[] array) {
+        areNotNull(element, array);
+        List list = Arrays.asList(array);
+        if (!(list.contains(element)))
+            throw new IllegalArgumentException("Expecting one of " + list + " but received " + element + ".");
+    }
+
+    private static Long wrap(long primitive) {
+        return new Long(primitive);
     }
 }

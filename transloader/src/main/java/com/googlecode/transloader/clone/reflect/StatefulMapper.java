@@ -2,33 +2,35 @@ package com.googlecode.transloader.clone.reflect;
 
 import com.googlecode.transloader.clone.reflect.decide.CloningDecisionStrategy;
 import com.googlecode.transloader.clone.reflect.instantiate.CloneInstantiater;
-import com.googlecode.transloader.clone.reflect.instantiate.InstantiationStrategy;
 import com.googlecode.transloader.except.Assert;
 import com.googlecode.transloader.reference.Reference;
 import com.googlecode.transloader.reference.ReferenceReflecter;
 import org.apache.commons.collections.map.IdentityMap;
 
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 
 final class StatefulMapper implements CloneMapper {
     private final ClassLoader targetLoader;
     private final CloningDecisionStrategy decider;
-    private final InstantiationStrategy instantiater;
+    private final CloneInstantiater instantiater;
 
     private final Map transformationMap = new IdentityMap();
     private final Map referenceMap = new IdentityMap();
+    private final ReferenceReflecter reflecter;
 
     StatefulMapper(
             Object original,
             ClassLoader targetLoader,
             CloningDecisionStrategy decider,
-            InstantiationStrategy instantiater
+            CloneInstantiater instantiater,
+            ReferenceReflecter reflecter
     ) throws Exception {
-        Assert.areNotNull(original, targetLoader, decider, instantiater);
+        Assert.areNotNull(original, targetLoader, decider, instantiater, reflecter);
         this.targetLoader = targetLoader;
         this.decider = decider;
         this.instantiater = instantiater;
+        this.reflecter = reflecter;
         mapTransformationAndReferencesFrom(original);
     }
 
@@ -44,12 +46,12 @@ final class StatefulMapper implements CloneMapper {
     private void mapTransformationFrom(Object original) throws Exception {
         Object clone = original;
         if (shouldClone(original))
-            clone = CloneInstantiater.wrap(original, instantiater).instantiateShallowCloneUsing(targetLoader);
+            clone = instantiater.instantiateShallowCloneOf(original, targetLoader);
         transformationMap.put(original, clone);
     }
 
     private void mapReferencesFrom(Object original) throws IllegalAccessException {
-        Reference[] references = ReferenceReflecter.wrap(original).getAllReferences();
+        Reference[] references = reflecter.reflectReferencesFrom(original);
         referenceMap.put(original, references);
     }
 
