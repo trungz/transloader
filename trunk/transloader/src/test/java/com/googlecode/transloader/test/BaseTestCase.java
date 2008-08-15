@@ -15,8 +15,7 @@ public abstract class BaseTestCase extends TestCase {
         String originalClassLoaderString = this.getClass().getClassLoader().toString();
         String cloneClassLoaderString = IndependentClassLoader.INSTANCE.toString();
         assertNotEquals(originalClassLoaderString, cloneClassLoaderString);
-        String expectedCloneString =
-                StringUtils.replace(originalDumpString, originalClassLoaderString, cloneClassLoaderString);
+        String expectedCloneString = StringUtils.replace(originalDumpString, originalClassLoaderString, cloneClassLoaderString);
         String cloneString = clone.toString();
         dump(originalDumpString);
         dump(cloneString);
