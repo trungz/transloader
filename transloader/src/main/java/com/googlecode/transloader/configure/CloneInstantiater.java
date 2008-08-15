@@ -9,6 +9,5 @@ import com.googlecode.transloader.clone.reflect.instantiate.DefaultInstantiater;
 public final class CloneInstantiater {
     public static final com.googlecode.transloader.clone.reflect.instantiate.CloneInstantiater DEFAULT = new DefaultInstantiater(new ObjenesisInstantiationStrategy());
 
-    private CloneInstantiater() {
-    }
+    private CloneInstantiater() {}
 }

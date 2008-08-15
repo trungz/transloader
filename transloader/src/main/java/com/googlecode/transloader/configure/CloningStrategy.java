@@ -1,8 +1,6 @@
 package com.googlecode.transloader.configure;
 
 import com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy;
-import com.googlecode.transloader.clone.reflect.decide.MaximalCloningDecisionStrategy;
-import com.googlecode.transloader.clone.reflect.decide.MinimalCloningDecisionStrategy;
 
 /**
  * @author jeremywales
@@ -27,11 +25,7 @@ public final class CloningStrategy {
      * @see com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy
      * @see com.googlecode.transloader.clone.reflect.decide.MinimalCloningDecisionStrategy
      */
-    public static final com.googlecode.transloader.clone.CloningStrategy MINIMAL = new ReflectionCloningStrategy(
-            new MinimalCloningDecisionStrategy(),
-            CloneInstantiater.DEFAULT,
-            ReflecterFactory.DEFAULT
-    );
+    public static final com.googlecode.transloader.clone.CloningStrategy MINIMAL = new ReflectionCloningStrategy(InternalCloner.MINIMAL);
 
     /**
      * The implementation which clones every <code>Object</code> in the given object graph. The given object graph is
@@ -45,11 +39,7 @@ public final class CloningStrategy {
      * @see com.googlecode.transloader.clone.reflect.ReflectionCloningStrategy
      * @see com.googlecode.transloader.clone.reflect.decide.MaximalCloningDecisionStrategy
      */
-    public static final com.googlecode.transloader.clone.CloningStrategy MAXIMAL = new ReflectionCloningStrategy(
-            new MaximalCloningDecisionStrategy(),
-            CloneInstantiater.DEFAULT, 
-            ReflecterFactory.DEFAULT
-    );
+    public static final com.googlecode.transloader.clone.CloningStrategy MAXIMAL = new ReflectionCloningStrategy(InternalCloner.MAXIMAL);
 
     private CloningStrategy() {}
 }

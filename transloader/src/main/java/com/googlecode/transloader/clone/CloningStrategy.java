@@ -13,10 +13,10 @@ public interface CloningStrategy {
     /**
      * Clones the given object using the given <code>ClassLoader</code>.
      *
-     * @param targetClassLoader the <code>ClassLoader</code> by which to load <code>Class</code>es for clones
+     * @param targetLoader the <code>ClassLoader</code> by which to load <code>Class</code>es for clones
      * @param original          the original object to be cloned (can be <code>null</code>).
      * @return the result of cloning the object graph
      * @throws Exception can throw any <code>Exception</code> depending on the implementation
      */
-	Object cloneObjectUsing(ClassLoader targetClassLoader, Object original) throws Exception;
+	Object cloneObjectUsing(ClassLoader targetLoader, Object original) throws Exception;
 }
